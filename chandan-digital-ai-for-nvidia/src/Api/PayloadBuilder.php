@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ChandanDigital\NvidiaAi\Api;
 
 use ChandanDigital\NvidiaAi\Content\IndianEnglishPolicy;
+use ChandanDigital\NvidiaAi\Seo\SeoSkills;
 
 /**
  * Builds and validates NVIDIA chat completions request bodies for the dashboard (Playground and
@@ -34,9 +35,10 @@ final class PayloadBuilder
      * @param bool $stream Whether to request a streamed response.
      * @param string $systemPrompt Optional system prompt.
      * @param bool $editorialPolicy Whether to add the editorial policy to the system prompt.
+     * @param string $skill Optional SEO skill ID whose rules are added to the system prompt.
      * @return array<string, mixed>|ApiError
      */
-    public function chat(array $model, array $settings, $messages, bool $stream, string $systemPrompt = '', bool $editorialPolicy = false)
+    public function chat(array $model, array $settings, $messages, bool $stream, string $systemPrompt = '', bool $editorialPolicy = false, string $skill = '')
     {
         if ($model['kind'] === 'image') {
             return self::invalid(__('Image generation models cannot be used in the chat Playground.', 'chandan-digital-ai-for-nvidia'));
@@ -53,6 +55,10 @@ final class PayloadBuilder
         $system = trim($systemPrompt);
         if ($editorialPolicy) {
             $system = ($system !== '' ? $system . "\n\n" : '') . IndianEnglishPolicy::instruction();
+        }
+        $skillText = $skill !== '' ? SeoSkills::instruction($skill) : '';
+        if ($skillText !== '') {
+            $system = ($system !== '' ? $system . "\n\n" : '') . $skillText;
         }
         if ($system !== '') {
             $apiMessages[] = ['role' => 'system', 'content' => $system];

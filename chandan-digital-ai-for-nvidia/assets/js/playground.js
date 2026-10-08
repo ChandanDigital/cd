@@ -23,6 +23,7 @@
 		stream: $('cdnv-pg-stream'),
 		showReasoning: $('cdnv-pg-show-reasoning'),
 		policy: $('cdnv-pg-policy'),
+		skill: $('cdnv-pg-skill'),
 		system: $('cdnv-pg-system'),
 		log: $('cdnv-pg-log'),
 		form: $('cdnv-pg-form'),
@@ -383,6 +384,7 @@
 			model: els.model.value,
 			messages: messages,
 			system: els.system.value,
+			skill: els.skill ? els.skill.value : '',
 			policy: !!els.policy.checked,
 			request_id: uuid()
 		};

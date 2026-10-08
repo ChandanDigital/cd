@@ -10,6 +10,9 @@ use ChandanDigital\NvidiaAi\Api\PayloadBuilder;
 use ChandanDigital\NvidiaAi\Api\SseParser;
 use ChandanDigital\NvidiaAi\Api\StreamState;
 use ChandanDigital\NvidiaAi\Api\ThinkSplitter;
+use ChandanDigital\NvidiaAi\Integrations\AiPluginBridge;
+use ChandanDigital\NvidiaAi\Seo\SeoAssistant;
+use ChandanDigital\NvidiaAi\Seo\SeoSkills;
 use ChandanDigital\NvidiaAi\Content\IndianEnglishPolicy;
 use ChandanDigital\NvidiaAi\Plugin;
 use ChandanDigital\NvidiaAi\Support\Logger;
@@ -77,7 +80,7 @@ check('unknown default model rejected', isset($errs['default_model']));
 
 echo "== Model registry ==\n";
 $all = ModelRegistry::all();
-check('original 48 models + Kimi K3 registered', count($all) === 49, (string) count($all));
+check('original 48 models + Kimi K3 + 3 new models registered', count($all) === 52, (string) count($all));
 check('kimi present with exact id', isset($all['moonshotai/kimi-k3']) && $all['moonshotai/kimi-k3']['name'] === 'Kimi K3');
 check('kimi is vision + reasoning', $all['moonshotai/kimi-k3']['kind'] === 'vision' && in_array('reasoning', $all['moonshotai/kimi-k3']['capabilities'], true));
 check('kimi reasoning values low/high/max', $all['moonshotai/kimi-k3']['reasoning_values'] === ['low', 'high', 'max']);
@@ -217,7 +220,7 @@ $list = $client->list_models();
 check('list models', $list['ok'] && in_array('moonshotai/kimi-k3', $list['ids'], true), wp_json_encode($list['error'] ? $list['error']->to_array() : null));
 $req = last_request($mockLog);
 check('Authorization header sent as Bearer', $req['auth'] === 'Bearer nvapi-TestKey_123-abcdef');
-check('user agent does not leak site URL', strpos($req['ua'], '127.0.0.1') === false && strpos($req['ua'], 'ChandanDigitalAIforNVIDIA/1.1.2') === 0, $req['ua']);
+check('user agent does not leak site URL', strpos($req['ua'], '127.0.0.1') === false && strpos($req['ua'], 'ChandanDigitalAIforNVIDIA/1.2.0') === 0, $req['ua']);
 $probe = $client->probe('moonshotai/kimi-k3');
 check('probe kimi ok', $probe['ok'] && $probe['finish_reason'] === 'length');
 $chat = $client->chat((new PayloadBuilder())->chat($kimi, ModelRegistry::settings('moonshotai/kimi-k3'), [['role' => 'user', 'text' => 'Hello Kimi']], false));
@@ -431,7 +434,7 @@ $st = get_option(ModelRegistry::OPTION); $st['settings']['moonshotai/kimi-k3'] =
 update_option(ModelRegistry::OPTION, $st); ModelRegistry::flush(); update_option(Plugin::VERSION_OPTION, '1.1.1');
 Plugin::maybe_upgrade(); ModelRegistry::flush();
 $ks = ModelRegistry::settings('moonshotai/kimi-k3');
-check('upgrade fills unset Kimi top_p with 0.95, keeps other choices', $ks['top_p'] === 0.95 && $ks['reasoning_effort'] === 'high' && get_option(Plugin::VERSION_OPTION) === '1.1.2');
+check('upgrade fills unset Kimi top_p with 0.95, keeps other choices', $ks['top_p'] === 0.95 && $ks['reasoning_effort'] === 'high' && get_option(Plugin::VERSION_OPTION) === '1.2.0');
 $st = get_option(ModelRegistry::OPTION); $st['settings']['moonshotai/kimi-k3']['top_p'] = 0.8;
 update_option(ModelRegistry::OPTION, $st); ModelRegistry::flush(); update_option(Plugin::VERSION_OPTION, '1.1.1');
 Plugin::maybe_upgrade(); ModelRegistry::flush();
@@ -466,6 +469,104 @@ $req = last_request($mockLog);
 check('style off: no system message for AI Client', $req['body']['messages'][0]['role'] === 'user');
 Settings::update(['editorial_policy' => 1]);
 
+echo "== New models (1.2.0) ==\n";
+foreach ([['z-ai/glm-5.3', 'GLM-5.3', 'text'], ['z-ai/glm-5.3-flash', 'GLM-5.3 Flash', 'vision'], ['deepseek-ai/deepseek-v4.1-flash', 'DeepSeek V4.1 Flash', 'vision']] as [$mid, $mname, $mkind]) {
+    $m = ModelRegistry::get($mid);
+    check("$mid registered as $mname ($mkind), access check required", $m !== null && $m['name'] === $mname && $m['kind'] === $mkind && $m['requires_verification'] && $m['is_new']);
+}
+$p = $client->probe('z-ai/glm-5.3');
+check('GLM-5.3 access check works against catalogue model', $p['ok']);
+$req = last_request($mockLog);
+check('exact GLM-5.3 ID sent', ($req['body']['model'] ?? '') === 'z-ai/glm-5.3');
+
+echo "== Editor AI check (WordPress AI plugin) ==\n";
+check('connector block classified clearly', ApiError::from_wp_error(new WP_Error('wpai_connector_not_approved', 'The "nvidia" AI connector has not been approved for use by "ai/ai.php".'))->code === 'connector_not_approved');
+check('connector block found inside SDK network message', ApiError::is_connector_block('Network error occurred while sending POST request to x: The "nvidia" AI connector has not been approved for use by "ai/ai.php".'));
+update_option('wpai_feature_connector-approval_enabled', 1);
+update_option('wpai_connector_approvals', []);
+update_option('wpai_connector_approval_pending', ['ai/ai.php::nvidia' => ['caller_type' => 'plugin', 'caller_basename' => 'ai/ai.php', 'caller_name' => 'AI', 'connector_id' => 'nvidia', 'attempts' => 3, 'first_seen' => time() - 60, 'last_seen' => time()]]);
+$st = AiPluginBridge::status();
+check('bridge reports AI plugin blocked for NVIDIA', $st['active'] && $st['approval_enabled'] && count($st['blocked']) === 1 && $st['blocked'][0]['basename'] === 'ai/ai.php' && $st['blocked'][0]['attempts'] === 3);
+update_option('wpai_connector_approvals', ['ai/ai.php' => ['nvidia' => true]]);
+$st = AiPluginBridge::status();
+check('bridge: once approved, no longer reported as blocked', $st['blocked'] === [] && $st['approved'] === ['ai/ai.php']);
+update_option('wpai_feature_connector-approval_enabled', 0);
+delete_option('wpai_connector_approval_pending'); delete_option('wpai_connector_approvals');
+$pref = apply_filters('wpai_preferred_text_models', [['anthropic', 'claude-sonnet-5']]);
+check('AI plugin gets NVIDIA text model after its own preferences', $pref[0] === ['anthropic', 'claude-sonnet-5'] && in_array(['nvidia', 'moonshotai/kimi-k3'], $pref, true), wp_json_encode($pref));
+$img = apply_filters('wpai_preferred_image_models', []);
+check('AI plugin gets NVIDIA FLUX image models', in_array(['nvidia', 'black-forest-labs/flux.1-schnell'], $img, true));
+check('AI plugin told NVIDIA credentials exist (key in this plugin)', apply_filters('wpai_has_ai_credentials', false, []) === true);
+
+echo "== SEO skills ==\n";
+check('six SEO skills with credit', count(SeoSkills::all()) === 6 && SeoSkills::SOURCE_URL === 'https://github.com/AgricIDaniel/claude-seo' && file_exists(WP_PLUGIN_DIR . '/chandan-digital-ai-for-nvidia/CREDITS.md') && strpos((string) file_get_contents(WP_PLUGIN_DIR . '/chandan-digital-ai-for-nvidia/CREDITS.md'), 'MIT License') !== false);
+check('skill texts have no em dash', !IndianEnglishPolicy::containsEmDash(SeoSkills::combined(array_keys(SeoSkills::all()))));
+$pl = (new PayloadBuilder())->chat(ModelRegistry::get('moonshotai/kimi-k3'), ModelRegistry::settings('moonshotai/kimi-k3'), [['role' => 'user', 'text' => 'Title please']], false, '', false, 'seo-page');
+check('Playground SEO skill added to system prompt', strpos($pl['messages'][0]['content'], 'SEO SKILL: ON-PAGE SEO') !== false);
+
+echo "== SEO Assistant ==\n";
+wp_set_current_user(1);
+$cat = wp_create_category('Marketing');
+$others = [];
+foreach (['SEO services in Kolkata' => 'We offer SEO services for local shops.', 'Google Ads for small business' => 'Ads that bring calls.', 'Social media tips' => 'Post often and reply fast.'] as $t => $c) {
+    $others[] = wp_insert_post(['post_title' => $t, 'post_content' => $c, 'post_status' => 'publish', 'post_category' => [$cat]]);
+}
+$pid = wp_insert_post(['post_title' => 'Digital marketing in Kolkata', 'post_content' => '<!-- wp:paragraph --><p>Our digital marketing team helps Kolkata shops. Ask about our SEO services and Google Ads.</p><!-- /wp:paragraph -->', 'post_status' => 'draft', 'post_category' => [$cat]]);
+$run = function (string $task, array $extra = []) use ($pid) {
+    $r = new WP_REST_Request('POST', '/chandan-digital-ai/v1/seo/run');
+    $r->set_header('content-type', 'application/json');
+    $r->set_body(wp_json_encode(array_merge(['post_id' => $pid, 'task' => $task, 'keyword' => 'digital marketing agency in Kolkata', 'model' => 'moonshotai/kimi-k3', 'title' => get_the_title($pid), 'content' => get_post_field('post_content', $pid)], $extra)));
+    $res = rest_do_request($r);
+    return [$res->get_status(), $res->get_data()];
+};
+[$code, $d] = $run('titles');
+check('titles: parsed from fenced JSON, duplicates removed, char counts', $code === 200 && count($d['items']) === 4 && $d['items'][0]['chars'] === mb_strlen($d['items'][0]['text']), wp_json_encode($d));
+$req = last_request($mockLog);
+check('titles: system prompt has writing style + on-page skill + task', strpos($req['body']['messages'][0]['content'], 'SEO SKILL: ON-PAGE SEO') !== false && strpos($req['body']['messages'][0]['content'], 'WRITING STYLE') !== false && strpos($req['body']['messages'][1]['content'], 'Focus keyword: digital marketing agency in Kolkata') !== false);
+check('SEO tasks get at least 2,048 output tokens', ($req['body']['max_tokens'] ?? 0) >= 2048);
+[$code, $d] = $run('meta');
+check('meta descriptions: 3 options', $code === 200 && count($d['items']) === 3);
+[$code, $d] = $run('audit');
+check('audit: score, unknown priority normalised', $code === 200 && $d['score'] === 72 && $d['issues'][1]['priority'] === 'medium' && $d['issues'][0]['priority'] === 'high');
+[$code, $d] = $run('improve');
+$req = last_request($mockLog);
+check('improve: HTML cleaned (no script, no onclick), 8,192+ tokens', $code === 200 && strpos($d['html'], '<script') === false && strpos($d['html'], 'onclick') === false && strpos($d['html'], '<h2>') !== false && ($req['body']['max_tokens'] ?? 0) >= 8192, $d['html'] ?? wp_json_encode($d));
+[$code, $d] = $run('links');
+$seoUrl = get_permalink($others[0]);
+check('links: only real page + anchor present in text kept', $code === 200 && count($d['items']) === 1 && $d['items'][0]['anchor'] === 'SEO services' && in_array($d['items'][0]['url'], array_map('get_permalink', $others), true), wp_json_encode($d));
+$req = last_request($mockLog);
+check('links: candidates are real published posts, current post excluded', strpos($req['body']['messages'][1]['content'], 'SEO services in Kolkata') !== false && strpos($req['body']['messages'][1]['content'], (string) get_permalink($pid)) === false);
+[$code, $d] = $run('image');
+$att = (int) ($d['attachment_id'] ?? 0);
+check('image: FLUX image saved to Media Library with alt text and SEO file name', $code === 200 && $att > 0 && get_post_meta($att, '_wp_attachment_image_alt', true) === 'Small team planning a digital marketing campaign in a Kolkata office' && preg_match('/^kolkata-digital-marketing-team(-\d+)?\.jpg$/', basename((string) get_attached_file($att))) && (int) get_post_field('post_parent', $att) === $pid, wp_json_encode($d));
+$req = last_request($mockLog);
+check('image: FLUX request sent to GenAI endpoint with prompt', strpos($req['path'], '/v1/genai/black-forest-labs/flux.1-schnell') === 0 && strpos((string) ($req['body']['prompt'] ?? ''), 'Kolkata') !== false && $req['body']['steps'] === 4);
+$r = new WP_REST_Request('POST', '/chandan-digital-ai/v1/seo/featured'); $r->set_param('post_id', $pid); $r->set_param('attachment_id', $att);
+check('featured image set', rest_do_request($r)->get_status() === 200 && (int) get_post_thumbnail_id($pid) === $att);
+foreach (['title' => 'Digital Marketing Agency in Kolkata: Grow Online', 'description' => 'A meta description.', 'keyword' => 'digital marketing kolkata'] as $f => $v) {
+    $r = new WP_REST_Request('POST', '/chandan-digital-ai/v1/seo/apply'); $r->set_param('post_id', $pid); $r->set_param('field', $f); $r->set_param('value', $v);
+    $res = rest_do_request($r);
+    check("apply $f saved into Chandan Digital SEO (_seom_$f)", $res->get_status() === 200 && get_post_meta($pid, '_seom_' . $f, true) === $v);
+}
+check('focus keyword also kept by this plugin and read back', get_post_meta($pid, SeoAssistant::KEYWORD_META, true) === 'digital marketing kolkata' && SeoAssistant::stored_keyword($pid) === 'digital marketing kolkata');
+[$code, $d] = $run('titles', ['title' => '', 'content' => '']);
+check('empty post refused with clear message', $code === 400);
+wp_set_current_user(3); // author
+[$code] = $run('titles');
+check('author refused by default (Editors and above)', $code === 403);
+wp_set_current_user(2); // editor
+[$code] = $run('meta');
+check('editor allowed by default', $code === 200);
+wp_set_current_user(1);
+Settings::update(['seo_assistant' => 0]);
+[$code] = $run('titles');
+check('SEO Assistant off: refused', $code === 403);
+Settings::update(['seo_assistant' => 1]);
+wp_set_current_user(0);
+[$code] = $run('titles');
+check('logged-out refused', $code === 401 || $code === 403);
+wp_set_current_user(1);
+
 echo "== Logging ==\n";
 Logger::clear();
 Logger::log(['type' => 't', 'model' => 'm/x', 'status' => 200]);
@@ -491,7 +592,7 @@ check('auto-update forced off for this plugin', Plugin::disable_auto_update(true
 check('other plugins auto-update untouched', Plugin::disable_auto_update(true, (object) ['plugin' => 'akismet/akismet.php']) === true);
 $headers = get_plugin_data(WP_PLUGIN_DIR . '/chandan-digital-ai-for-nvidia/chandan-digital-ai-for-nvidia.php', false, false);
 check('Update URI header set off WordPress.org', strpos($headers['UpdateURI'], 'chandandigital.com') !== false);
-check('plugin header branding', $headers['Name'] === 'Chandan Digital AI for NVIDIA' && $headers['Author'] === 'Chandan Digital' && $headers['Version'] === '1.1.2');
+check('plugin header branding', $headers['Name'] === 'Chandan Digital AI for NVIDIA' && $headers['Author'] === 'Chandan Digital' && $headers['Version'] === '1.2.0');
 $before = get_option(Settings::OPTION);
 Plugin::activate();
 check('re-activation keeps existing settings', get_option(Settings::OPTION) === $before);

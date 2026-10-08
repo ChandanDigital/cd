@@ -43,6 +43,7 @@ final class RestController
             'messages' => ['type' => 'array', 'required' => true],
             'system' => ['type' => 'string', 'default' => ''],
             'policy' => ['type' => 'boolean', 'default' => false],
+            'skill' => ['type' => 'string', 'default' => ''],
             'request_id' => ['type' => 'string', 'required' => true],
         ];
 
@@ -413,7 +414,8 @@ final class RestController
             $messages,
             $stream,
             $system,
-            (bool) $request->get_param('policy')
+            (bool) $request->get_param('policy'),
+            (string) $request->get_param('skill')
         );
         if ($payload instanceof ApiError) {
             return self::error_response($payload, 400);
@@ -444,7 +446,7 @@ final class RestController
      * @param int $status HTTP status.
      * @param ApiError|null $error Error, if any.
      */
-    private static function record_model_status(string $modelId, int $status, ?ApiError $error): void
+    public static function record_model_status(string $modelId, int $status, ?ApiError $error): void
     {
         if ($error === null) {
             $model = ModelRegistry::get($modelId);

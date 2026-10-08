@@ -1,5 +1,7 @@
 // Browser end-to-end tests for Chandan Digital AI for NVIDIA (test-only, not shipped).
 const { chromium } = require('playwright');
+const { execSync } = require('child_process');
+const wpcli = (args) => execSync(process.env.WPCLI + ' ' + args + ' 2>/dev/null', { encoding: 'utf8' }).trim();
 const fs = require('fs');
 const path = require('path');
 
@@ -46,7 +48,7 @@ async function shot(page, name, fullPage = true) {
 	await page.goto(ADMIN);
 	check('overview heading', (await page.textContent('.cdnv-brand__title')).includes('Chandan Digital AI for NVIDIA'));
 	check('developer + website shown', (await page.textContent('.cdnv-brand__meta')).includes('Chandan Digital') && (await page.textContent('.cdnv-brand__meta')).includes('chandandigital.com'));
-	check('seven tabs', (await page.$$('.cdnv-tabs .nav-tab')).length === 7);
+	check('eight tabs', (await page.$$('.cdnv-tabs .nav-tab')).length === 8);
 	await shot(page, '01-overview-fresh');
 
 	// API settings: save key
@@ -74,7 +76,7 @@ async function shot(page, name, fullPage = true) {
 	// Models
 	await page.goto(ADMIN + '&tab=models');
 	const rows = await page.$$('[data-cdnv-model-row]');
-	check('model manager lists 49 models', rows.length === 49, String(rows.length));
+	check('model manager lists 52 models', rows.length === 52, String(rows.length));
 	await page.fill('#cdnv-model-search', 'kimi');
 	const visible = await page.$$eval('[data-cdnv-model-row]', (rs) => rs.filter((r) => !r.hidden).length);
 	check('search filters to Kimi models', visible === 2, String(visible));
@@ -84,7 +86,7 @@ async function shot(page, name, fullPage = true) {
 	await page.click('[data-cdnv-action="refresh-models"]');
 	await page.waitForSelector('#cdnv-refresh-result .cdnv-summary', { timeout: 30000 });
 	const refreshText = await page.textContent('#cdnv-refresh-result');
-	check('refresh models shows count', refreshText.includes('8 models'), refreshText.slice(0, 120));
+	check('refresh models shows count', refreshText.includes('11 models'), refreshText.slice(0, 120));
 	await page.click('#cdnv-refresh-result summary');
 	const addButtons = await page.$$('#cdnv-refresh-result .cdnv-catalog-list button');
 	check('unregistered catalogue models listed', addButtons.length === 2);
@@ -93,7 +95,7 @@ async function shot(page, name, fullPage = true) {
 	await page.fill('#cdnv-custom-name', 'New Model One');
 	await Promise.all([page.waitForNavigation(), page.click('#cdnv-add-custom input[type=submit]')]);
 	check('custom model added', (await page.textContent('.cdnv-notice')).includes('Custom model added'));
-	check('custom row present', (await page.$$('[data-cdnv-model-row]')).length === 50);
+	check('custom row present', (await page.$$('[data-cdnv-model-row]')).length === 53);
 	// Check Kimi access from the table.
 	await page.fill('#cdnv-model-search', 'kimi-k3');
 	await page.click('[data-cdnv-action="verify-model"][data-model="moonshotai/kimi-k3"]');
@@ -326,7 +328,7 @@ async function shot(page, name, fullPage = true) {
 	await page.setViewportSize({ width: 390, height: 844 });
 	await page.goto(ADMIN + '&tab=playground');
 	await shot(page, '10-mobile-playground');
-	for (const tab of ['overview', 'api', 'models', 'kimi', 'playground', 'diagnostics', 'privacy']) {
+	for (const tab of ['overview', 'api', 'models', 'kimi', 'seo', 'playground', 'diagnostics', 'privacy']) {
 		await page.goto(ADMIN + '&tab=' + tab);
 		const fits = await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1);
 		check('no horizontal page overflow at 390px: ' + tab, fits);
@@ -337,6 +339,82 @@ async function shot(page, name, fullPage = true) {
 
 	check('no JavaScript console errors', consoleErrors.length === 0, consoleErrors.join(' | '));
 	check('no external requests from plugin screens (WordPress core avatars excluded)', externalRequests.length === 0, externalRequests.join(', '));
+
+	// SEO Assistant in the block editor.
+	if (process.env.SEO_POST_ID) {
+		const postUrl = BASE + '/wp-admin/post.php?post=' + process.env.SEO_POST_ID + '&action=edit';
+		await page.goto(postUrl);
+		await page.waitForFunction(() => window.wp && wp.data && wp.data.select('core/editor') && wp.data.select('core/editor').getCurrentPostId(), null, { timeout: 60000 });
+		await page.evaluate(() => { try { wp.data.dispatch('core/preferences').set('core/edit-post', 'welcomeGuide', false); } catch (e) {} });
+		await page.keyboard.press('Escape');
+		// WordPress 6.6+ keeps meta boxes in a collapsed pane; the sidebar button must open it.
+		await page.waitForSelector('#cdnv-seo', { state: 'attached', timeout: 30000 });
+		check('SEO Assistant pane starts collapsed (WordPress default)', !(await page.isVisible('#cdnv-seo')));
+		await page.waitForSelector('.cdnv-seo-open', { timeout: 30000 });
+		check('"Open SEO Assistant" button in the Post sidebar', await page.isVisible('.cdnv-seo-open'));
+		await page.click('.cdnv-seo-open');
+		await page.waitForSelector('#cdnv-seo', { state: 'visible', timeout: 15000 });
+		check('SEO Assistant box shown in block editor after opening', await page.isVisible('#cdnv-seo'));
+		check('focus keyword prefilled from Chandan Digital SEO', (await page.inputValue('#cdnv-seo-keyword')) === 'digital marketing agency in Kolkata');
+		const seoClick = async (task) => {
+			await page.click('#cdnv-seo [data-seo-task="' + task + '"]');
+			await page.waitForFunction(() => !document.getElementById('cdnv-seo').classList.contains('is-busy') && document.querySelector('#cdnv-seo .cdnv-seo__results').childElementCount > 0, null, { timeout: 90000 });
+		};
+		await seoClick('titles');
+		check('titles listed with character counts', (await page.$$('#cdnv-seo .cdnv-seo__options li')).length === 4 && (await page.textContent('#cdnv-seo .cdnv-seo__count')).includes('characters'));
+		await page.click('#cdnv-seo .cdnv-seo__options li:first-child button:has-text("Use as post title")');
+		const newTitle = await page.evaluate(() => wp.data.select('core/editor').getEditedPostAttribute('title'));
+		check('"Use as post title" changes the editor title', newTitle === 'Digital Marketing Agency in Kolkata: Grow Your Business Online', newTitle);
+		await page.click('#cdnv-seo .cdnv-seo__options li:first-child button:has-text("Use as SEO title")');
+		await page.waitForFunction(() => document.querySelector('[name="seom_title"]').value.length > 0, null, { timeout: 15000 });
+		check('"Use as SEO title" fills the Chandan Digital SEO field', (await page.inputValue('[name="seom_title"]')) === 'Digital Marketing Agency in Kolkata: Grow Your Business Online');
+		await seoClick('meta');
+		await page.click('#cdnv-seo .cdnv-seo__options li:nth-child(2) button:has-text("Use as meta description")');
+		await page.waitForFunction(() => document.querySelector('[name="seom_description"]').value.indexOf('Grow your Kolkata business') === 0, null, { timeout: 15000 });
+		check('"Use as meta description" fills the SEO field', true);
+		await seoClick('audit');
+		check('SEO check shows score and fixes', (await page.textContent('#cdnv-seo .cdnv-seo__results')).includes('72/100') && (await page.$$('#cdnv-seo .cdnv-seo__issue')).length === 2);
+		await seoClick('links');
+		const linksText = await page.textContent('#cdnv-seo .cdnv-seo__links');
+		check('internal links: one real suggestion, invented ones removed', (await page.$$('#cdnv-seo .cdnv-seo__links li')).length === 1 && linksText.includes('SEO services in Kolkata') && !linksText.includes('evil.example.com'));
+		await shot(page, '13-seo-links');
+		await seoClick('improve');
+		check('improved content preview has no script', !(await page.innerHTML('#cdnv-seo .cdnv-seo__preview')).includes('<script'));
+		page.once('dialog', (d) => d.accept());
+		await page.click('#cdnv-seo button:has-text("Replace post content")');
+		const contentNow = await page.evaluate(() => wp.data.select('core/editor').getEditedPostContent());
+		check('"Replace post content" updates the block editor', contentNow.includes('Why Kolkata businesses need digital marketing') && contentNow.includes('wp:heading'), contentNow.slice(0, 150));
+		await seoClick('image');
+		check('featured image generated and shown with alt text', (await page.$$('#cdnv-seo .cdnv-seo__image img')).length === 1 && (await page.textContent('#cdnv-seo .cdnv-seo__image')).includes('Small team planning'));
+		await page.click('#cdnv-seo button:has-text("Set as featured image")');
+		await page.waitForFunction(() => wp.data.select('core/editor').getEditedPostAttribute('featured_media') > 0, null, { timeout: 15000 });
+		check('"Set as featured image" updates the editor', true);
+		await shot(page, '14-seo-assistant-editor');
+		// Save the post: the SEO plugin's own save must keep the new values.
+		await page.evaluate(() => wp.data.dispatch('core/editor').savePost());
+		await page.waitForFunction(() => !wp.data.select('core/editor').isSavingPost() && !wp.data.select('core/edit-post').isSavingMetaBoxes(), null, { timeout: 60000 });
+		await page.waitForTimeout(1500);
+		check('after saving the post, SEO title kept', wpcli('post meta get ' + process.env.SEO_POST_ID + ' _seom_title') === 'Digital Marketing Agency in Kolkata: Grow Your Business Online');
+		check('after saving the post, meta description kept', wpcli('post meta get ' + process.env.SEO_POST_ID + ' _seom_description').indexOf('Grow your Kolkata business') === 0);
+		check('after saving the post, title and featured image saved', wpcli('post get ' + process.env.SEO_POST_ID + ' --field=post_title') === 'Digital Marketing Agency in Kolkata: Grow Your Business Online' && parseInt(wpcli('post meta get ' + process.env.SEO_POST_ID + ' _thumbnail_id'), 10) > 0);
+	}
+
+	// Editor AI check on Diagnostics, with the AI plugin blocking NVIDIA.
+	wpcli('option update wpai_feature_connector-approval_enabled 1');
+	wpcli('option update wpai_connector_approval_pending \'{"ai/ai.php::nvidia":{"caller_type":"plugin","caller_basename":"ai/ai.php","caller_name":"AI","connector_id":"nvidia","attempts":5,"first_seen":1,"last_seen":' + Math.floor(Date.now() / 1000) + '}}\' --format=json');
+	await page.goto(ADMIN + '&tab=diagnostics');
+	const check403 = await page.textContent('#cdnv-editor-ai');
+	check('Diagnostics explains the editor 403 and names the blocked plugin', check403.includes('Blocked (403)') && check403.includes('ai/ai.php') && check403.includes('Tools > Connector Approvals'));
+	check('Diagnostics links to the approval screen', (await page.getAttribute('#cdnv-editor-ai a.button-primary', 'href')).includes('tools.php?page=ai-connector-approval'));
+	await shot(page, '15-editor-ai-check');
+	await page.goto(ADMIN);
+	check('Overview warns about blocked editor AI', (await page.textContent('.cdnv-card--alert')).includes('blocked (403)'));
+	wpcli('option delete wpai_connector_approval_pending');
+	wpcli('option update wpai_feature_connector-approval_enabled 0');
+
+	// SEO tab
+	await page.goto(ADMIN + '&tab=seo');
+	check('SEO tab shows Chandan Digital SEO as active and the six skills', (await page.textContent('.cdnv-panel')).includes('saved into it') && (await page.$$('.cdnv-panel details.cdnv-details')).length === 6);
 
 	// Security: unauthenticated and nonce-less REST calls.
 	const anon = await browser.newContext();

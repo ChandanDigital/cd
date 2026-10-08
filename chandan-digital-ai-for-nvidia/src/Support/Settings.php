@@ -54,6 +54,10 @@ final class Settings
             'log_retention_days' => 7,
             'auto_refresh_models' => 0,
             'delete_data_on_uninstall' => 0,
+            'seo_assistant' => 1,
+            'seo_assistant_access' => 'editor',
+            'seo_model' => '',
+            'seo_image_model' => 'black-forest-labs/flux.1-schnell',
         ];
     }
 
@@ -123,7 +127,7 @@ final class Settings
             $current[$key] = $value;
         }
 
-        foreach (['editorial_policy', 'playground_policy', 'logging', 'log_content', 'auto_refresh_models', 'delete_data_on_uninstall'] as $flag) {
+        foreach (['editorial_policy', 'playground_policy', 'seo_assistant', 'logging', 'log_content', 'auto_refresh_models', 'delete_data_on_uninstall'] as $flag) {
             if (array_key_exists($flag, $input)) {
                 $current[$flag] = empty($input[$flag]) ? 0 : 1;
             }
@@ -140,6 +144,33 @@ final class Settings
             $access = (string) $input['playground_access'];
             if (in_array($access, ['administrator', 'editor'], true)) {
                 $current['playground_access'] = $access;
+            }
+        }
+
+        if (array_key_exists('seo_assistant_access', $input)) {
+            $access = (string) $input['seo_assistant_access'];
+            if (in_array($access, ['administrator', 'editor', 'author'], true)) {
+                $current['seo_assistant_access'] = $access;
+            }
+        }
+
+        if (array_key_exists('seo_model', $input)) {
+            $model = (string) $input['seo_model'];
+            $found = ModelRegistry::get($model);
+            if ($model === '' || ($found !== null && $found['kind'] !== 'image')) {
+                $current['seo_model'] = $model;
+            } else {
+                $errors['seo_model'] = __('Choose a chat model for the SEO Assistant.', 'chandan-digital-ai-for-nvidia');
+            }
+        }
+
+        if (array_key_exists('seo_image_model', $input)) {
+            $model = (string) $input['seo_image_model'];
+            $found = ModelRegistry::get($model);
+            if ($found !== null && $found['kind'] === 'image') {
+                $current['seo_image_model'] = $model;
+            } else {
+                $errors['seo_image_model'] = __('Choose a FLUX image model.', 'chandan-digital-ai-for-nvidia');
             }
         }
 
@@ -209,6 +240,23 @@ final class Settings
          */
         $url = (string) apply_filters('cdnv_api_base_url', (string) self::get('base_url'));
         return untrailingslashit($url !== '' ? $url : self::DEFAULT_BASE_URL);
+    }
+
+    /**
+     * Base URL of NVIDIA's GenAI endpoint, used for FLUX image generation.
+     *
+     * @since 1.2.0
+     */
+    public static function genai_base_url(): string
+    {
+        /**
+         * Filters the NVIDIA GenAI (image generation) base URL.
+         *
+         * @since 1.2.0
+         *
+         * @param string $url Base URL without a trailing slash.
+         */
+        return untrailingslashit((string) apply_filters('cdnv_genai_base_url', 'https://ai.api.nvidia.com/v1/genai'));
     }
 
     /**
@@ -407,6 +455,25 @@ final class Settings
          * @param string $capability Capability name.
          */
         return (string) apply_filters('cdnv_playground_capability', $capability);
+    }
+
+    /**
+     * Capability needed to use the SEO Assistant (on top of being able to edit the post).
+     *
+     * @since 1.2.0
+     */
+    public static function seo_capability(): string
+    {
+        $map = ['administrator' => 'manage_options', 'editor' => 'edit_others_posts', 'author' => 'publish_posts'];
+        $capability = $map[(string) self::get('seo_assistant_access')] ?? 'edit_others_posts';
+        /**
+         * Filters the capability required to use the SEO Assistant.
+         *
+         * @since 1.2.0
+         *
+         * @param string $capability Capability name.
+         */
+        return (string) apply_filters('cdnv_seo_capability', $capability);
     }
 
     /**

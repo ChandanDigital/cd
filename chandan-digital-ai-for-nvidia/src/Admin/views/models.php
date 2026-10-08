@@ -70,7 +70,7 @@ $cdnv_default = (string) Settings::get('default_model');
                         <td><?php if ($cdnv_chat) : ?><input type="radio" name="default_model" value="<?php echo esc_attr($cdnv_id); ?>" <?php checked($cdnv_default, $cdnv_id); ?> aria-label="<?php echo esc_attr(sprintf(/* translators: %s: model name. */ __('Make %s the default model', 'chandan-digital-ai-for-nvidia'), $cdnv_model['name'])); ?>"><?php endif; ?></td>
                         <td>
                             <strong><?php echo esc_html($cdnv_model['name']); ?></strong>
-                            <?php if ($cdnv_id === ModelRegistry::KIMI_K3) : ?><?php echo Ui::pill(__('New', 'chandan-digital-ai-for-nvidia'), 'info'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in Ui. ?><?php endif; ?>
+                            <?php if (!empty($cdnv_model['is_new'])) : ?><?php echo Ui::pill(__('New', 'chandan-digital-ai-for-nvidia'), 'info'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in Ui. ?><?php endif; ?>
                             <?php if ($cdnv_model['source'] === 'custom') : ?><?php echo Ui::pill(__('Custom', 'chandan-digital-ai-for-nvidia'), 'info'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in Ui. ?><?php endif; ?>
                             <br><code class="cdnv-model-id"><?php echo esc_html($cdnv_id); ?></code>
                         </td>

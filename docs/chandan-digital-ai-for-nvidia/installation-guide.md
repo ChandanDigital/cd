@@ -1,8 +1,8 @@
 # Installation Guide
 
-**Plugin:** Chandan Digital AI for NVIDIA 1.1.2
-**File:** `chandan-digital-ai-for-nvidia-v1.1.2.zip`
-**SHA-256:** `9562e7954b6e46410981fb557e07a2248232a879d793b4407af5b3335dca4905`
+**Plugin:** Chandan Digital AI for NVIDIA 1.2.0
+**File:** `chandan-digital-ai-for-nvidia-v1.2.0.zip`
+**SHA-256:** `bbad5c4dfbd0d1fbeaf0ae83e19d722dbd816e40475b01946e2474c4f1db8ad7`
 
 ## Before you start
 
@@ -19,7 +19,7 @@ If the original **AI Provider for NVIDIA** plugin is installed, deactivate it fi
 
 1. Log in to WordPress as an administrator.
 2. Go to **Plugins > Add New Plugin > Upload Plugin**.
-3. Choose `chandan-digital-ai-for-nvidia-v1.1.2.zip` and press **Install Now**.
+3. Choose `chandan-digital-ai-for-nvidia-v1.2.0.zip` and press **Install Now**.
 4. Press **Activate Plugin**.
 5. A new menu item, **NVIDIA AI**, appears in the admin sidebar.
 
@@ -32,6 +32,17 @@ If the original **AI Provider for NVIDIA** plugin is installed, deactivate it fi
 5. Open **Kimi K3 Settings** and review the defaults (temperature 1, 16384 maximum tokens, reasoning effort max, seed 0, streaming on).
 6. Open **API Diagnostics** and press **Test streaming**. If it reports that output is buffered, turn streaming off in the Kimi K3 settings.
 7. Open **AI Playground**, type a question and press **Generate response**.
+8. Open **SEO Assistant**, choose who may use it and the default model, and save.
+9. If you use the WordPress **AI** plugin and its **Connector Approval** feature is on, go to **Tools > Connector Approvals** and approve **AI** (and any other plugin you trust) for **NVIDIA**. Without this, the AI plugin's buttons in posts and pages fail with a 403. **API Diagnostics > Editor AI check** shows what is blocked.
+
+## Using the SEO Assistant in posts and pages
+
+1. Open any post or page.
+2. In the block editor, click **Open SEO Assistant** in the **Post** sidebar on the right. (Or click the **Meta Boxes** bar at the bottom of the editor. WordPress 6.6 and newer keep this pane closed until you open it.) In the Classic Editor, the box sits under the content.
+3. Check the **Focus keyword** (it is read from Chandan Digital SEO when set) and pick a model.
+4. Press a button: **SEO titles**, **Meta description**, **SEO check**, **Improve content**, **Internal links** or **Featured image**.
+5. Review the result and press **Use**, **Replace post content** or **Set as featured image** for the parts you want. Nothing changes before that.
+6. Save or update the post as usual.
 
 ## Updating (manual only)
 
@@ -61,3 +72,6 @@ A key in wp-config.php or in WordPress Settings > Connectors is never removed by
 | Text appears all at once instead of word by word | Your host buffers output. Run **Test streaming**, and turn streaming off for the model if it is buffered. |
 | "A key was saved here earlier but can no longer be decrypted" | Your WordPress security salts changed. Enter the key again. |
 | The plugin's notice says another plugin registered "nvidia" | Deactivate the other NVIDIA provider plugin. |
+| AI buttons in posts and pages (from the WordPress AI plugin) fail with a 403 | The AI plugin's Connector Approval is blocking them. Approve **AI** for **NVIDIA** under **Tools > Connector Approvals**, or turn Connector Approval off under **Settings > AI**. See **API Diagnostics > Editor AI check**. |
+| I can't see the SEO Assistant box | In the block editor, click **Open SEO Assistant** in the Post sidebar, or open the **Meta Boxes** bar at the bottom. Also check that it is switched on, and that your role is allowed, on the **SEO Assistant** tab. |
+| A new model (GLM-5.3, GLM-5.3 Flash, DeepSeek V4.1 Flash) gives "not available" | Press **Check access** on the AI Models tab. If NVIDIA says your key cannot use it, pick another model. |

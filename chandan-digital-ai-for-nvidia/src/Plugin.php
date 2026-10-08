@@ -6,8 +6,10 @@ namespace ChandanDigital\NvidiaAi;
 
 use ChandanDigital\NvidiaAi\Admin\AdminPage;
 use ChandanDigital\NvidiaAi\Api\NvidiaClient;
+use ChandanDigital\NvidiaAi\Integrations\AiPluginBridge;
 use ChandanDigital\NvidiaAi\Provider\NvidiaProvider;
 use ChandanDigital\NvidiaAi\Rest\RestController;
+use ChandanDigital\NvidiaAi\Seo\SeoAssistant;
 use ChandanDigital\NvidiaAi\Support\Logger;
 use ChandanDigital\NvidiaAi\Support\ModelRegistry;
 use ChandanDigital\NvidiaAi\Support\Settings;
@@ -66,6 +68,8 @@ final class Plugin
         add_action('wp_ajax_' . self::DISMISS_NOTICE_ACTION, [self::class, 'dismiss_missing_client_notice']);
 
         AdminPage::init();
+        AiPluginBridge::init();
+        SeoAssistant::init();
         add_action('rest_api_init', [RestController::class, 'register_routes']);
     }
 

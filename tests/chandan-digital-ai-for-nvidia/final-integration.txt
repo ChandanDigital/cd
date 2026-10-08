@@ -14,7 +14,7 @@ PASS  base url rejects credentials
 PASS  timeout below range rejected
 PASS  unknown default model rejected
 == Model registry ==
-PASS  original 48 models + Kimi K3 registered
+PASS  original 48 models + Kimi K3 + 3 new models registered
 PASS  kimi present with exact id
 PASS  kimi is vision + reasoning
 PASS  kimi reasoning values low/high/max
@@ -158,6 +158,45 @@ PASS  too-long rules refused, old rules kept
 PASS  saving the built-in text clears the custom copy
 PASS  reset (empty) returns to built-in rules
 PASS  style off: no system message for AI Client
+== New models (1.2.0) ==
+PASS  z-ai/glm-5.3 registered as GLM-5.3 (text), access check required
+PASS  z-ai/glm-5.3-flash registered as GLM-5.3 Flash (vision), access check required
+PASS  deepseek-ai/deepseek-v4.1-flash registered as DeepSeek V4.1 Flash (vision), access check required
+PASS  GLM-5.3 access check works against catalogue model
+PASS  exact GLM-5.3 ID sent
+== Editor AI check (WordPress AI plugin) ==
+PASS  connector block classified clearly
+PASS  connector block found inside SDK network message
+PASS  bridge reports AI plugin blocked for NVIDIA
+PASS  bridge: once approved, no longer reported as blocked
+PASS  AI plugin gets NVIDIA text model after its own preferences
+PASS  AI plugin gets NVIDIA FLUX image models
+PASS  AI plugin told NVIDIA credentials exist (key in this plugin)
+== SEO skills ==
+PASS  six SEO skills with credit
+PASS  skill texts have no em dash
+PASS  Playground SEO skill added to system prompt
+== SEO Assistant ==
+PASS  titles: parsed from fenced JSON, duplicates removed, char counts
+PASS  titles: system prompt has writing style + on-page skill + task
+PASS  SEO tasks get at least 2,048 output tokens
+PASS  meta descriptions: 3 options
+PASS  audit: score, unknown priority normalised
+PASS  improve: HTML cleaned (no script, no onclick), 8,192+ tokens
+PASS  links: only real page + anchor present in text kept
+PASS  links: candidates are real published posts, current post excluded
+PASS  image: FLUX image saved to Media Library with alt text and SEO file name
+PASS  image: FLUX request sent to GenAI endpoint with prompt
+PASS  featured image set
+PASS  apply title saved into Chandan Digital SEO (_seom_title)
+PASS  apply description saved into Chandan Digital SEO (_seom_description)
+PASS  apply keyword saved into Chandan Digital SEO (_seom_keyword)
+PASS  focus keyword also kept by this plugin and read back
+PASS  empty post refused with clear message
+PASS  author refused by default (Editors and above)
+PASS  editor allowed by default
+PASS  SEO Assistant off: refused
+PASS  logged-out refused
 == Logging ==
 PASS  logging off by default -> nothing stored
 PASS  log entry stored without content by default
@@ -174,4 +213,4 @@ PASS  re-activation keeps existing settings
 PASS  re-activation keeps saved key
 PASS  no cron scheduled by default
 
-RESULT: 161 passed, 0 failed
+RESULT: 196 passed, 0 failed

@@ -3,7 +3,7 @@ Contributors: chandandigital
 Tags: ai, nvidia, kimi, ai-provider, connector
 Requires at least: 6.9
 Tested up to: 7.1.3
-Stable tag: 1.1.2
+Stable tag: 1.2.0
 Requires PHP: 7.4
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -18,6 +18,7 @@ This is a private plugin. It is maintained by Chandan Digital (https://chandandi
 
 **What it does**
 
+* SEO Assistant in every post and page: SEO titles, meta descriptions saved into Chandan Digital SEO, an SEO check, improved content, internal link suggestions to your real pages, and FLUX featured images with SEO alt text.
 * Kimi K3 (`moonshotai/kimi-k3`) through NVIDIA's chat completions endpoint: text, chat, coding help, reasoning, image understanding, streaming and non-streaming replies.
 * All original NVIDIA models from "AI Provider for NVIDIA" 1.0.2 are kept (Llama, Nemotron, Mistral, Qwen, GPT-OSS, Gemma, vision models and FLUX image generation).
 * AI Model Manager: search, enable or disable models, choose the default model, see capabilities and access status, check access per model, register custom model IDs, refresh NVIDIA's catalogue on demand.
@@ -34,7 +35,7 @@ This is a private plugin. It is maintained by Chandan Digital (https://chandandi
 
 == Installation ==
 
-1. In WordPress, go to Plugins > Add New > Upload Plugin and upload `chandan-digital-ai-for-nvidia-v1.1.2.zip`.
+1. In WordPress, go to Plugins > Add New > Upload Plugin and upload `chandan-digital-ai-for-nvidia-v1.2.0.zip`.
 2. Activate the plugin.
 3. Open NVIDIA AI > NVIDIA API Settings, paste your API key and save. For extra security, define `CHANDAN_NVIDIA_API_KEY` in wp-config.php instead.
 4. Press "Test connection", then open the AI Models tab and press "Check access" on Kimi K3.
@@ -59,6 +60,14 @@ By default this plugin's key is given to the WordPress AI Client only when WordP
 = Why is Kimi K3 not offered to other plugins yet? =
 
 A model is offered to other plugins only after its access is confirmed with your key. Press "Check access" on the AI Models or Kimi K3 tab, or send one Playground message.
+
+= I can't find the SEO Assistant box in the editor. Where is it? =
+
+In the block editor, WordPress 6.6 and newer put boxes like this one in a "Meta Boxes" pane at the bottom of the screen, and the pane starts closed. Click that bar to open it, or click "Open SEO Assistant" in the Post sidebar on the right. In the Classic Editor it sits under the content box.
+
+= The AI buttons in posts and pages show a 403 error. Why? =
+
+The WordPress "AI" plugin has a "Connector Approval" feature. When it is on, WordPress blocks every request to the NVIDIA connector, with a 403, until an administrator approves the plugin making the request. Open NVIDIA AI > API Diagnostics to see which plugin is blocked, then approve it under Tools > Connector Approvals, or turn Connector Approval off under Settings > AI. The SEO Assistant box in this plugin is not affected.
 
 = Kimi K3 replied with random words in many languages. What happened? =
 
@@ -95,6 +104,15 @@ Every text answer can follow the Chandan Digital writing style: simple Indian En
 The style is an instruction to the model. How closely an answer follows it still depends on the model. The plugin does not check grammar, plagiarism or facts after the answer arrives, apart from the em dash check.
 
 == Changelog ==
+
+= 1.2.0 =
+
+* New SEO Assistant box in the post and page editor (block editor and Classic Editor): SEO titles, meta descriptions, SEO check, content improvement, internal link suggestions and featured image generation. Saves the SEO title, meta description and focus keyword into Chandan Digital SEO. In the block editor, an "Open SEO Assistant" button in the Post sidebar opens the box, because WordPress 6.6+ keeps meta boxes in a pane at the bottom that starts closed.
+* SEO skills adapted from claude-seo by AgriciDaniel (MIT License), used by the SEO Assistant and selectable in the AI Playground.
+* New models: GLM-5.3 (z-ai/glm-5.3), GLM-5.3 Flash (z-ai/glm-5.3-flash) and DeepSeek V4.1 Flash (deepseek-ai/deepseek-v4.1-flash). Like Kimi K3, they are offered to other plugins after their access is confirmed.
+* New editor AI check on the Diagnostics tab, and a warning, when the WordPress AI plugin's Connector Approval blocks requests to NVIDIA (the cause of 403 errors in the editor).
+* The WordPress AI plugin now gets this plugin's NVIDIA models as preferred text, vision and image models, and knows that NVIDIA credentials exist when the key is stored here.
+* Clearer error when a request is blocked by Connector Approval.
 
 = 1.1.2 =
 

@@ -1,15 +1,16 @@
 # Testing Report
 
-**Plugin:** Chandan Digital AI for NVIDIA 1.1.2
+**Plugin:** Chandan Digital AI for NVIDIA 1.2.0
 **Test date:** 8 October 2026
 
 ## Summary
 
 | Test suite | Result |
 |---|---|
-| Integration tests inside WordPress (WP-CLI) | **161 passed, 0 failed** |
-| Browser end-to-end tests (Chromium, Playwright) | **90 passed, 0 failed** |
+| Integration tests inside WordPress (WP-CLI) | **196 passed, 0 failed** |
+| Browser end-to-end tests (Chromium, Playwright) | **112 passed, 0 failed** |
 | Lifecycle tests with the real ZIP | All steps behaved as expected (details below) |
+| Editor 403 reproduced with the real WordPress AI plugin 1.4.0 | Cause confirmed, fix confirmed (details below) |
 | PHP 7.4 to 8.4 compatibility scan (PHPCompatibility) | 0 errors |
 | WordPress security sniffs (escaping, nonces, input, SQL, i18n) | 0 issues in new code; 1 warning on an unchanged original file (not browser output) |
 | PHP warnings or notices from the plugin during all tests | 0 |
@@ -17,12 +18,14 @@
 
 Full outputs: `tests/chandan-digital-ai-for-nvidia/final-integration.txt` and `final-e2e.txt`.
 
+The security sniffs flag one line in `src/Content/JsonOutput.php`, a file carried over unchanged from the original plugin. It builds an exception message for PHP code, not browser output, so it was left as it is.
+
 ## Why live NVIDIA tests were not performed
 
 1. This build environment's network policy blocked `integrate.api.nvidia.com` (the proxy refused the connection).
 2. No NVIDIA API key was supplied for this work, and the key mentioned earlier in your conversation was deliberately not used.
 
-So **no result in this report comes from NVIDIA's real servers.** Instead, a local mock server (`tests/chandan-digital-ai-for-nvidia/mock/router.php`) imitates NVIDIA's documented formats. It sends streams split at awkward points (inside JSON, between `\r` and `\n`, and two events in one write), uses `\r\n` line endings for one model, adds `<think>` tags, drops a connection mid-stream, and returns 401, 403, 404, 400, 429 (with Retry-After) and 500 errors. It also enforces Moonshot AI's documented Kimi K3 rules (`reasoning_effort` low/high/max, temperature 1), so the plugin's error paths could be checked.
+So **no result in this report comes from NVIDIA's real servers.** Instead, a local mock server (`tests/chandan-digital-ai-for-nvidia/mock/router.php`) imitates NVIDIA's documented formats. It sends streams split at awkward points (inside JSON, between `\r` and `\n`, and two events in one write), uses `\r\n` line endings for one model, adds `<think>` tags, drops a connection mid-stream, and returns 401, 403, 404, 400, 429 (with Retry-After) and 500 errors. For 1.2.0 it also answers the SEO Assistant's tasks (including deliberately messy answers: JSON inside a code fence, a `<script>` tag, an invented URL and a link phrase that is not in the text) and returns a small JPEG for FLUX image requests. It also enforces Moonshot AI's documented Kimi K3 rules (`reasoning_effort` low/high/max, temperature 1), so the plugin's error paths could be checked.
 
 Please follow section 4 of the API Configuration Guide on your site to confirm live behaviour with your key.
 
@@ -32,6 +35,8 @@ Please follow section 4 of the API Configuration Guide on your site to confirm l
 - PHP 8.3.6 with cURL, PHP built-in web server (6 workers)
 - Chromium (headless) through Playwright 1.48
 - Plugin installed from the release ZIP for lifecycle tests
+- WordPress AI plugin 1.4.0, built from its GitHub source (wordpress.org downloads were blocked here). Its JavaScript was not built, so a test-only must-use plugin defined `WPAI_IS_TEST` to skip its built-assets check. That flag only affects that check.
+- Chandan Digital SEO (`seo-manager-pro`) active, for the SEO title, description and keyword fields
 
 ## Results against the requested checklist
 
@@ -98,7 +103,7 @@ Please follow section 4 of the API Configuration Guide on your site to confirm l
 | Interrupted connection | **Pass**: reported as incomplete; partial text kept but not used as context |
 | Non-streaming fallback | **Pass**: non-streaming mode works, and the Playground switches automatically if a stream cannot start |
 | Duplicate requests | **Pass**: a reused request ID gets HTTP 409 |
-| Server streaming self-test | **Pass**: "events arrived one by one (first after 29 ms, last after 1631 ms)" on the test server |
+| Server streaming self-test | **Pass**: "events arrived one by one (first after 30 ms, last after 1630 ms)" on the test server |
 | Streaming on your real host (nginx, Apache, CDN) | **Not performed**: use API Diagnostics > Test streaming |
 
 ### Reasoning
@@ -133,7 +138,64 @@ Please follow section 4 of the API Configuration Guide on your site to confirm l
 | No vendor telemetry | **Pass** (the original had none either; see the audit) |
 | No hidden update downloader | **Pass**: no update code; `Update URI` set; auto-update off for this plugin only |
 | No external requests from plugin screens | **Pass** (WordPress core's Gravatar avatars excluded) |
-| No remote code execution path introduced | **Pass** by code review: no `eval`, no dynamic includes from input, uploads never written to disk |
+| No remote code execution path introduced | **Pass** by code review: no `eval`, no dynamic includes from input; Playground uploads never written to disk; SEO images saved only after an image-type check, with the extension taken from the detected type |
+
+### The 403 error in posts and pages (added in 1.2.0)
+
+The WordPress AI plugin (1.4.0) has a "Connector Approval" feature. When it is on, a guard inside WordPress stops every request to an AI connector until an administrator approves the plugin that is asking. The guard answers with a `wpai_connector_not_approved` error that carries HTTP status 403. The AI plugin's own editor buttons (title, excerpt, meta description, alt text, images) count as a plugin that needs approval, so they fail until "AI" is approved for NVIDIA.
+
+This was reproduced on the test site with the AI plugin's real title-generation endpoint (`tests/chandan-digital-ai-for-nvidia/repro-connector-approval.php`):
+
+| Situation | Result |
+|---|---|
+| Connector Approval off | **HTTP 200**, title returned |
+| Connector Approval on, "AI" not approved for NVIDIA | **Refused** before reaching NVIDIA: "The "nvidia" AI connector has not been approved for use by "ai/ai.php"", and the request was added to the AI plugin's pending list |
+| Connector Approval on, "AI" approved for NVIDIA | **HTTP 200**, title returned |
+
+Depending on what WordPress already had cached, the AI plugin reported the refusal as a network error (503) or as "Please ensure you have a connected provider that supports text generation" (500). The browser shows the guard's 403 when the refusal reaches it directly. In every case the cause was the missing approval, and approving fixed it.
+
+| Check | Result |
+|---|---|
+| Diagnostics "Editor AI check" names the blocked plugin, says why, and links to Tools > Connector Approvals | **Pass** |
+| Overview shows a warning card while a block is recorded | **Pass** |
+| Once approved, the plugin is no longer reported as blocked | **Pass** |
+| A blocked request is reported as `connector_not_approved`, also when wrapped inside the AI Client's network error | **Pass** |
+| The AI plugin receives NVIDIA text, vision and FLUX image models as preferred models | **Pass** |
+| The AI plugin knows NVIDIA credentials exist when the key is saved in this plugin | **Pass** |
+| This plugin never approves anything by itself | **Pass** by code review: it only reads the AI plugin's options |
+
+### SEO Assistant (added in 1.2.0)
+
+| Check | Result |
+|---|---|
+| Box appears on posts and pages in the block editor | **Pass** |
+| WordPress 7.1 keeps meta boxes in a closed pane; the "Open SEO Assistant" button in the Post sidebar opens it | **Pass** |
+| Focus keyword read from Chandan Digital SEO | **Pass** |
+| SEO titles: fenced JSON parsed, duplicates removed, character counts shown | **Pass (mock)** |
+| "Use as post title" changes the editor title | **Pass** |
+| "Use as SEO title" and "Use as meta description" fill and save the Chandan Digital SEO fields | **Pass** |
+| Values are still there after the post is saved (the SEO plugin's own save does not wipe them) | **Pass** |
+| SEO check shows a score and the fixes, unknown priority values cleaned up | **Pass (mock)** |
+| Improve content: `<script>` and `onclick` removed on the server; preview, then "Replace post content" updates the block editor | **Pass (mock)** |
+| Internal links: only real published posts and pages, phrase must be in the text, invented URLs dropped | **Pass (mock)** |
+| Featured image: FLUX request sent to NVIDIA's GenAI endpoint, image saved to the Media Library with SEO file name and alt text, set as featured image | **Pass (mock)** |
+| SEO tasks get at least 2,048 output tokens (8,192 for improve) | **Pass** |
+| Writing style and the matching SEO skill are added to the system prompt | **Pass** |
+| Permissions: logged-out refused, Authors refused by default, Editors allowed, box off refused | **Pass** |
+| Empty post refused with a clear message | **Pass** |
+| SEO skills: six skills with the claude-seo credit, no em dashes, selectable in the Playground | **Pass** |
+| Classic Editor screen in a real browser | **Not performed** (the same REST routes were tested; the Classic Editor code path in the script was reviewed only) |
+| Real answers from NVIDIA models and real FLUX images | **Not performed** (needs live NVIDIA access) |
+
+### New models (added in 1.2.0)
+
+| Check | Result |
+|---|---|
+| `z-ai/glm-5.3` (GLM-5.3, text), `z-ai/glm-5.3-flash` (GLM-5.3 Flash, vision) and `deepseek-ai/deepseek-v4.1-flash` (DeepSeek V4.1 Flash, vision) registered with these exact IDs | **Pass** |
+| Marked "New" and "access check required" until "Check access" succeeds | **Pass** |
+| Access check and a chat request send the exact model ID | **Pass (mock)** |
+| Model list refresh shows the new models | **Pass (mock)** |
+| Whether your NVIDIA key can use these models | **Not performed** (use "Check access" on the AI Models tab) |
 
 ### Garbled Kimi K3 replies (added in 1.1.2)
 
@@ -180,7 +242,8 @@ The mock server copies the failure seen on a live site: a reply that starts with
 | Delete with "delete all data" removes every plugin option | **Pass** |
 | Running alongside the original plugin | **Pass**: no fatal error; clear notice; this plugin takes over once the original is deactivated |
 | Existing AI Client integration keeps working | **Pass (mock)**: original models send the same requests as before (no added defaults) |
-| No horizontal scrolling at phone width (390 px) on all seven tabs | **Pass** |
+| Upgrade from 1.1.2 to 1.2.0 through **Upload Plugin > Replace current with uploaded** | **Pass**: "Plugin updated successfully"; key, default model and Kimi reasoning setting kept; SEO Assistant on; the three new models present; auto-update still off |
+| No horizontal scrolling at phone width (390 px) on all eight tabs | **Pass** |
 
 ## Bugs found and fixed during testing
 
@@ -188,10 +251,13 @@ The mock server copies the failure seen on a live site: a reply that starts with
 2. An `https://127.0.0.1/...` image URL was accepted when the site itself runs on that address, because WordPress trusts its own host. Fixed with explicit checks for private and reserved IPs, `localhost` and `.local` names.
 3. The image URL field overflowed the screen on phones. Fixed in CSS.
 4. Model names showed "Nvidia" instead of "NVIDIA". Fixed.
+5. (1.2.0) In WordPress 7.1 the SEO Assistant box was inside the closed "Meta Boxes" pane, so it was easy to miss. Added the "Open SEO Assistant" button in the Post sidebar and a note on the SEO Assistant tab.
+6. (1.2.0) A long status label on the SEO Assistant tab caused sideways scrolling on phones. Shortened.
 
 ## Not tested
 
-- Live requests to NVIDIA (any model), as explained above.
+- Live requests to NVIDIA (any model, including FLUX image generation), as explained above.
+- The WordPress AI plugin's editor buttons in a real browser (its JavaScript was not built here). Its REST endpoint was tested directly instead.
 - WordPress multisite.
 - PHP 7.4 at runtime (only a static compatibility scan was run; tests ran on PHP 8.3).
 - Hosts without the PHP cURL extension (buffered streaming fallback path).

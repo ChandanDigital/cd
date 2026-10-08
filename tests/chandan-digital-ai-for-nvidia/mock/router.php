@@ -37,9 +37,17 @@ if ($key === 'nvapi-invalid-key-0000') {
 }
 
 if ($method === 'GET' && $path === '/v1/models') {
-    $ids = ['meta/llama-3.3-70b-instruct', 'meta/llama-3.1-8b-instruct', 'moonshotai/kimi-k3', 'moonshotai/kimi-k2.6',
+    $ids = ['meta/llama-3.3-70b-instruct', 'meta/llama-3.1-8b-instruct', 'moonshotai/kimi-k3', 'moonshotai/kimi-k2.6', 'z-ai/glm-5.3', 'z-ai/glm-5.3-flash', 'deepseek-ai/deepseek-v4.1-flash',
         'nvidia/nemotron-3-super-120b-a12b', 'meta/llama-3.2-90b-vision-instruct', 'acme/new-model-1', 'acme/new-model-2'];
     out_json(200, ['object' => 'list', 'data' => array_map(fn($id) => ['id' => $id, 'object' => 'model', 'owned_by' => explode('/', $id)[0]], $ids)]);
+}
+
+// FLUX image generation (NVIDIA GenAI endpoint).
+if ($method === 'POST' && strpos($path, '/v1/genai/') === 0) {
+    $im = imagecreatetruecolor(96, 64);
+    imagefill($im, 0, 0, imagecolorallocate($im, 118, 185, 0));
+    ob_start(); imagejpeg($im); $jpg = ob_get_clean();
+    out_json(200, ['artifacts' => [['base64' => base64_encode($jpg), 'finishReason' => 'SUCCESS', 'seed' => 1]]]);
 }
 
 if ($method !== 'POST' || $path !== '/v1/chat/completions') {
@@ -129,6 +137,36 @@ if (strpos($text, 'GARBLE_ALWAYS') !== false || (strpos($text, 'GARBLE_ONCE') !=
 }
 if (strpos($text, 'BANG_ONCE') !== false && $flip('bang')) {
     $reasoning = 'Let me think ' . str_repeat('!', 80);
+}
+// SEO Assistant tasks: answer in the requested format (sometimes messily, to test the checks).
+$system = ($body['messages'][0]['role'] ?? '') === 'system' ? (string) $body['messages'][0]['content'] : '';
+if (strpos($system, 'TASK: SEO_TITLES') !== false) {
+    $answer = "Here you go:\n```json\n" . json_encode(['titles' => ['Digital Marketing Agency in Kolkata: Grow Your Business Online', 'Digital Marketing in Kolkata That Brings You Real Customers', 'Kolkata Digital Marketing: SEO, Ads and Content That Work', 'Digital Marketing Agency Kolkata | Chandan Digital Services Explained Here Today', 'Digital Marketing Agency in Kolkata: Grow Your Business Online']]) . "\n```";
+} elseif (strpos($system, 'TASK: META_DESCRIPTION') !== false) {
+    $answer = json_encode(['descriptions' => ['Looking for a digital marketing agency in Kolkata? Chandan Digital plans SEO, ads and content that bring real enquiries. See our services and results.', 'Grow your Kolkata business with SEO, Google Ads and social media from Chandan Digital. Simple plans, honest reports and steady leads for local brands.', 'Chandan Digital helps Kolkata businesses rank higher and win more customers with practical SEO, paid ads and content. Talk to us about your goals today.']]);
+} elseif (strpos($system, 'TASK: SEO_AUDIT') !== false) {
+    $answer = json_encode(['score' => 72, 'summary' => 'The page covers the topic but the keyword is missing from the first paragraph.', 'strengths' => ['Clear headings'], 'issues' => [['priority' => 'high', 'issue' => 'Focus keyword missing from the first 100 words', 'fix' => 'Add "digital marketing agency in Kolkata" to the opening sentence.'], ['priority' => 'urgent', 'issue' => 'No internal links', 'fix' => 'Link to your SEO services page.']]]);
+} elseif (strpos($system, 'TASK: IMPROVE_CONTENT') !== false) {
+    $answer = "```html\n<h2>Why Kolkata businesses need digital marketing</h2><p>Chandan Digital helps local shops reach buyers online.</p><script>alert('x')</script><p onclick=\"steal()\">Our SEO services bring steady enquiries.</p>\n```";
+} elseif (strpos($system, 'TASK: INTERNAL_LINKS') !== false) {
+    preg_match('/Candidate pages on this site \(JSON\):\n(.*)$/s', $text, $m);
+    $cands = json_decode($m[1] ?? '[]', true) ?: [];
+    // Like a model would, link "SEO services" to the page about SEO services.
+    $first = $cands[0]['url'] ?? 'https://x.invalid/';
+    foreach ($cands as $cand) {
+        if (stripos((string) ($cand['title'] ?? ''), 'SEO services') !== false) {
+            $first = $cand['url'];
+            break;
+        }
+    }
+    $second = $cands[1]['url'] ?? $first;
+    $answer = json_encode(['links' => [
+        ['anchor' => 'SEO services', 'url' => $first, 'reason' => 'Readers want details.'],
+        ['anchor' => 'made up', 'url' => 'https://evil.example.com/fake-page', 'reason' => 'Invented page.'],
+        ['anchor' => 'a phrase that is not in the text', 'url' => $second, 'reason' => 'Anchor missing.'],
+    ]]);
+} elseif (strpos($system, 'TASK: IMAGE_BRIEF') !== false) {
+    $answer = json_encode(['prompt' => 'A bright modern office in Kolkata where a small team plans an online marketing campaign on laptops, warm daylight, photo style, no text', 'alt' => 'Small team planning a digital marketing campaign in a Kolkata office', 'filename' => 'Kolkata Digital Marketing Team!']);
 }
 $usage = ['prompt_tokens' => 42, 'completion_tokens' => 17, 'total_tokens' => 59];
 

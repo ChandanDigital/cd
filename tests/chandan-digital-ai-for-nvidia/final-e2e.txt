@@ -1,6 +1,6 @@
 PASS  overview heading
 PASS  developer + website shown
-PASS  seven tabs
+PASS  eight tabs
 PASS  key saved notice
 PASS  full key never rendered in HTML
 PASS  masked key shown
@@ -8,7 +8,7 @@ PASS  key field left empty after save
 PASS  http base URL rejected
 PASS  connection test: endpoint, key, model all OK
 PASS  key not exposed in JS config
-PASS  model manager lists 49 models
+PASS  model manager lists 52 models
 PASS  search filters to Kimi models
 PASS  capability search (reasoning + vision) -> Kimi K3
 PASS  refresh models shows count
@@ -62,7 +62,7 @@ PASS  stop cancels and marks reply
 PASS  buttons re-enabled after stop
 PASS  model-access error is distinct from key error
 PASS  streaming self-test reports a verdict
-      stream test said: Streaming works: events arrived one by one (first after 29 ms, last after 1628 ms).
+      stream test said: Streaming works: events arrived one by one (first after 30 ms, last after 1630 ms).
 PASS  log entry recorded
 PASS  log has no prompt by default
 PASS  log has no key
@@ -76,11 +76,33 @@ PASS  no horizontal page overflow at 390px: overview
 PASS  no horizontal page overflow at 390px: api
 PASS  no horizontal page overflow at 390px: models
 PASS  no horizontal page overflow at 390px: kimi
+PASS  no horizontal page overflow at 390px: seo
 PASS  no horizontal page overflow at 390px: playground
 PASS  no horizontal page overflow at 390px: diagnostics
 PASS  no horizontal page overflow at 390px: privacy
 PASS  no JavaScript console errors
 PASS  no external requests from plugin screens (WordPress core avatars excluded)
+PASS  SEO Assistant pane starts collapsed (WordPress default)
+PASS  "Open SEO Assistant" button in the Post sidebar
+PASS  SEO Assistant box shown in block editor after opening
+PASS  focus keyword prefilled from Chandan Digital SEO
+PASS  titles listed with character counts
+PASS  "Use as post title" changes the editor title
+PASS  "Use as SEO title" fills the Chandan Digital SEO field
+PASS  "Use as meta description" fills the SEO field
+PASS  SEO check shows score and fixes
+PASS  internal links: one real suggestion, invented ones removed
+PASS  improved content preview has no script
+PASS  "Replace post content" updates the block editor
+PASS  featured image generated and shown with alt text
+PASS  "Set as featured image" updates the editor
+PASS  after saving the post, SEO title kept
+PASS  after saving the post, meta description kept
+PASS  after saving the post, title and featured image saved
+PASS  Diagnostics explains the editor 403 and names the blocked plugin
+PASS  Diagnostics links to the approval screen
+PASS  Overview warns about blocked editor AI
+PASS  SEO tab shows Chandan Digital SEO as active and the six skills
 PASS  anonymous REST chat refused
 PASS  anonymous connection test refused
 PASS  logged-in request without nonce refused (CSRF)
@@ -90,4 +112,4 @@ PASS  editor cannot call admin REST routes
 PASS  editor cannot save API settings
 PASS  editor can use Playground when allowed
 
-RESULT: 90 passed, 0 failed
+RESULT: 112 passed, 0 failed

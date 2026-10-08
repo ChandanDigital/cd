@@ -27,7 +27,7 @@ final class AdminPage
     public const SLUG = 'chandan-digital-ai-nvidia';
 
     /** Tabs that need manage_options. The Playground can be opened to editors. */
-    private const ADMIN_TABS = ['overview', 'api', 'models', 'kimi', 'diagnostics', 'privacy'];
+    private const ADMIN_TABS = ['overview', 'api', 'models', 'kimi', 'seo', 'diagnostics', 'privacy'];
 
     private static string $hook = '';
 
@@ -38,7 +38,7 @@ final class AdminPage
     {
         add_action('admin_menu', [self::class, 'menu']);
         add_action('admin_enqueue_scripts', [self::class, 'assets']);
-        foreach (['save_api', 'save_models', 'add_custom', 'remove_custom', 'save_model_settings', 'save_privacy', 'clear_logs'] as $action) {
+        foreach (['save_api', 'save_models', 'add_custom', 'remove_custom', 'save_model_settings', 'save_privacy', 'save_seo', 'clear_logs'] as $action) {
             add_action('admin_post_cdnv_' . $action, [self::class, 'handle_' . $action]);
         }
     }
@@ -136,6 +136,7 @@ final class AdminPage
             'api' => __('NVIDIA API Settings', 'chandan-digital-ai-for-nvidia'),
             'models' => __('AI Models', 'chandan-digital-ai-for-nvidia'),
             'kimi' => __('Kimi K3 Settings', 'chandan-digital-ai-for-nvidia'),
+            'seo' => __('SEO Assistant', 'chandan-digital-ai-for-nvidia'),
             'playground' => __('AI Playground', 'chandan-digital-ai-for-nvidia'),
             'diagnostics' => __('API Diagnostics', 'chandan-digital-ai-for-nvidia'),
             'privacy' => __('Privacy & Security', 'chandan-digital-ai-for-nvidia'),
@@ -343,6 +344,22 @@ final class AdminPage
             Logger::apply_retention();
         }
         self::redirect('privacy', $errors ? 'warning' : 'success', __('Privacy and security settings saved.', 'chandan-digital-ai-for-nvidia'), array_values($errors));
+    }
+
+    /**
+     * Saves SEO Assistant settings.
+     */
+    public static function handle_save_seo(): void
+    {
+        self::verify('cdnv_save_seo');
+        $post = self::post();
+        $errors = Settings::update([
+            'seo_assistant' => !empty($post['seo_assistant']),
+            'seo_assistant_access' => (string) ($post['seo_assistant_access'] ?? 'editor'),
+            'seo_model' => (string) ($post['seo_model'] ?? ''),
+            'seo_image_model' => (string) ($post['seo_image_model'] ?? ''),
+        ]);
+        self::redirect('seo', $errors ? 'warning' : 'success', __('SEO Assistant settings saved.', 'chandan-digital-ai-for-nvidia'), array_values($errors));
     }
 
     /**

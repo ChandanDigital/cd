@@ -70,6 +70,10 @@
 .cdnv-card--wide {
 	grid-column: 1 / -1;
 }
+.cdnv-card--alert {
+	border-left: 4px solid var(--cdnv-bad);
+	background: var(--cdnv-bad-bg);
+}
 .cdnv-card--flush {
 	padding: 0;
 }
@@ -104,6 +108,10 @@
 	padding: 10px 12px;
 	overflow-x: auto;
 	white-space: pre;
+}
+.cdnv-code--wrap {
+	white-space: pre-wrap;
+	overflow-wrap: anywhere;
 }
 .cdnv-details summary {
 	cursor: pointer;

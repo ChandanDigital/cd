@@ -126,6 +126,71 @@ final class NvidiaClient
     }
 
     /**
+     * Generation settings per FLUX model, matching the original plugin's image model.
+     */
+    private const FLUX_PROFILES = [
+        'black-forest-labs/flux.1-schnell' => ['cfg_scale' => 0.0, 'steps' => 4],
+        'black-forest-labs/flux.1-dev' => ['cfg_scale' => 3.5, 'steps' => 28],
+        'black-forest-labs/flux.2-klein-4b' => ['cfg_scale' => 1.0, 'steps' => 4],
+    ];
+
+    /**
+     * Generates one image with a FLUX model through NVIDIA's GenAI endpoint.
+     *
+     * @since 1.2.0
+     *
+     * @param string $modelId FLUX model ID.
+     * @param string $prompt Image prompt.
+     * @param int $width Width: 1024, 1344 or 896.
+     * @param int $height Height: 1024, 896 or 1344.
+     * @return array{ok: bool, status: int, bytes: string, duration_ms: int, error: ApiError|null}
+     */
+    public function generate_image(string $modelId, string $prompt, int $width = 1344, int $height = 896): array
+    {
+        $out = ['ok' => false, 'status' => 0, 'bytes' => '', 'duration_ms' => 0, 'error' => null];
+        $profile = self::FLUX_PROFILES[$modelId] ?? ['cfg_scale' => 3.5, 'steps' => 25];
+        $body = wp_json_encode([
+            'prompt' => $prompt,
+            'cfg_scale' => $profile['cfg_scale'],
+            'width' => $width,
+            'height' => $height,
+            'steps' => $profile['steps'],
+        ]);
+        if ($body === false) {
+            $out['error'] = new ApiError('invalid_input');
+            return $out;
+        }
+        $args = $this->args('POST', $body, false);
+        // Image generation is slower than chat, including cold starts.
+        $args['timeout'] = max($this->timeout, 60);
+        $result = $this->send(Settings::genai_base_url() . '/' . $modelId, $args, 'chat');
+        $out['status'] = $result['status'];
+        $out['duration_ms'] = $result['duration_ms'];
+        if ($result['error'] !== null) {
+            $out['error'] = $result['error'];
+            return $out;
+        }
+        $data = json_decode($result['body'], true);
+        $artifact = is_array($data) && isset($data['artifacts'][0]) && is_array($data['artifacts'][0]) ? $data['artifacts'][0] : null;
+        if ($artifact === null || !isset($artifact['base64']) || !is_string($artifact['base64'])) {
+            $out['error'] = new ApiError('malformed_response', $result['status'], ApiError::extract_detail($result['body']));
+            return $out;
+        }
+        if (isset($artifact['finishReason']) && is_string($artifact['finishReason']) && stripos($artifact['finishReason'], 'filter') !== false) {
+            $out['error'] = new ApiError('invalid_request', $result['status'], 'The image was blocked by NVIDIA\'s content filter.', null, __('NVIDIA\'s safety filter blocked this image. Change the prompt and try again.', 'chandan-digital-ai-for-nvidia'));
+            return $out;
+        }
+        $bytes = base64_decode($artifact['base64'], true);
+        if ($bytes === false || @getimagesizefromstring($bytes) === false) { // phpcs:ignore WordPress.PHP.NoSilencedErrors -- invalid data is reported below.
+            $out['error'] = new ApiError('malformed_response', $result['status'], 'The image data could not be read.');
+            return $out;
+        }
+        $out['ok'] = true;
+        $out['bytes'] = $bytes;
+        return $out;
+    }
+
+    /**
      * Checks that the API key can call a model, with a tiny request (a few output tokens).
      *
      * @param string $modelId Model ID.

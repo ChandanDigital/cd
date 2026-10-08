@@ -141,6 +141,9 @@ final class ApiError
         $text = (string) $error->get_error_message();
         $lower = strtolower($text);
         $detail = Logger::redact($text, 300);
+        if ($error->get_error_code() === 'wpai_connector_not_approved' || self::is_connector_block($text)) {
+            return new self('connector_not_approved', 403, $detail);
+        }
         if ($error->get_error_code() === 'http_request_not_executed' || strpos($lower, 'blocked requests') !== false) {
             return new self('blocked_by_wordpress', 0, $detail);
         }
@@ -151,6 +154,20 @@ final class ApiError
             return new self('tls_error', 0, $detail);
         }
         return new self('network_error', 0, $detail);
+    }
+
+    /**
+     * Whether a transport error came from the WordPress AI plugin's Connector Approval guard,
+     * which stops requests before they leave the site.
+     *
+     * @since 1.2.0
+     *
+     * @param string $message Error message.
+     */
+    public static function is_connector_block(string $message): bool
+    {
+        return stripos($message, 'connector has not been approved for use') !== false
+            || stripos($message, 'wpai_connector_not_approved') !== false;
     }
 
     /**
@@ -280,6 +297,7 @@ final class ApiError
             'empty_response' => __('NVIDIA returned an empty response. Try again.', 'chandan-digital-ai-for-nvidia'),
             'malformed_response' => __('NVIDIA returned a response that could not be read. Try again.', 'chandan-digital-ai-for-nvidia'),
             'garbled_output' => __('The model sent back garbled text (random words in mixed languages and internal markers such as <|close|>), so the plugin stopped it instead of showing or saving it. It already asked once more and got the same result. This is a known problem with Kimi K3 on NVIDIA\'s servers at the moment, not with your site or API key. Try again in a few minutes, set Reasoning effort to High or Low on the Kimi K3 Settings tab, or choose another model.', 'chandan-digital-ai-for-nvidia'),
+            'connector_not_approved' => __('WordPress stopped this request before it reached NVIDIA. The AI plugin\'s "Connector Approval" feature is on, and the plugin that asked has not been approved to use the NVIDIA connector. Go to Tools > Connector Approvals and approve it, or turn Connector Approval off under Settings > AI. Your NVIDIA key and this plugin are fine.', 'chandan-digital-ai-for-nvidia'),
             'stream_interrupted' => __('The streamed response stopped before it finished. The text shown so far may be incomplete.', 'chandan-digital-ai-for-nvidia'),
             'cancelled' => __('The request was cancelled.', 'chandan-digital-ai-for-nvidia'),
             'duplicate_request' => __('This request is already being processed.', 'chandan-digital-ai-for-nvidia'),

@@ -200,7 +200,9 @@ class NvidiaTextGenerationModel extends AbstractApiBasedModel implements TextGen
         try {
             $modelId = $this->metadata()->getId();
             if ($error === null && $status === 0) {
-                $error = new ApiError('network_error', 0, Logger::redact($transportError, 300));
+                $error = ApiError::is_connector_block($transportError)
+                    ? new ApiError('connector_not_approved', 403, Logger::redact($transportError, 300))
+                    : new ApiError('network_error', 0, Logger::redact($transportError, 300));
             } elseif ($error === null && $status >= 400) {
                 $error = ApiError::from_http($status, substr($body, 0, 65536));
             }

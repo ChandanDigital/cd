@@ -9,6 +9,7 @@ defined('ABSPATH') || exit;
 
 use ChandanDigital\NvidiaAi\Admin\AdminPage;
 use ChandanDigital\NvidiaAi\Admin\Ui;
+use ChandanDigital\NvidiaAi\Integrations\AiPluginBridge;
 use ChandanDigital\NvidiaAi\Plugin;
 use ChandanDigital\NvidiaAi\Support\ModelRegistry;
 use ChandanDigital\NvidiaAi\Support\Settings;
@@ -31,7 +32,17 @@ $cdnv_ai_key_labels = [
     'none' => __('No key available to the AI Client', 'chandan-digital-ai-for-nvidia'),
 ];
 ?>
+<?php $cdnv_ai = AiPluginBridge::status(); ?>
 <div class="cdnv-grid">
+    <?php if ($cdnv_ai['approval_enabled'] && $cdnv_ai['blocked']) : ?>
+        <section class="cdnv-card cdnv-card--wide cdnv-card--alert">
+            <h2><?php esc_html_e('AI buttons in posts and pages are blocked (403)', 'chandan-digital-ai-for-nvidia'); ?></h2>
+            <p><?php esc_html_e('The WordPress AI plugin\'s Connector Approval is stopping requests to NVIDIA from:', 'chandan-digital-ai-for-nvidia'); ?>
+                <strong><?php echo esc_html(implode(', ', array_column($cdnv_ai['blocked'], 'name'))); ?></strong></p>
+            <p><a class="button button-primary" href="<?php echo esc_url($cdnv_ai['approval_url']); ?>"><?php esc_html_e('Approve it in Tools > Connector Approvals', 'chandan-digital-ai-for-nvidia'); ?></a>
+                <a class="button" href="<?php echo esc_url(AdminPage::url('diagnostics')); ?>#cdnv-editor-ai"><?php esc_html_e('Details', 'chandan-digital-ai-for-nvidia'); ?></a></p>
+        </section>
+    <?php endif; ?>
     <section class="cdnv-card">
         <h2><?php esc_html_e('Plugin', 'chandan-digital-ai-for-nvidia'); ?></h2>
         <dl class="cdnv-dl">

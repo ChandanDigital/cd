@@ -19,6 +19,16 @@ defined('ABSPATH') || exit;
             <label><input type="checkbox" id="cdnv-pg-show-reasoning" checked> <?php esc_html_e('Show reasoning', 'chandan-digital-ai-for-nvidia'); ?></label>
             <label><input type="checkbox" id="cdnv-pg-policy" <?php checked((bool) \ChandanDigital\NvidiaAi\Support\Settings::get('playground_policy')); ?>> <?php esc_html_e('Use Chandan Digital writing style', 'chandan-digital-ai-for-nvidia'); ?></label>
         </div>
+        <div class="cdnv-field">
+            <label for="cdnv-pg-skill"><strong><?php esc_html_e('SEO skill', 'chandan-digital-ai-for-nvidia'); ?></strong></label>
+            <select id="cdnv-pg-skill">
+                <option value=""><?php esc_html_e('None', 'chandan-digital-ai-for-nvidia'); ?></option>
+                <?php foreach (\ChandanDigital\NvidiaAi\Seo\SeoSkills::all() as $cdnv_skill_id => $cdnv_skill) : ?>
+                    <option value="<?php echo esc_attr($cdnv_skill_id); ?>"><?php echo esc_html($cdnv_skill['label'] . ' - ' . $cdnv_skill['description']); ?></option>
+                <?php endforeach; ?>
+            </select>
+            <p class="description"><?php esc_html_e('Adds the chosen SEO rules (adapted from claude-seo) to your request. For example, pick "On-page SEO" and ask for a title and meta description for an article.', 'chandan-digital-ai-for-nvidia'); ?></p>
+        </div>
         <details class="cdnv-details">
             <summary><?php esc_html_e('System prompt (optional)', 'chandan-digital-ai-for-nvidia'); ?></summary>
             <label for="cdnv-pg-system" class="screen-reader-text"><?php esc_html_e('System prompt', 'chandan-digital-ai-for-nvidia'); ?></label>

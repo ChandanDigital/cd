@@ -46,6 +46,8 @@ function cdnv_uninstall_site(): void
         delete_option('cdnv_api_key');
         delete_option('cdnv_models');
         delete_option('cdnv_version');
+        delete_option('cdnv_writing_style');
+        delete_post_meta_by_key('_cdnv_focus_keyword');
     }
 }
 

@@ -78,6 +78,10 @@ final class ModelRegistry
         'stepfun-ai/step-3.7-flash' => 'text',
         'stepfun-ai/step-3.5-flash' => 'text',
         'z-ai/glm-5.1' => 'text',
+        // Added in 1.2.0. Shown to other plugins only after a successful access check.
+        'z-ai/glm-5.3' => 'text',
+        'z-ai/glm-5.3-flash' => 'vision',
+        'deepseek-ai/deepseek-v4.1-flash' => 'vision',
         'abacusai/dracarys-llama-3.1-70b-instruct' => 'text',
         'bytedance/seed-oss-36b-instruct' => 'text',
         'stockmark/stockmark-2-100b-instruct' => 'text',
@@ -134,6 +138,13 @@ final class ModelRegistry
         ],
     ];
 
+    /** Profiles for models added in 1.2.0 (IDs from their build.nvidia.com pages). */
+    private const NEW_MODELS = [
+        'z-ai/glm-5.3' => ['name' => 'GLM-5.3', 'developer' => 'Z.ai'],
+        'z-ai/glm-5.3-flash' => ['name' => 'GLM-5.3 Flash', 'developer' => 'Z.ai'],
+        'deepseek-ai/deepseek-v4.1-flash' => ['name' => 'DeepSeek V4.1 Flash', 'developer' => 'DeepSeek'],
+    ];
+
     /** Readable developer names for model ID prefixes. */
     private const DEVELOPERS = [
         'meta' => 'Meta',
@@ -153,6 +164,7 @@ final class ModelRegistry
         'sarvamai' => 'Sarvam AI',
         'upstage' => 'Upstage',
         'black-forest-labs' => 'Black Forest Labs',
+        'deepseek-ai' => 'DeepSeek',
     ];
 
     /** @var array<string, mixed>|null */
@@ -292,9 +304,9 @@ final class ModelRegistry
             $requiresVerification = true;
         } else {
             $reasoningValues = $profile['reasoning_values'] ?? [];
-            $name = $profile['name'] ?? self::humanize($id);
-            $developer = $profile['developer'] ?? (self::DEVELOPERS[$prefix] ?? $prefix);
-            $requiresVerification = !empty($profile['requires_verification']);
+            $name = $profile['name'] ?? (self::NEW_MODELS[$id]['name'] ?? self::humanize($id));
+            $developer = $profile['developer'] ?? (self::NEW_MODELS[$id]['developer'] ?? (self::DEVELOPERS[$prefix] ?? $prefix));
+            $requiresVerification = !empty($profile['requires_verification']) || isset(self::NEW_MODELS[$id]);
         }
 
         $capabilities = [];
@@ -324,6 +336,7 @@ final class ModelRegistry
             'max_tokens_limit' => (int) ($profile['max_tokens_limit'] ?? 1048576),
             'context_window' => isset($profile['context_window']) ? (int) $profile['context_window'] : null,
             'requires_verification' => $requiresVerification,
+            'is_new' => $source === 'builtin' && ($id === self::KIMI_K3 || isset(self::NEW_MODELS[$id])),
             'notes' => (string) ($profile['notes'] ?? ''),
             'enabled' => array_key_exists($id, $state['enabled']) ? (bool) $state['enabled'][$id] : true,
             'status' => isset($state['status'][$id]) && is_array($state['status'][$id]) ? $state['status'][$id] : ['state' => 'unknown'],

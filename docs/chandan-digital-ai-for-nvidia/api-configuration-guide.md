@@ -70,13 +70,19 @@ The **Key for the WordPress AI Client** setting decides what other plugins use:
 6. **Non-streaming.** Untick **Stream the reply** and send another message.
 7. **Reasoning effort.** On **Kimi K3 Settings**, change reasoning effort to **Low**, save, and ask a question in the Playground. If NVIDIA rejects the value, the Playground shows NVIDIA's own message. Change it back to **Max** or **High** in that case.
 
-## 5. Kimi K3 settings explained
+## 5. New models and the SEO Assistant (1.2.0)
+
+1. **New models.** On **AI Models**, press **Refresh models**, then **Check access** next to **GLM-5.3** (`z-ai/glm-5.3`), **GLM-5.3 Flash** (`z-ai/glm-5.3-flash`) and **DeepSeek V4.1 Flash** (`deepseek-ai/deepseek-v4.1-flash`). Each one shows **Access confirmed** if your key can use it. Only then are they offered to other plugins.
+2. **SEO Assistant.** Open a draft post with some text, click **Open SEO Assistant** in the Post sidebar, and press **SEO titles**. A list of five titles should appear. Try **Featured image** to check that FLUX image generation works with your key (it uses `ai.api.nvidia.com`).
+3. **WordPress AI plugin.** If you use it, open **API Diagnostics > Editor AI check**. If it shows **Blocked (403)**, approve the listed plugin for NVIDIA under **Tools > Connector Approvals** (or turn Connector Approval off under **Settings > AI**), then try the AI plugin's title button in a post again.
+
+## 6. Kimi K3 settings explained
 
 | Setting | Default | What it does |
 |---|---|---|
 | Temperature | 1 | Randomness of the reply. Moonshot AI fixes this at 1.0 on its own API, and NVIDIA's sample uses 1, so keep 1 unless a test shows other values work. |
 | Maximum output tokens | 16384 | Upper limit for the reply, including reasoning. Raise it if replies stop early with "reached the maximum output tokens". |
-| Top P | empty (not sent) | Optional. |
+| Top P | 0.95 | Moonshot AI documents 0.95 as fixed for Kimi K3, so keep it. |
 | Reasoning effort | Max | Low, High or Max. Lower values answer faster. "Default" leaves the parameter out. |
 | Seed | 0 | Makes replies more repeatable. Empty means it is not sent. |
 | Streaming | On | Text appears as it is generated in the Playground. |
@@ -84,8 +90,8 @@ The **Key for the WordPress AI Client** setting decides what other plugins use:
 | Use these settings for other plugins | On | Fills in values that other plugins leave unset. |
 | Temperature from other plugins | Send theirs | Switch to "Always send the temperature set on this page" if other plugins fail because they send a different temperature. |
 
-## 6. Firewalls and hosting
+## 7. Firewalls and hosting
 
-- If your site uses `WP_HTTP_BLOCK_EXTERNAL`, add `integrate.api.nvidia.com` (and `ai.api.nvidia.com` for FLUX images) to `WP_ACCESSIBLE_HOSTS`.
+- If your site uses `WP_HTTP_BLOCK_EXTERNAL`, add `integrate.api.nvidia.com` (and `ai.api.nvidia.com` for FLUX images, including the SEO Assistant's featured images) to `WP_ACCESSIBLE_HOSTS`.
 - If your server's firewall limits outgoing traffic, allow HTTPS (port 443) to those hosts.
 - Some hosts and CDNs buffer output, which stops streaming. Use **API Diagnostics > Test streaming** to check.
