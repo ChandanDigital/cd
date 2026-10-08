@@ -56,8 +56,8 @@ Copy the HTML code block below and paste it directly into the `<head>` section o
 
 ## 🤖 Chandan Digital AI for NVIDIA (WordPress plugin)
 
-This repository also contains **Chandan Digital AI for NVIDIA** (version 1.1.1), a private WordPress plugin that connects WordPress to NVIDIA-hosted AI models, including Moonshot AI **Kimi K3**.
+This repository also contains **Chandan Digital AI for NVIDIA** (version 1.1.2), a private WordPress plugin that connects WordPress to NVIDIA-hosted AI models, including Moonshot AI **Kimi K3**.
 
-* **Install file:** [`dist/chandan-digital-ai-for-nvidia-v1.1.1.zip`](dist/chandan-digital-ai-for-nvidia-v1.1.1.zip)
+* **Install file:** [`dist/chandan-digital-ai-for-nvidia-v1.1.2.zip`](dist/chandan-digital-ai-for-nvidia-v1.1.2.zip)
 * **Source code:** [`chandan-digital-ai-for-nvidia/`](chandan-digital-ai-for-nvidia/)
 * **Guides and reports:** [`docs/chandan-digital-ai-for-nvidia/`](docs/chandan-digital-ai-for-nvidia/README.md)

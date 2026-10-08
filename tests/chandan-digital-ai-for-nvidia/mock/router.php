@@ -116,6 +116,20 @@ if ($model === 'acme/think-tags') {
     $reasoning = '';
     $answer = '<think>internal plan here</think>Final answer without tags.';
 }
+// Reproduce NVIDIA's hosted Kimi K3 failure: token salad with leaked template markers, or "!" loops.
+$salad = "<|close|>我都.inline店oteric身贝rangSat\nWant武器зpa jpegadmin,X+cURRE丹LabelvoidASSEMBERambleinjections蛋inistrator The user asked a veryVictimresponse问询疗愈 options<|close|>contextMYASimplemy懦弱 fans<|close|>";
+$flip = function (string $name) use ($dir): bool {
+    $file = $dir . '/' . $name . '.count';
+    $n = (int) @file_get_contents($file);
+    file_put_contents($file, (string) ($n + 1));
+    return $n % 2 === 0;
+};
+if (strpos($text, 'GARBLE_ALWAYS') !== false || (strpos($text, 'GARBLE_ONCE') !== false && $flip('garble'))) {
+    $answer = 'Photosynthesis ' . $salad . ' more salad 文中ctionsXMLA';
+}
+if (strpos($text, 'BANG_ONCE') !== false && $flip('bang')) {
+    $reasoning = 'Let me think ' . str_repeat('!', 80);
+}
 $usage = ['prompt_tokens' => 42, 'completion_tokens' => 17, 'total_tokens' => 59];
 
 if (!$stream) {

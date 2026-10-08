@@ -113,7 +113,7 @@ PASS  AI Client 1.3.1: unverified Kimi K3 not usable until access confirmed
 PASS  verified Kimi K3 offered and listed first (default model)
 PASS  disabled model removed from AI Client list immediately
 PASS  AI Client -> Kimi K3 uses exact model id
-PASS  AI Client gets dashboard defaults (temp 1, 16384, max, seed 0)
+PASS  AI Client gets dashboard defaults (temp 1, top_p 0.95, 16384, max, seed 0)
 PASS  AI Client result text
 PASS  writing style applied to AI Client requests (default on)
 PASS  caller-set max_tokens respected
@@ -125,6 +125,25 @@ PASS  AI Client 404 marks model not available
 PASS  model that lost access is no longer offered
 PASS  fallback mode keeps existing WordPress key
 PASS  always mode uses plugin key
+== Garbled output (NVIDIA Kimi K3 problem) ==
+PASS  guard: leaked <|close|> marker
+PASS  guard: reserved token marker
+PASS  guard: run of 40+ "!"
+PASS  guard: replacement characters
+PASS  guard: normal English answer passes
+PASS  guard: Bengali and Hindi text pass
+PASS  guard: code with <| operator passes
+PASS  stream: marker split across chunks caught, nothing after it emitted
+PASS  stream: garbled first reply discarded, retried, clean answer
+PASS  stream: garbled twice -> clear garbled_output error
+PASS  stream: "!!!" loop in reasoning caught and retried
+PASS  non-stream: garbled reply retried once, clean answer
+PASS  non-stream: garbled twice -> error, no garbage returned
+PASS  AI Client: garbled reply retried, clean text returned
+PASS  AI Client: garbled twice -> exception, never returned to the caller
+== Upgrade to 1.1.2 ==
+PASS  upgrade fills unset Kimi top_p with 0.95, keeps other choices
+PASS  upgrade keeps a top_p the admin chose
 == Writing style ==
 PASS  built-in writing style in use
 PASS  style covers rhythm, active voice and self-check
@@ -155,4 +174,4 @@ PASS  re-activation keeps existing settings
 PASS  re-activation keeps saved key
 PASS  no cron scheduled by default
 
-RESULT: 144 passed, 0 failed
+RESULT: 161 passed, 0 failed

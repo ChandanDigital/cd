@@ -3,7 +3,7 @@ Contributors: chandandigital
 Tags: ai, nvidia, kimi, ai-provider, connector
 Requires at least: 6.9
 Tested up to: 7.1.3
-Stable tag: 1.1.1
+Stable tag: 1.1.2
 Requires PHP: 7.4
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -34,7 +34,7 @@ This is a private plugin. It is maintained by Chandan Digital (https://chandandi
 
 == Installation ==
 
-1. In WordPress, go to Plugins > Add New > Upload Plugin and upload `chandan-digital-ai-for-nvidia-v1.1.1.zip`.
+1. In WordPress, go to Plugins > Add New > Upload Plugin and upload `chandan-digital-ai-for-nvidia-v1.1.2.zip`.
 2. Activate the plugin.
 3. Open NVIDIA AI > NVIDIA API Settings, paste your API key and save. For extra security, define `CHANDAN_NVIDIA_API_KEY` in wp-config.php instead.
 4. Press "Test connection", then open the AI Models tab and press "Check access" on Kimi K3.
@@ -59,6 +59,10 @@ By default this plugin's key is given to the WordPress AI Client only when WordP
 = Why is Kimi K3 not offered to other plugins yet? =
 
 A model is offered to other plugins only after its access is confirmed with your key. Press "Check access" on the AI Models or Kimi K3 tab, or send one Playground message.
+
+= Kimi K3 replied with random words in many languages. What happened? =
+
+This is a known problem with Kimi K3 on NVIDIA's servers, reported by many users on NVIDIA's developer forum. From version 1.1.2 the plugin spots such replies, discards them and asks again once. If it keeps happening, wait a few minutes, set Reasoning effort to High or Low on the Kimi K3 Settings tab, or use another model for a while.
 
 = Does streaming work on every host? =
 
@@ -91,6 +95,11 @@ Every text answer can follow the Chandan Digital writing style: simple Indian En
 The style is an instruction to the model. How closely an answer follows it still depends on the model. The plugin does not check grammar, plagiarism or facts after the answer arrives, apart from the em dash check.
 
 == Changelog ==
+
+= 1.1.2 =
+
+* Fix: garbled replies from NVIDIA's hosted Kimi K3 (random mixed-language text, internal markers such as <|close|>, or long runs of "!") are no longer shown. The plugin spots them as they arrive, throws the reply away and asks once more. If the second reply is also broken, the Playground shows a clear message, and other plugins get an error instead of the garbage, so it never ends up in a post.
+* Kimi K3 now sends top P 0.95 by default, the value Moonshot AI documents as fixed for this model. Existing installs that never set top P get this value once on upgrade; a value you chose is kept.
 
 = 1.1.1 =
 

@@ -5,6 +5,7 @@
 use ChandanDigital\NvidiaAi\Api\ApiError;
 use ChandanDigital\NvidiaAi\Api\ImageInput;
 use ChandanDigital\NvidiaAi\Api\NvidiaClient;
+use ChandanDigital\NvidiaAi\Api\OutputGuard;
 use ChandanDigital\NvidiaAi\Api\PayloadBuilder;
 use ChandanDigital\NvidiaAi\Api\SseParser;
 use ChandanDigital\NvidiaAi\Api\StreamState;
@@ -179,7 +180,7 @@ $expected = [
         ['type' => 'text', 'text' => 'What is in this image?'],
         ['type' => 'image_url', 'image_url' => ['url' => 'https://example.com/example1b.jpg']],
     ]]],
-    'max_tokens' => 16384, 'temperature' => 1.0, 'reasoning_effort' => 'max', 'seed' => 0, 'stream' => true,
+    'max_tokens' => 16384, 'temperature' => 1.0, 'top_p' => 0.95, 'reasoning_effort' => 'max', 'seed' => 0, 'stream' => true,
 ];
 check('kimi payload matches NVIDIA reference structure', $payload === $expected, wp_json_encode($payload));
 $payload = $b->chat($kimi, ModelRegistry::settings('moonshotai/kimi-k3'), [
@@ -216,7 +217,7 @@ $list = $client->list_models();
 check('list models', $list['ok'] && in_array('moonshotai/kimi-k3', $list['ids'], true), wp_json_encode($list['error'] ? $list['error']->to_array() : null));
 $req = last_request($mockLog);
 check('Authorization header sent as Bearer', $req['auth'] === 'Bearer nvapi-TestKey_123-abcdef');
-check('user agent does not leak site URL', strpos($req['ua'], '127.0.0.1') === false && strpos($req['ua'], 'ChandanDigitalAIforNVIDIA/1.1.1') === 0, $req['ua']);
+check('user agent does not leak site URL', strpos($req['ua'], '127.0.0.1') === false && strpos($req['ua'], 'ChandanDigitalAIforNVIDIA/1.1.2') === 0, $req['ua']);
 $probe = $client->probe('moonshotai/kimi-k3');
 check('probe kimi ok', $probe['ok'] && $probe['finish_reason'] === 'length');
 $chat = $client->chat((new PayloadBuilder())->chat($kimi, ModelRegistry::settings('moonshotai/kimi-k3'), [['role' => 'user', 'text' => 'Hello Kimi']], false));
@@ -315,7 +316,7 @@ ModelRegistry::set_enabled('meta/llama-3.3-70b-instruct', true);
 $result = AiClient::prompt('Hello through the AI Client')->usingProvider('nvidia')->usingModelPreference('moonshotai/kimi-k3')->generateTextResult();
 $req = last_request($mockLog);
 check('AI Client -> Kimi K3 uses exact model id', ($req['body']['model'] ?? '') === 'moonshotai/kimi-k3');
-check('AI Client gets dashboard defaults (temp 1, 16384, max, seed 0)', ($req['body']['temperature'] ?? null) == 1 && ($req['body']['max_tokens'] ?? 0) === 16384 && ($req['body']['reasoning_effort'] ?? '') === 'max' && ($req['body']['seed'] ?? -1) === 0, wp_json_encode($req['body']));
+check('AI Client gets dashboard defaults (temp 1, top_p 0.95, 16384, max, seed 0)', ($req['body']['top_p'] ?? null) == 0.95 && ($req['body']['temperature'] ?? null) == 1 && ($req['body']['max_tokens'] ?? 0) === 16384 && ($req['body']['reasoning_effort'] ?? '') === 'max' && ($req['body']['seed'] ?? -1) === 0, wp_json_encode($req['body']));
 check('AI Client result text', strpos($result->toText(), 'Hello from moonshotai/kimi-k3') === 0, $result->toText());
 check('writing style applied to AI Client requests (default on)', strpos($req['body']['messages'][0]['content'] ?? '', 'WRITING STYLE FOR ALL READER-FACING CONTENT') !== false);
 $result = AiClient::prompt('caller temperature')->usingProvider('nvidia')->usingModelPreference('moonshotai/kimi-k3')->usingTemperature(1.0)->usingMaxTokens(100)->generateTextResult();
@@ -379,6 +380,64 @@ check('always mode uses plugin key', $registry->getProviderRequestAuthentication
 delete_option('connectors_ai_nvidia_api_key');
 Settings::update(['ai_client_key_mode' => 'fallback']);
 
+echo "== Garbled output (NVIDIA Kimi K3 problem) ==\n";
+$mockDir = dirname($mockLog);
+$resetCounters = function () use ($mockDir) { @unlink($mockDir . '/garble.count'); @unlink($mockDir . '/bang.count'); };
+check('guard: leaked <|close|> marker', OutputGuard::is_garbled('Photosynthesis <|close|>我都.inline店'));
+check('guard: reserved token marker', OutputGuard::is_garbled('abc <|reserved_token_17|> def'));
+check('guard: run of 40+ "!"', OutputGuard::is_garbled(str_repeat('!', 45)));
+check('guard: replacement characters', OutputGuard::is_garbled("a\u{FFFD}b\u{FFFD}c\u{FFFD}"));
+check('guard: normal English answer passes', !OutputGuard::is_garbled('Plants use sunlight, water and carbon dioxide to make food. Wow!!!'));
+check('guard: Bengali and Hindi text pass', !OutputGuard::is_garbled('সালোকসংশ্লেষ হলো উদ্ভিদের খাদ্য তৈরির প্রক্রিয়া। प्रकाश संश्लेषण।'));
+check('guard: code with <| operator passes', !OutputGuard::is_garbled('if ($a <| $b) { echo "x"; }'));
+$st = new StreamState(); $seen = '';
+foreach (['data: {"choices":[{"delta":{"content":"Good text <|clo"}}]}', 'data: {"choices":[{"delta":{"content":"se|>junk"}}]}', 'data: {"choices":[{"delta":{"content":"more junk"}}]}'] as $line) {
+    $st->handle(substr($line, 6), function ($c, $t) use (&$seen) { $seen .= $t; });
+}
+check('stream: marker split across chunks caught, nothing after it emitted', $st->error !== null && $st->error->code === 'garbled_output' && strpos($seen, 'junk') === false, $seen);
+$kimiM = ModelRegistry::get('moonshotai/kimi-k3'); $kimiS = ModelRegistry::settings('moonshotai/kimi-k3');
+$gc = NvidiaClient::create();
+$resetCounters(); $shown = ''; $resets = 0;
+$r = $gc->stream((new PayloadBuilder())->chat($kimiM, $kimiS, [['role' => 'user', 'text' => 'what is photosynthesis? GARBLE_ONCE']], true),
+    function ($c, $t) use (&$shown) { if ($c === 'content') { $shown .= $t; } }, fn() => true, function () use (&$shown, &$resets) { $shown = ''; $resets++; });
+check('stream: garbled first reply discarded, retried, clean answer', $r['ok'] && $r['garbled_retries'] === 1 && $resets === 1 && strpos($r['content'], '<|') === false && $shown === $r['content'], $r['content']);
+$resetCounters();
+$r = $gc->stream((new PayloadBuilder())->chat($kimiM, $kimiS, [['role' => 'user', 'text' => 'GARBLE_ALWAYS']], true), function () {}, fn() => true, function () {});
+check('stream: garbled twice -> clear garbled_output error', !$r['ok'] && $r['error']->code === 'garbled_output' && $r['garbled_retries'] === 1 && strpos($r['error']->message, 'Kimi K3') !== false);
+$resetCounters();
+$r = $gc->stream((new PayloadBuilder())->chat($kimiM, $kimiS, [['role' => 'user', 'text' => 'BANG_ONCE']], true), function () {}, fn() => true, function () {});
+check('stream: "!!!" loop in reasoning caught and retried', $r['ok'] && $r['garbled_retries'] === 1 && strpos($r['reasoning'], '!!!!!!!!!!') === false);
+$resetCounters();
+$r = $gc->chat((new PayloadBuilder())->chat($kimiM, $kimiS, [['role' => 'user', 'text' => 'GARBLE_ONCE']], false));
+check('non-stream: garbled reply retried once, clean answer', $r['ok'] && $r['garbled_retries'] === 1 && strpos($r['content'], '<|') === false);
+$resetCounters();
+$r = $gc->chat((new PayloadBuilder())->chat($kimiM, $kimiS, [['role' => 'user', 'text' => 'GARBLE_ALWAYS']], false));
+check('non-stream: garbled twice -> error, no garbage returned', !$r['ok'] && $r['error']->code === 'garbled_output' && $r['content'] === '');
+$resetCounters();
+$res = AiClient::prompt('Write about photosynthesis GARBLE_ONCE')->usingProvider('nvidia')->usingModelPreference('moonshotai/kimi-k3')->generateTextResult();
+check('AI Client: garbled reply retried, clean text returned', strpos($res->toText(), '<|') === false && strpos($res->toText(), 'Hello from moonshotai/kimi-k3') === 0, $res->toText());
+$resetCounters();
+$before = count(file($mockLog)); $caught = '';
+try {
+    AiClient::prompt('GARBLE_ALWAYS')->usingProvider('nvidia')->usingModelPreference('moonshotai/kimi-k3')->generateTextResult();
+} catch (\Throwable $e) {
+    $caught = $e->getMessage();
+}
+check('AI Client: garbled twice -> exception, never returned to the caller', strpos($caught, 'garbled text') !== false && count(file($mockLog)) - $before === 2, $caught);
+$resetCounters();
+
+echo "== Upgrade to 1.1.2 ==\n";
+$st = get_option(ModelRegistry::OPTION); $st['settings']['moonshotai/kimi-k3'] = array_merge(ModelRegistry::default_settings('moonshotai/kimi-k3'), ['top_p' => null, 'reasoning_effort' => 'high']);
+update_option(ModelRegistry::OPTION, $st); ModelRegistry::flush(); update_option(Plugin::VERSION_OPTION, '1.1.1');
+Plugin::maybe_upgrade(); ModelRegistry::flush();
+$ks = ModelRegistry::settings('moonshotai/kimi-k3');
+check('upgrade fills unset Kimi top_p with 0.95, keeps other choices', $ks['top_p'] === 0.95 && $ks['reasoning_effort'] === 'high' && get_option(Plugin::VERSION_OPTION) === '1.1.2');
+$st = get_option(ModelRegistry::OPTION); $st['settings']['moonshotai/kimi-k3']['top_p'] = 0.8;
+update_option(ModelRegistry::OPTION, $st); ModelRegistry::flush(); update_option(Plugin::VERSION_OPTION, '1.1.1');
+Plugin::maybe_upgrade(); ModelRegistry::flush();
+check('upgrade keeps a top_p the admin chose', ModelRegistry::settings('moonshotai/kimi-k3')['top_p'] === 0.8);
+$st = get_option(ModelRegistry::OPTION); unset($st['settings']['moonshotai/kimi-k3']); update_option(ModelRegistry::OPTION, $st); ModelRegistry::flush();
+
 echo "== Writing style ==\n";
 delete_option(IndianEnglishPolicy::OPTION);
 $style = IndianEnglishPolicy::instruction();
@@ -432,7 +491,7 @@ check('auto-update forced off for this plugin', Plugin::disable_auto_update(true
 check('other plugins auto-update untouched', Plugin::disable_auto_update(true, (object) ['plugin' => 'akismet/akismet.php']) === true);
 $headers = get_plugin_data(WP_PLUGIN_DIR . '/chandan-digital-ai-for-nvidia/chandan-digital-ai-for-nvidia.php', false, false);
 check('Update URI header set off WordPress.org', strpos($headers['UpdateURI'], 'chandandigital.com') !== false);
-check('plugin header branding', $headers['Name'] === 'Chandan Digital AI for NVIDIA' && $headers['Author'] === 'Chandan Digital' && $headers['Version'] === '1.1.1');
+check('plugin header branding', $headers['Name'] === 'Chandan Digital AI for NVIDIA' && $headers['Author'] === 'Chandan Digital' && $headers['Version'] === '1.1.2');
 $before = get_option(Settings::OPTION);
 Plugin::activate();
 check('re-activation keeps existing settings', get_option(Settings::OPTION) === $before);

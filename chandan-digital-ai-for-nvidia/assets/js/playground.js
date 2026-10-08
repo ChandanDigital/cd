@@ -269,6 +269,14 @@
 		}
 
 		return {
+			reset: function () {
+				text = '';
+				started = false;
+				body.textContent = '';
+				body.appendChild(cursor);
+				reasoningBody.textContent = '';
+				details.hidden = true;
+			},
 			appendContent: function (chunk) {
 				startBody();
 				text += chunk;
@@ -446,6 +454,12 @@
 				} else if (eventName === 'content' && !state.finished) {
 					state.content += payload.text;
 					view.appendContent(payload.text);
+				} else if (eventName === 'reset' && !state.finished) {
+					// The server threw away a garbled reply and is asking again.
+					state.content = '';
+					state.reasoning = '';
+					view.reset();
+					view.note(payload.message, 'info');
 				} else if (eventName === 'done' && !state.finished) {
 					state.finished = true;
 					state.result = {
@@ -547,8 +561,11 @@
 			if (result.aborted) {
 				view.note(t.stopped, 'warn');
 			} else {
+				if (result.error && result.error.code === 'garbled_output') {
+					view.reset();
+				}
 				view.error(result.error);
-				if (result.partial) {
+				if (result.partial && !(result.error && result.error.code === 'garbled_output')) {
 					view.note(t.interrupted, 'warn');
 				}
 			}

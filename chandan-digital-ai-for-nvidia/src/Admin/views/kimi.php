@@ -39,7 +39,8 @@ if ($cdnv_kimi === null) {
         <ul class="ul-disc">
             <li><?php esc_html_e('The request format follows NVIDIA\'s published Kimi K3 example: POST to /v1/chat/completions with model, messages (text and image_url parts), max_tokens, temperature, reasoning_effort, seed and stream.', 'chandan-digital-ai-for-nvidia'); ?></li>
             <li><?php esc_html_e('Reasoning effort values (low, high, max) and the need to send earlier reasoning back in multi-turn chats come from Moonshot AI\'s Kimi K3 documentation.', 'chandan-digital-ai-for-nvidia'); ?></li>
-            <li><?php esc_html_e('Moonshot AI fixes temperature at 1.0 on its own API. NVIDIA\'s example also uses 1. Other values may be rejected; the plugin shows NVIDIA\'s reason if so.', 'chandan-digital-ai-for-nvidia'); ?></li>
+            <li><?php esc_html_e('Moonshot AI fixes temperature at 1.0 and top P at 0.95 for Kimi K3, and the plugin sends those values by default. NVIDIA\'s example also uses temperature 1. Other values may be rejected; the plugin shows NVIDIA\'s reason if so.', 'chandan-digital-ai-for-nvidia'); ?></li>
+            <li><?php esc_html_e('NVIDIA\'s hosted Kimi K3 has a known problem where some replies come back as garbled text (mixed languages and markers such as <|close|>) or endless "!". The plugin spots this, throws the reply away, asks once more, and shows a clear message if the second reply is also broken. Nothing garbled is shown or passed to other plugins.', 'chandan-digital-ai-for-nvidia'); ?></li>
             <li><?php esc_html_e('NVIDIA\'s example sends a public image URL. Exact image size limits for this model on NVIDIA are not published; the plugin uses conservative defaults you can change below.', 'chandan-digital-ai-for-nvidia'); ?></li>
             <li><?php esc_html_e('Use "Check Kimi K3 access" and the Playground to confirm everything with your own key.', 'chandan-digital-ai-for-nvidia'); ?></li>
         </ul>

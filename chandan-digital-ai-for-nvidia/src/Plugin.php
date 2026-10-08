@@ -101,8 +101,13 @@ final class Plugin
      */
     public static function maybe_upgrade(): void
     {
-        if (get_option(self::VERSION_OPTION) === VERSION) {
+        $previous = (string) get_option(self::VERSION_OPTION, '');
+        if ($previous === VERSION) {
             return;
+        }
+        // 1.1.2: Kimi K3 now sends Moonshot AI's documented top P (0.95) when none was ever set.
+        if ($previous !== '' && version_compare($previous, '1.1.2', '<')) {
+            ModelRegistry::fill_unset_setting(ModelRegistry::KIMI_K3, 'top_p', 0.95);
         }
         add_option(Settings::OPTION, Settings::defaults());
         update_option(self::VERSION_OPTION, VERSION);

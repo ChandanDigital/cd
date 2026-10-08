@@ -1,6 +1,6 @@
 # Security and Privacy Audit
 
-**Plugin:** Chandan Digital AI for NVIDIA 1.1.1
+**Plugin:** Chandan Digital AI for NVIDIA 1.1.2
 **Compared with:** AI Provider for NVIDIA 1.0.2 (the uploaded ZIP)
 
 ## 1. Review of the original plugin
@@ -82,7 +82,7 @@ Tested: logged-out requests get HTTP 401, a logged-in request without a nonce is
 ### Outgoing request hygiene
 
 - Redirects are not followed, so the API key cannot be forwarded to another host.
-- A plain user agent (`ChandanDigitalAIforNVIDIA/1.1.1`) is used. WordPress's default would also send your site's address.
+- A plain user agent (`ChandanDigitalAIforNVIDIA/1.1.2`) is used. WordPress's default would also send your site's address.
 - Requests go through the WordPress HTTP API, so proxy settings, SSL certificates and `WP_HTTP_BLOCK_EXTERNAL` still apply.
 - A base URL that is not on `nvidia.com` shows a warning, because the key is sent there. Only `https://` base URLs are accepted.
 

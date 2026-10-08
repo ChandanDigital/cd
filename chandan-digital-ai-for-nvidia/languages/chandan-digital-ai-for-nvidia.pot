@@ -2,14 +2,14 @@
 # This file is distributed under the GPL-2.0-or-later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Chandan Digital AI for NVIDIA 1.1.1\n"
+"Project-Id-Version: Chandan Digital AI for NVIDIA 1.1.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/chandan-digital-ai-for-nvidia\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-08T13:38:36+00:00\n"
+"POT-Creation-Date: 2026-10-08T14:13:11+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: chandan-digital-ai-for-nvidia\n"
@@ -758,14 +758,18 @@ msgid "Reasoning effort values (low, high, max) and the need to send earlier rea
 msgstr ""
 
 #: src/Admin/views/kimi.php:42
-msgid "Moonshot AI fixes temperature at 1.0 on its own API. NVIDIA's example also uses 1. Other values may be rejected; the plugin shows NVIDIA's reason if so."
+msgid "Moonshot AI fixes temperature at 1.0 and top P at 0.95 for Kimi K3, and the plugin sends those values by default. NVIDIA's example also uses temperature 1. Other values may be rejected; the plugin shows NVIDIA's reason if so."
 msgstr ""
 
 #: src/Admin/views/kimi.php:43
-msgid "NVIDIA's example sends a public image URL. Exact image size limits for this model on NVIDIA are not published; the plugin uses conservative defaults you can change below."
+msgid "NVIDIA's hosted Kimi K3 has a known problem where some replies come back as garbled text (mixed languages and markers such as <|close|>) or endless \"!\". The plugin spots this, throws the reply away, asks once more, and shows a clear message if the second reply is also broken. Nothing garbled is shown or passed to other plugins."
 msgstr ""
 
 #: src/Admin/views/kimi.php:44
+msgid "NVIDIA's example sends a public image URL. Exact image size limits for this model on NVIDIA are not published; the plugin uses conservative defaults you can change below."
+msgstr ""
+
+#: src/Admin/views/kimi.php:45
 msgid "Use \"Check Kimi K3 access\" and the Playground to confirm everything with your own key."
 msgstr ""
 
@@ -1027,7 +1031,7 @@ msgid "Check access"
 msgstr ""
 
 #: src/Admin/views/models.php:105
-#: src/Plugin.php:242
+#: src/Plugin.php:247
 msgid "Settings"
 msgstr ""
 
@@ -1578,22 +1582,26 @@ msgid "NVIDIA returned a response that could not be read. Try again."
 msgstr ""
 
 #: src/Api/ApiError.php:282
-msgid "The streamed response stopped before it finished. The text shown so far may be incomplete."
+msgid "The model sent back garbled text (random words in mixed languages and internal markers such as <|close|>), so the plugin stopped it instead of showing or saving it. It already asked once more and got the same result. This is a known problem with Kimi K3 on NVIDIA's servers at the moment, not with your site or API key. Try again in a few minutes, set Reasoning effort to High or Low on the Kimi K3 Settings tab, or choose another model."
 msgstr ""
 
 #: src/Api/ApiError.php:283
-msgid "The request was cancelled."
+msgid "The streamed response stopped before it finished. The text shown so far may be incomplete."
 msgstr ""
 
 #: src/Api/ApiError.php:284
-msgid "This request is already being processed."
+msgid "The request was cancelled."
 msgstr ""
 
 #: src/Api/ApiError.php:285
+msgid "This request is already being processed."
+msgstr ""
+
+#: src/Api/ApiError.php:286
 msgid "The request contains invalid input."
 msgstr ""
 
-#: src/Api/ApiError.php:287
+#: src/Api/ApiError.php:288
 msgid "An unexpected error occurred while talking to NVIDIA."
 msgstr ""
 
@@ -1662,8 +1670,8 @@ msgstr ""
 msgid "Image width and height must be between 1 and %d pixels."
 msgstr ""
 
-#: src/Api/NvidiaClient.php:162
-#: src/Api/NvidiaClient.php:207
+#: src/Api/NvidiaClient.php:166
+#: src/Api/NvidiaClient.php:223
 msgid "The request contains characters that cannot be sent. Remove unusual characters and try again."
 msgstr ""
 
@@ -1735,19 +1743,19 @@ msgstr ""
 msgid "The writing style text is too long. Keep it under %d characters."
 msgstr ""
 
-#: src/Plugin.php:225
+#: src/Plugin.php:230
 msgid "Manual updates only (upload a new ZIP)."
 msgstr ""
 
-#: src/Plugin.php:306
+#: src/Plugin.php:311
 msgid "Chandan Digital AI for NVIDIA: the original \"AI Provider for NVIDIA\" plugin is also active and has registered the \"nvidia\" provider first. Deactivate it so Kimi K3 and your dashboard settings reach the WordPress AI Client. Your Playground still works."
 msgstr ""
 
-#: src/Plugin.php:307
+#: src/Plugin.php:312
 msgid "Chandan Digital AI for NVIDIA: another plugin has already registered the \"nvidia\" AI provider, so this plugin's provider was not registered. Deactivate the other NVIDIA provider plugin."
 msgstr ""
 
-#: src/Plugin.php:321
+#: src/Plugin.php:326
 msgid "Chandan Digital AI for NVIDIA: the WordPress AI Client (bundled with WordPress 7.0 and later) is not available, so other plugins cannot use NVIDIA models yet. The plugin's own dashboard and Playground still work."
 msgstr ""
 
@@ -1796,19 +1804,23 @@ msgstr ""
 msgid "Image generation models use a separate NVIDIA endpoint and cannot be checked here. They are used through the WordPress AI Client."
 msgstr ""
 
-#: src/Rest/RestController.php:363
+#: src/Rest/RestController.php:366
+msgid "The first reply came back as garbled text, so the plugin threw it away and asked again."
+msgstr ""
+
+#: src/Rest/RestController.php:380
 msgid "Missing request ID."
 msgstr ""
 
-#: src/Rest/RestController.php:374
+#: src/Rest/RestController.php:391
 msgid "Choose an enabled chat model."
 msgstr ""
 
-#: src/Rest/RestController.php:379
+#: src/Rest/RestController.php:396
 msgid "You need permission to upload files to send images."
 msgstr ""
 
-#: src/Rest/RestController.php:389
+#: src/Rest/RestController.php:406
 msgid "The system prompt is too long or contains invalid characters."
 msgstr ""
 
@@ -1854,15 +1866,15 @@ msgstr ""
 msgid "Choose at least one image format, or turn image input off."
 msgstr ""
 
-#: src/Support/ModelRegistry.php:555
+#: src/Support/ModelRegistry.php:576
 msgid "Enter a model ID in the form publisher/model-name, for example moonshotai/kimi-k3."
 msgstr ""
 
-#: src/Support/ModelRegistry.php:558
+#: src/Support/ModelRegistry.php:579
 msgid "This model is already built in."
 msgstr ""
 
-#: src/Support/ModelRegistry.php:562
+#: src/Support/ModelRegistry.php:583
 msgid "You can register up to 100 custom models."
 msgstr ""
 

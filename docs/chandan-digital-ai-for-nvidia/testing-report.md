@@ -1,14 +1,14 @@
 # Testing Report
 
-**Plugin:** Chandan Digital AI for NVIDIA 1.1.1
+**Plugin:** Chandan Digital AI for NVIDIA 1.1.2
 **Test date:** 8 October 2026
 
 ## Summary
 
 | Test suite | Result |
 |---|---|
-| Integration tests inside WordPress (WP-CLI) | **144 passed, 0 failed** |
-| Browser end-to-end tests (Chromium, Playwright) | **84 passed, 0 failed** |
+| Integration tests inside WordPress (WP-CLI) | **161 passed, 0 failed** |
+| Browser end-to-end tests (Chromium, Playwright) | **90 passed, 0 failed** |
 | Lifecycle tests with the real ZIP | All steps behaved as expected (details below) |
 | PHP 7.4 to 8.4 compatibility scan (PHPCompatibility) | 0 errors |
 | WordPress security sniffs (escaping, nonces, input, SQL, i18n) | 0 issues in new code; 1 warning on an unchanged original file (not browser output) |
@@ -134,6 +134,23 @@ Please follow section 4 of the API Configuration Guide on your site to confirm l
 | No hidden update downloader | **Pass**: no update code; `Update URI` set; auto-update off for this plugin only |
 | No external requests from plugin screens | **Pass** (WordPress core's Gravatar avatars excluded) |
 | No remote code execution path introduced | **Pass** by code review: no `eval`, no dynamic includes from input, uploads never written to disk |
+
+### Garbled Kimi K3 replies (added in 1.1.2)
+
+The mock server copies the failure seen on a live site: a reply that starts with `<|close|>` and turns into random Chinese, Cyrillic and English pieces, plus a reasoning loop of 80 "!" characters.
+
+| Check | Result |
+|---|---|
+| Guard spots `<|close|>`, `<|reserved_token_N|>`, 40+ "!" and broken characters | **Pass** |
+| Guard leaves normal English, Bengali, Hindi and code alone | **Pass** |
+| A marker split across two stream chunks is still caught, and nothing after it reaches the screen | **Pass** |
+| Streaming: garbled first reply thrown away, request sent again, clean answer shown with a note | **Pass** |
+| Streaming: garbled twice gives one clear message, no garbage on screen | **Pass** |
+| "!!!" loop in the reasoning caught and retried | **Pass** |
+| Non-streaming: same retry and error behaviour | **Pass** |
+| WordPress AI Client: garbled reply retried; if garbled twice, the calling plugin gets an error instead of the text (exactly two requests sent) | **Pass** |
+| Upgrade from 1.1.1 fills an unset Kimi top P with 0.95 and keeps a value you chose | **Pass** (also checked through the real upload screen) |
+| Whether NVIDIA's live service returns clean answers more often with top P 0.95 | **Not performed** (needs live NVIDIA access) |
 
 ### Writing style (added in 1.1.1)
 

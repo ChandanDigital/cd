@@ -27,6 +27,9 @@ final class StreamState
 
     private ThinkSplitter $splitter;
 
+    /** @var array<string, string> Recent text per channel, for spotting corruption split across chunks. */
+    private array $tail = ['content' => '', 'reasoning' => ''];
+
     public function __construct()
     {
         $this->splitter = new ThinkSplitter();
@@ -41,7 +44,7 @@ final class StreamState
     public function handle(string $data, callable $emit): void
     {
         $data = trim($data);
-        if ($data === '') {
+        if ($data === '' || $this->error !== null) {
             return;
         }
         if ($data === '[DONE]') {
@@ -120,6 +123,16 @@ final class StreamState
      */
     private function add(string $channel, string $text, callable $emit): void
     {
+        if ($this->error !== null) {
+            return;
+        }
+        // Check before emitting, so corrupted output never reaches the screen.
+        $window = $this->tail[$channel] . $text;
+        if (OutputGuard::is_garbled($window)) {
+            $this->error = new ApiError('garbled_output', 200);
+            return;
+        }
+        $this->tail[$channel] = (string) substr($window, -OutputGuard::WINDOW);
         $this->receivedAny = true;
         if ($channel === 'reasoning') {
             $this->reasoning .= $text;

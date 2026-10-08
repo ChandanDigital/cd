@@ -115,11 +115,11 @@ final class ModelRegistry
             'max_tokens_limit' => 1048576,
             'context_window' => 1048576,
             'requires_verification' => true,
-            'notes' => 'Kimi K3 always thinks before answering. Moonshot AI documents temperature 1.0 as fixed for this model on its own API, so other values may be rejected. NVIDIA may apply different limits; test changes with the Diagnostics tab.',
+            'notes' => 'Kimi K3 always thinks before answering. Moonshot AI documents temperature 1.0 and top P 0.95 as fixed for this model, so keep those values. NVIDIA\'s hosted Kimi K3 sometimes returns garbled text or long runs of "!"; the plugin catches this, asks once more, and never shows or saves the garbage. If it keeps happening, set reasoning effort to High or Low.',
             'defaults' => [
                 'temperature' => 1.0,
                 'max_tokens' => 16384,
-                'top_p' => null,
+                'top_p' => 0.95,
                 'reasoning_effort' => 'max',
                 'seed' => 0,
                 'stream' => 1,
@@ -520,6 +520,27 @@ final class ModelRegistry
         }
 
         return [$clean, $errors];
+    }
+
+    /**
+     * Sets a saved setting to a new default, but only where it was never given a value (null).
+     * Used by upgrade steps; a value the administrator chose is never changed.
+     *
+     * @param string $id Model ID.
+     * @param string $key Setting name.
+     * @param mixed $value New value.
+     */
+    public static function fill_unset_setting(string $id, string $key, $value): void
+    {
+        $state = self::state();
+        if (!isset($state['settings'][$id]) || !is_array($state['settings'][$id])) {
+            return; // Nothing saved yet, so the new default already applies.
+        }
+        if (array_key_exists($key, $state['settings'][$id]) && $state['settings'][$id][$key] !== null) {
+            return;
+        }
+        $state['settings'][$id][$key] = $value;
+        self::save_state($state, false);
     }
 
     /**

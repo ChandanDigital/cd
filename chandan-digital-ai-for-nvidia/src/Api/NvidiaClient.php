@@ -31,6 +31,9 @@ final class NvidiaClient
     private const STREAM_LIMIT = 4194304;
     private const ERROR_BODY_LIMIT = 65536;
 
+    /** How many times a garbled reply is sent again automatically. */
+    private const GARBLED_RETRIES = 1;
+
     private string $apiKey;
     private string $baseUrl;
     private int $timeout;
@@ -156,6 +159,7 @@ final class NvidiaClient
             'model' => (string) ($payload['model'] ?? ''),
             'duration_ms' => 0,
             'error' => null,
+            'garbled_retries' => 0,
         ];
         $body = wp_json_encode($payload);
         if ($body === false) {
@@ -163,20 +167,29 @@ final class NvidiaClient
             return $out;
         }
 
-        $result = $this->send($this->baseUrl . '/chat/completions', $this->args('POST', $body, false), 'chat');
-        $out['status'] = $result['status'];
-        $out['duration_ms'] = $result['duration_ms'];
-        if ($result['error'] !== null) {
-            $out['error'] = $result['error'];
-            return $out;
-        }
+        $start = microtime(true);
+        for ($garbledRetries = 0; ; $garbledRetries++) {
+            $result = $this->send($this->baseUrl . '/chat/completions', $this->args('POST', $body, false), 'chat');
+            $out['status'] = $result['status'];
+            $out['duration_ms'] = self::ms($start);
+            $out['garbled_retries'] = $garbledRetries;
+            if ($result['error'] !== null) {
+                $out['error'] = $result['error'];
+                return $out;
+            }
 
-        $parsed = array_merge($out, self::parse_completion($result['body'], $result['status']), [
-            'status' => $result['status'],
-            'duration_ms' => $result['duration_ms'],
-        ]);
-        $parsed['ok'] = $parsed['error'] === null;
-        return $parsed;
+            $parsed = array_merge($out, self::parse_completion($result['body'], $result['status']), [
+                'status' => $result['status'],
+                'duration_ms' => self::ms($start),
+                'garbled_retries' => $garbledRetries,
+            ]);
+            // A garbled reply is usually a one-off on NVIDIA's side, so ask once more.
+            if ($parsed['error'] !== null && $parsed['error']->code === 'garbled_output' && $garbledRetries < self::GARBLED_RETRIES) {
+                continue;
+            }
+            $parsed['ok'] = $parsed['error'] === null;
+            return $parsed;
+        }
     }
 
     /**
@@ -185,9 +198,11 @@ final class NvidiaClient
      * @param array<string, mixed> $payload Request body.
      * @param callable(string, string): void $onText Receives (channel, text); channel is content or reasoning.
      * @param callable(): bool $onTick Called regularly while waiting; return false to cancel the request.
+     * @param callable(string): void|null $onRetry Called before the request is sent again after a garbled
+     *                                          reply, so the caller can clear what it has shown.
      * @return array<string, mixed> Same shape as chat(), plus "streamed" (whether chunks arrived live).
      */
-    public function stream(array $payload, callable $onText, callable $onTick): array
+    public function stream(array $payload, callable $onText, callable $onTick, ?callable $onRetry = null): array
     {
         $payload['stream'] = true;
         $body = wp_json_encode($payload);
@@ -202,6 +217,7 @@ final class NvidiaClient
             'duration_ms' => 0,
             'error' => null,
             'streamed' => false,
+            'garbled_retries' => 0,
         ];
         if ($body === false) {
             $out['error'] = new ApiError('invalid_input', 0, '', null, __('The request contains characters that cannot be sent. Remove unusual characters and try again.', 'chandan-digital-ai-for-nvidia'));
@@ -209,9 +225,22 @@ final class NvidiaClient
         }
 
         $start = microtime(true);
+        $garbledRetries = 0;
         for ($attempt = 0; ; $attempt++) {
             $result = $this->stream_once($body, $onText, $onTick);
             $error = $result['error'];
+            // A garbled reply is usually a one-off on NVIDIA's side, so ask once more straight away.
+            if ($error instanceof ApiError && $error->code === 'garbled_output' && $garbledRetries < self::GARBLED_RETRIES) {
+                $garbledRetries++;
+                if ($onRetry !== null) {
+                    $onRetry('garbled_output');
+                }
+                if ($onTick() === false) {
+                    $result['error'] = new ApiError('cancelled');
+                    break;
+                }
+                continue;
+            }
             $canRetry = $error instanceof ApiError
                 && $error->is_retryable()
                 && !$result['received_any']
@@ -231,6 +260,7 @@ final class NvidiaClient
         }
 
         $out = array_merge($out, $result);
+        $out['garbled_retries'] = $garbledRetries;
         unset($out['received_any']);
         $out['duration_ms'] = (int) round((microtime(true) - $start) * 1000);
         $out['ok'] = $out['error'] === null;
@@ -337,6 +367,9 @@ final class NvidiaClient
 
         if ($aborted) {
             $result['error'] = new ApiError('cancelled');
+        } elseif ($state->error !== null) {
+            // The stream handler stopped the transfer itself (garbled or unreadable output).
+            $result['error'] = $state->error;
         } elseif (is_wp_error($response)) {
             $result['error'] = $state->receivedAny ? new ApiError('stream_interrupted', 0, Logger::redact($response->get_error_message(), 300)) : ApiError::from_wp_error($response);
         } elseif ($result['status'] >= 400) {
@@ -432,6 +465,11 @@ final class NvidiaClient
                     $content .= $text;
                 }
             }
+        }
+        if (OutputGuard::is_garbled($content) || OutputGuard::is_garbled($out['reasoning'])) {
+            $out['reasoning'] = '';
+            $out['error'] = new ApiError('garbled_output', $status);
+            return $out;
         }
         $out['content'] = trim($content);
         $out['finish_reason'] = isset($choice['finish_reason']) && is_string($choice['finish_reason']) ? $choice['finish_reason'] : null;

@@ -2,13 +2,13 @@
 
 Private WordPress plugin by [Chandan Digital](https://chandandigital.com/) that connects WordPress to NVIDIA-hosted AI models, including **Moonshot AI Kimi K3** (`moonshotai/kimi-k3`).
 
-Version 1.1.1 · Requires WordPress 6.9+ (7.0+ recommended) and PHP 7.4+ · GPL-2.0-or-later · Manual updates only
+Version 1.1.2 · Requires WordPress 6.9+ (7.0+ recommended) and PHP 7.4+ · GPL-2.0-or-later · Manual updates only
 
 ## Deliverables
 
 | # | Deliverable | Location |
 |---|---|---|
-| 1 | Installable plugin ZIP | [`dist/chandan-digital-ai-for-nvidia-v1.1.1.zip`](../../dist/chandan-digital-ai-for-nvidia-v1.1.1.zip) |
+| 1 | Installable plugin ZIP | [`dist/chandan-digital-ai-for-nvidia-v1.1.2.zip`](../../dist/chandan-digital-ai-for-nvidia-v1.1.2.zip) |
 | 2 | Complete source code | [`chandan-digital-ai-for-nvidia/`](../../chandan-digital-ai-for-nvidia/) |
 | 3 | API integration report | [api-integration-report.md](api-integration-report.md) |
 | 4 | Security and privacy audit | [security-privacy-audit.md](security-privacy-audit.md) |
@@ -17,7 +17,7 @@ Version 1.1.1 · Requires WordPress 6.9+ (7.0+ recommended) and PHP 7.4+ · GPL-
 | 7 | Testing report | [testing-report.md](testing-report.md) |
 | | Test harness and raw results | [`tests/chandan-digital-ai-for-nvidia/`](../../tests/chandan-digital-ai-for-nvidia/) |
 
-ZIP SHA-256: `ae536ce4cc76c68609a9284e43478688991526a7a9388bdc7405512852c7ccdd`
+ZIP SHA-256: `9562e7954b6e46410981fb557e07a2248232a879d793b4407af5b3335dca4905`
 
 ## Dashboard
 

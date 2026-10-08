@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ChandanDigital\NvidiaAi\Models;
 
 use ChandanDigital\NvidiaAi\Api\ApiError;
+use ChandanDigital\NvidiaAi\Api\OutputGuard;
 use ChandanDigital\NvidiaAi\Support\Logger;
 use ChandanDigital\NvidiaAi\Support\ModelRegistry;
 use ChandanDigital\NvidiaAi\Support\Settings;
@@ -94,17 +95,50 @@ class NvidiaTextGenerationModel extends AbstractApiBasedModel implements TextGen
         // Add authentication credentials to the request.
         $request = $this->getRequestAuthentication()->authenticateRequest($request);
 
-        // Send and process the request.
+        // Send and process the request. A garbled reply is sent again once, and never returned.
         $start = microtime(true);
-        try {
-            $response = $httpTransporter->send($request);
-        } catch (\Throwable $e) {
-            $this->recordOutcome(0, '', $start, $e->getMessage());
-            throw $e;
+        for ($attempt = 0; ; $attempt++) {
+            try {
+                $response = $httpTransporter->send($request);
+            } catch (\Throwable $e) {
+                $this->recordOutcome(0, '', $start, $e->getMessage());
+                throw $e;
+            }
+            if (!$response->isSuccessful() || !$this->isGarbledResponse($response)) {
+                break;
+            }
+            if ($attempt >= 1) {
+                $this->recordOutcome($response->getStatusCode(), '', $start, '', new ApiError('garbled_output', $response->getStatusCode()));
+                throw new RuntimeException(ApiError::message_for('garbled_output'));
+            }
         }
         $this->recordOutcome($response->getStatusCode(), (string) $response->getBody(), $start);
         ResponseUtil::throwIfNotSuccessful($response);
         return $this->parseResponseToGenerativeAiResult($response);
+    }
+
+    /**
+     * Whether a successful response carries corrupted text (see OutputGuard).
+     *
+     * @since 1.1.2
+     *
+     * @param Response $response The response from the API endpoint.
+     */
+    protected function isGarbledResponse(Response $response): bool
+    {
+        $data = $response->getData();
+        if (!is_array($data) || !isset($data['choices']) || !is_array($data['choices'])) {
+            return false;
+        }
+        foreach ($data['choices'] as $choice) {
+            $message = is_array($choice) && isset($choice['message']) && is_array($choice['message']) ? $choice['message'] : [];
+            foreach (['content', 'reasoning_content', 'reasoning'] as $field) {
+                if (isset($message[$field]) && is_string($message[$field]) && OutputGuard::is_garbled($message[$field])) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /**
@@ -159,15 +193,15 @@ class NvidiaTextGenerationModel extends AbstractApiBasedModel implements TextGen
      * @param string $body Response body (only read for error details).
      * @param float $start Request start time.
      * @param string $transportError Transport error message, if any.
+     * @param ApiError|null $error Error already classified by the caller.
      */
-    protected function recordOutcome(int $status, string $body, float $start, string $transportError = ''): void
+    protected function recordOutcome(int $status, string $body, float $start, string $transportError = '', ?ApiError $error = null): void
     {
         try {
             $modelId = $this->metadata()->getId();
-            $error = null;
-            if ($status === 0) {
+            if ($error === null && $status === 0) {
                 $error = new ApiError('network_error', 0, Logger::redact($transportError, 300));
-            } elseif ($status >= 400) {
+            } elseif ($error === null && $status >= 400) {
                 $error = ApiError::from_http($status, substr($body, 0, 65536));
             }
 

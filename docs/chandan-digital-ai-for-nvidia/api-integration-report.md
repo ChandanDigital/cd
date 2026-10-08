@@ -1,6 +1,6 @@
 # API Integration Report: Kimi K3 on NVIDIA
 
-**Plugin:** Chandan Digital AI for NVIDIA 1.1.1
+**Plugin:** Chandan Digital AI for NVIDIA 1.1.2
 **Model:** Moonshot AI Kimi K3, model ID `moonshotai/kimi-k3`
 **Endpoint:** `https://integrate.api.nvidia.com/v1/chat/completions` (POST, JSON, Bearer token)
 
@@ -22,7 +22,7 @@ All of this is kept. In 1.1.1 the old editorial policy was replaced by the new C
 |---|---|
 | Model registration | `moonshotai/kimi-k3` added to the model registry as a multimodal (text and image input) model with reasoning. All 48 original models are still there. |
 | Request format | Follows NVIDIA's published Kimi K3 sample: `model`, `messages` (text and `image_url` parts), `max_tokens`, `temperature`, `reasoning_effort`, `seed`, `stream`. A test checks that the plugin's request matches this structure exactly. |
-| Default settings | Temperature 1, maximum output tokens 16384, reasoning effort `max`, seed 0, streaming on, image input on. All can be changed on the Kimi K3 Settings tab. |
+| Default settings | Temperature 1, top P 0.95, maximum output tokens 16384, reasoning effort `max`, seed 0, streaming on, image input on. All can be changed on the Kimi K3 Settings tab. |
 | Reasoning effort | Dashboard offers Default, Low, Medium, High, Max. For Kimi K3, only `low`, `high` and `max` can be chosen; Medium is shown as "not supported". "Default" leaves the parameter out. For other built-in models the control is disabled, because their support is not verified. |
 | Reasoning output | Kimi K3 returns its thinking in `reasoning_content` (also `reasoning` on some backends). The plugin shows it separately from the answer. Inline `<think>...</think>` tags from other models are also separated, even when a tag is split across two streamed chunks. |
 | Multi-turn chats | Moonshot AI and NVIDIA ask clients to send Kimi K3's earlier reasoning back. The plugin does this in the Playground and through the WordPress AI Client, merging content, `reasoning_content` and `tool_calls` into one assistant message. |
@@ -130,6 +130,19 @@ The plugin sends a set of writing rules to the model as a system instruction. Th
 - You can edit them on the Privacy & Security tab and go back to the built-in version at any time.
 
 These are instructions to the model, so results depend on how well the model follows them. The plugin does not rewrite or grade the answer afterwards, apart from the em dash check.
+
+## 10. Garbled replies from NVIDIA's Kimi K3 (1.1.2)
+
+On a live site, Kimi K3 answered "what is photosynthesis?" with random words in Chinese, Cyrillic and English mixed with internal markers such as `<|close|>`. The plugin did not create that text; it only joins the pieces NVIDIA sends. Other users have reported the same thing with Kimi K3 on NVIDIA: [leaked `<|close|>` and `<|sep|>` markers with mixed-script fragments](https://github.com/Alishahryar1/free-claude-code/issues/2018), [replies in Chinese and Russian that make no sense](https://forums.developer.nvidia.com/t/kimi-k3-is-dead/385279), and [endless "!" output](https://forums.developer.nvidia.com/t/kimi-k3-outputs-only/384298), which [another report links to reasoning set to max](https://github.com/anomalyco/opencode/issues/53426). No fix from NVIDIA or Moonshot AI had been published when this was written.
+
+What the plugin does about it:
+
+- It checks every streamed piece before showing it. Template markers, a run of 40 or more "!" or several broken characters stop the reply at once.
+- It throws the broken reply away and sends the same request once more. The Playground clears the bubble and says why.
+- If the second reply is also broken, the Playground shows one clear message, and a plugin using the WordPress AI Client receives an error instead of the text, so garbage never reaches a post.
+- Kimi K3 now sends top P 0.95, the value [Moonshot AI documents as fixed](https://platform.kimi.ai/docs/guide/kimi-k3-quickstart) for this model. Earlier versions left it out, so NVIDIA's own default applied.
+
+If it keeps happening, wait a few minutes, lower reasoning effort to High or Low, or switch to another model for a while.
 
 ## Sources
 

@@ -263,6 +263,9 @@ final class RestController
         if ($result['error'] !== null) {
             return self::error_response($result['error'], 502);
         }
+        if (!empty($result['garbled_retries'])) {
+            $notices[] = self::retry_notice();
+        }
         return new WP_REST_Response([
             'ok' => true,
             'model' => $model['id'],
@@ -310,7 +313,13 @@ final class RestController
             return !connection_aborted();
         };
 
-        $result = $client->stream($payload, $onText, $onTick);
+        $onRetry = static function (string $reason) use (&$lastOutput): void {
+            // Tell the browser to throw away what it has shown before the request is sent again.
+            self::send_event('reset', ['reason' => $reason, 'message' => self::retry_notice()]);
+            $lastOutput = microtime(true);
+        };
+
+        $result = $client->stream($payload, $onText, $onTick, $onRetry);
         self::record_model_status($model['id'], $result['status'], $result['error']);
         self::log_chat('playground_stream', $model['id'], $payload, $result);
 
@@ -347,6 +356,14 @@ final class RestController
         }
         self::send_event('done', ['n' => 5]);
         exit;
+    }
+
+    /**
+     * Note shown when a garbled reply was thrown away and the request sent again.
+     */
+    private static function retry_notice(): string
+    {
+        return __('The first reply came back as garbled text, so the plugin threw it away and asked again.', 'chandan-digital-ai-for-nvidia');
     }
 
     /**

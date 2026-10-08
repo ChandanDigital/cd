@@ -129,6 +129,7 @@ async function shot(page, name, fullPage = true) {
 	check('kimi max tokens default 16384', (await page.inputValue('#cdnv-max-tokens')) === '16384');
 	check('kimi reasoning default max', (await page.inputValue('#cdnv-reasoning')) === 'max');
 	check('kimi seed default 0', (await page.inputValue('#cdnv-seed')) === '0');
+	check('kimi top P default 0.95', (await page.inputValue('#cdnv-top-p')) === '0.95');
 	check('kimi medium disabled', await page.$eval('#cdnv-reasoning option[value=medium]', (o) => o.disabled));
 	check('kimi streaming + images on', (await page.isChecked('input[name=stream]')) && (await page.isChecked('input[name=images]')));
 	await shot(page, '04-kimi-settings');
@@ -226,6 +227,34 @@ async function shot(page, name, fullPage = true) {
 		return [a, b];
 	});
 	check('duplicate request id rejected (409)', dup[0] === 200 && dup[1] === 409, dup.join(','));
+
+	// Garbled Kimi K3 replies (known NVIDIA problem): discarded, retried, never shown.
+	if (process.env.MOCK_DIR) {
+		['garble.count', 'bang.count'].forEach((f) => { try { fs.unlinkSync(path.join(process.env.MOCK_DIR, f)); } catch (e) {} });
+	}
+	await page.click('#cdnv-pg-clear');
+	await page.fill('#cdnv-pg-prompt', 'what is photosynthesis? GARBLE_ONCE');
+	await page.click('#cdnv-pg-send');
+	await page.waitForSelector('.cdnv-msg--assistant .cdnv-msg__meta button', { timeout: 60000 });
+	const cleanText = await page.textContent('.cdnv-msg--assistant .cdnv-msg__body');
+	check('garbled first reply never shown; clean retry shown', !cleanText.includes('<|') && !cleanText.includes('懦弱') && cleanText.includes('Hello from moonshotai/kimi-k3'), cleanText.slice(0, 120));
+	check('user told the first reply was thrown away', (await page.textContent('.cdnv-msg__notes')).includes('garbled text'));
+	await page.click('#cdnv-pg-clear');
+	await page.fill('#cdnv-pg-prompt', 'GARBLE_ALWAYS');
+	await page.click('#cdnv-pg-send');
+	await page.waitForSelector('.cdnv-msg--assistant .cdnv-error', { timeout: 60000 });
+	const garbledBubble = await page.textContent('.cdnv-msg--assistant');
+	check('no confusing "incomplete" note on garbled error', !garbledBubble.includes('This reply is incomplete'));
+	check('garbled twice: clear message, no garbage on screen', garbledBubble.includes('known problem with Kimi K3') && !garbledBubble.includes('懦弱') && !(await page.textContent('.cdnv-msg--assistant .cdnv-msg__body')).includes('<|'), garbledBubble.slice(0, 160));
+	await shot(page, '12-garbled-handled');
+	await page.uncheck('#cdnv-pg-stream');
+	await page.click('#cdnv-pg-clear');
+	if (process.env.MOCK_DIR) { try { fs.unlinkSync(path.join(process.env.MOCK_DIR, 'garble.count')); } catch (e) {} }
+	await page.fill('#cdnv-pg-prompt', 'GARBLE_ONCE without streaming');
+	await page.click('#cdnv-pg-send');
+	await page.waitForSelector('.cdnv-msg--assistant .cdnv-msg__meta button', { timeout: 60000 });
+	check('non-streaming: garbled reply retried, clean answer and note', !(await page.textContent('.cdnv-msg--assistant .cdnv-msg__body')).includes('<|') && (await page.textContent('.cdnv-msg__notes')).includes('garbled text'));
+	await page.check('#cdnv-pg-stream');
 
 	// Stop button cancels a stream
 	await page.click('#cdnv-pg-clear');

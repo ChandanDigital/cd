@@ -28,6 +28,7 @@ PASS  kimi temperature default 1
 PASS  kimi max tokens default 16384
 PASS  kimi reasoning default max
 PASS  kimi seed default 0
+PASS  kimi top P default 0.95
 PASS  kimi medium disabled
 PASS  kimi streaming + images on
 PASS  kimi settings saved
@@ -52,11 +53,16 @@ PASS  http image URL rejected in browser
 PASS  server rejects private-network image URL
 PASS  server rejects disguised non-image upload
 PASS  duplicate request id rejected (409)
+PASS  garbled first reply never shown; clean retry shown
+PASS  user told the first reply was thrown away
+PASS  no confusing "incomplete" note on garbled error
+PASS  garbled twice: clear message, no garbage on screen
+PASS  non-streaming: garbled reply retried, clean answer and note
 PASS  stop cancels and marks reply
 PASS  buttons re-enabled after stop
 PASS  model-access error is distinct from key error
 PASS  streaming self-test reports a verdict
-      stream test said: Streaming works: events arrived one by one (first after 29 ms, last after 1631 ms).
+      stream test said: Streaming works: events arrived one by one (first after 29 ms, last after 1628 ms).
 PASS  log entry recorded
 PASS  log has no prompt by default
 PASS  log has no key
@@ -84,4 +90,4 @@ PASS  editor cannot call admin REST routes
 PASS  editor cannot save API settings
 PASS  editor can use Playground when allowed
 
-RESULT: 84 passed, 0 failed
+RESULT: 90 passed, 0 failed

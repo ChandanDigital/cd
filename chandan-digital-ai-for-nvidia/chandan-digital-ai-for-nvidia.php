@@ -4,7 +4,7 @@
  * Plugin Name: Chandan Digital AI for NVIDIA
  * Plugin URI: https://chandandigital.com/
  * Description: NVIDIA-hosted AI models for WordPress, including Moonshot AI Kimi K3. Registers the NVIDIA provider with the WordPress AI Client and adds a private admin dashboard, model manager, playground and diagnostics.
- * Version: 1.1.1
+ * Version: 1.1.2
  * Requires at least: 6.9
  * Requires PHP: 7.4
  * Author: Chandan Digital
@@ -37,7 +37,7 @@ if (!defined('ABSPATH')) {
     return;
 }
 
-const VERSION = '1.1.1';
+const VERSION = '1.1.2';
 const PLUGIN_FILE = __FILE__;
 const TEXT_DOMAIN = 'chandan-digital-ai-for-nvidia';
 

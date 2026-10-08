@@ -279,6 +279,7 @@ final class ApiError
             'endpoint_not_found' => __('The API base URL did not respond like an NVIDIA API (HTTP 404). Check the base URL.', 'chandan-digital-ai-for-nvidia'),
             'empty_response' => __('NVIDIA returned an empty response. Try again.', 'chandan-digital-ai-for-nvidia'),
             'malformed_response' => __('NVIDIA returned a response that could not be read. Try again.', 'chandan-digital-ai-for-nvidia'),
+            'garbled_output' => __('The model sent back garbled text (random words in mixed languages and internal markers such as <|close|>), so the plugin stopped it instead of showing or saving it. It already asked once more and got the same result. This is a known problem with Kimi K3 on NVIDIA\'s servers at the moment, not with your site or API key. Try again in a few minutes, set Reasoning effort to High or Low on the Kimi K3 Settings tab, or choose another model.', 'chandan-digital-ai-for-nvidia'),
             'stream_interrupted' => __('The streamed response stopped before it finished. The text shown so far may be incomplete.', 'chandan-digital-ai-for-nvidia'),
             'cancelled' => __('The request was cancelled.', 'chandan-digital-ai-for-nvidia'),
             'duplicate_request' => __('This request is already being processed.', 'chandan-digital-ai-for-nvidia'),
