@@ -1,0 +1,1878 @@
+# Copyright (C) 2026 Chandan Digital
+# This file is distributed under the GPL-2.0-or-later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Chandan Digital AI for NVIDIA 1.1.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/chandan-digital-ai-for-nvidia\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-10-08T13:03:47+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: chandan-digital-ai-for-nvidia\n"
+
+#. Plugin Name of the plugin
+#: chandan-digital-ai-for-nvidia.php:4
+#: src/Admin/AdminPage.php:63
+#: src/Admin/views/header.php:14
+msgid "Chandan Digital AI for NVIDIA"
+msgstr ""
+
+#. Plugin URI of the plugin
+#. Author URI of the plugin
+#: chandan-digital-ai-for-nvidia.php:5
+#: chandan-digital-ai-for-nvidia.php:11
+msgid "https://chandandigital.com/"
+msgstr ""
+
+#. Description of the plugin
+#: chandan-digital-ai-for-nvidia.php:6
+msgid "NVIDIA-hosted AI models for WordPress, including Moonshot AI Kimi K3. Registers the NVIDIA provider with the WordPress AI Client and adds a private admin dashboard, model manager, playground and diagnostics."
+msgstr ""
+
+#. Author of the plugin
+#: chandan-digital-ai-for-nvidia.php:10
+msgid "Chandan Digital"
+msgstr ""
+
+#: src/Admin/AdminPage.php:64
+msgid "NVIDIA AI"
+msgstr ""
+
+#: src/Admin/AdminPage.php:124
+msgid "You do not have permission to view this page."
+msgstr ""
+
+#: src/Admin/AdminPage.php:127
+msgid "You do not have permission to use the AI Playground."
+msgstr ""
+
+#: src/Admin/AdminPage.php:134
+msgid "Overview"
+msgstr ""
+
+#: src/Admin/AdminPage.php:135
+msgid "NVIDIA API Settings"
+msgstr ""
+
+#: src/Admin/AdminPage.php:136
+msgid "AI Models"
+msgstr ""
+
+#: src/Admin/AdminPage.php:137
+msgid "Kimi K3 Settings"
+msgstr ""
+
+#: src/Admin/AdminPage.php:138
+msgid "AI Playground"
+msgstr ""
+
+#: src/Admin/AdminPage.php:139
+msgid "API Diagnostics"
+msgstr ""
+
+#: src/Admin/AdminPage.php:140
+msgid "Privacy & Security"
+msgstr ""
+
+#: src/Admin/AdminPage.php:149
+msgid "Plugin sections"
+msgstr ""
+
+#: src/Admin/AdminPage.php:203
+msgid "The saved API key was removed."
+msgstr ""
+
+#: src/Admin/AdminPage.php:209
+msgid "The API key was saved and encrypted."
+msgstr ""
+
+#: src/Admin/AdminPage.php:224
+msgid "Connection settings saved."
+msgstr ""
+
+#: src/Admin/AdminPage.php:242
+msgid "Choose a chat model as the default model."
+msgstr ""
+
+#: src/Admin/AdminPage.php:260
+msgid "Model choices saved."
+msgstr ""
+
+#: src/Admin/AdminPage.php:280
+msgid "Custom model added. Use \"Check access\" to confirm your API key can use it; until then it is not offered to other plugins."
+msgstr ""
+
+#: src/Admin/AdminPage.php:292
+msgid "Only custom models can be removed. Built-in models can be disabled instead."
+msgstr ""
+
+#: src/Admin/AdminPage.php:295
+msgid "Custom model removed."
+msgstr ""
+
+#: src/Admin/AdminPage.php:310
+msgid "Settings were not saved. Fix the following and try again:"
+msgstr ""
+
+#: src/Admin/AdminPage.php:312
+msgid "Model settings saved."
+msgstr ""
+
+#: src/Admin/AdminPage.php:335
+msgid "Privacy and security settings saved."
+msgstr ""
+
+#: src/Admin/AdminPage.php:346
+msgid "Local logs cleared."
+msgstr ""
+
+#. translators: %s: default value.
+#. translators: 1: default value, 2: limit.
+#: src/Admin/AdminPage.php:386
+#: src/Admin/views/model-settings.php:56
+#: src/Admin/views/model-settings.php:66
+msgid "not sent"
+msgstr ""
+
+#. translators: %s: value.
+#: src/Admin/AdminPage.php:389
+#, php-format
+msgid "Temperature: %s"
+msgstr ""
+
+#. translators: %s: value.
+#: src/Admin/AdminPage.php:391
+#, php-format
+msgid "Max tokens: %s"
+msgstr ""
+
+#. translators: %s: value.
+#: src/Admin/AdminPage.php:395
+#, php-format
+msgid "Reasoning: %s"
+msgstr ""
+
+#. translators: %s: value.
+#: src/Admin/AdminPage.php:395
+msgid "model default"
+msgstr ""
+
+#. translators: %s: value.
+#: src/Admin/AdminPage.php:398
+#, php-format
+msgid "Seed: %s"
+msgstr ""
+
+#: src/Admin/AdminPage.php:410
+msgid "Working…"
+msgstr ""
+
+#: src/Admin/AdminPage.php:411
+msgid "Thinking…"
+msgstr ""
+
+#: src/Admin/AdminPage.php:412
+#: src/Admin/views/diagnostics.php:88
+msgid "OK"
+msgstr ""
+
+#: src/Admin/AdminPage.php:413
+msgid "Failed"
+msgstr ""
+
+#: src/Admin/AdminPage.php:414
+#: src/Admin/Ui.php:27
+msgid "Not checked"
+msgstr ""
+
+#: src/Admin/AdminPage.php:415
+#: src/Admin/Ui.php:23
+msgid "Access confirmed"
+msgstr ""
+
+#: src/Admin/AdminPage.php:416
+#: src/Admin/Ui.php:24
+msgid "Not available to this key"
+msgstr ""
+
+#: src/Admin/AdminPage.php:417
+#: src/Admin/Ui.php:25
+msgid "Access denied"
+msgstr ""
+
+#: src/Admin/AdminPage.php:418
+#: src/Admin/Ui.php:26
+msgid "Check failed"
+msgstr ""
+
+#: src/Admin/AdminPage.php:419
+msgid "The request to this WordPress site failed. Check your connection and try again."
+msgstr ""
+
+#. translators: %d: number of models.
+#: src/Admin/AdminPage.php:421
+#, php-format
+msgid "NVIDIA catalogue refreshed: %d models listed."
+msgstr ""
+
+#: src/Admin/AdminPage.php:422
+msgid "Catalogue models that are not in your list yet (not checked for access):"
+msgstr ""
+
+#: src/Admin/AdminPage.php:423
+msgid "Registered models that NVIDIA no longer lists:"
+msgstr ""
+
+#: src/Admin/AdminPage.php:424
+msgid "Add as custom model"
+msgstr ""
+
+#: src/Admin/AdminPage.php:425
+msgid "None"
+msgstr ""
+
+#. translators: 1: milliseconds until the first event, 2: milliseconds until the last event.
+#: src/Admin/AdminPage.php:427
+#, php-format
+msgid "Streaming works: events arrived one by one (first after %1$d ms, last after %2$d ms)."
+msgstr ""
+
+#. translators: %d: milliseconds.
+#: src/Admin/AdminPage.php:429
+#, php-format
+msgid "Streaming is being buffered by the server or a proxy: all events arrived together after %d ms. Responses will still work, but text will appear all at once. Turn streaming off for your models, or ask your host to disable output buffering for this site."
+msgstr ""
+
+#: src/Admin/AdminPage.php:430
+msgid "The streaming test failed. Turn streaming off for your models; the non-streaming mode will be used."
+msgstr ""
+
+#: src/Admin/AdminPage.php:431
+#: src/Admin/views/diagnostics.php:75
+msgid "HTTP"
+msgstr ""
+
+#: src/Admin/AdminPage.php:432
+msgid "You"
+msgstr ""
+
+#: src/Admin/AdminPage.php:433
+msgid "Assistant"
+msgstr ""
+
+#: src/Admin/AdminPage.php:434
+#: src/Admin/Ui.php:68
+msgid "Reasoning"
+msgstr ""
+
+#: src/Admin/AdminPage.php:435
+msgid "Copy response"
+msgstr ""
+
+#: src/Admin/AdminPage.php:436
+msgid "Copied"
+msgstr ""
+
+#: src/Admin/AdminPage.php:437
+msgid "Copy failed. Select the text and copy it manually."
+msgstr ""
+
+#: src/Admin/AdminPage.php:438
+msgid "Stopped. The text above may be incomplete and will not be used as context."
+msgstr ""
+
+#: src/Admin/AdminPage.php:439
+msgid "This reply is incomplete and will not be used as context for the next message."
+msgstr ""
+
+#: src/Admin/AdminPage.php:440
+msgid "The reply stopped because it reached the maximum output tokens setting."
+msgstr ""
+
+#: src/Admin/AdminPage.php:441
+msgid "Streaming did not start on this server, so the standard (non-streaming) mode was used."
+msgstr ""
+
+#: src/Admin/AdminPage.php:442
+msgid "Enter a prompt or add an image first."
+msgstr ""
+
+#. translators: %d: number of images.
+#: src/Admin/AdminPage.php:444
+#, php-format
+msgid "This model accepts up to %d images per request."
+msgstr ""
+
+#. translators: %d: size in megabytes.
+#. translators: %d: size limit in megabytes.
+#: src/Admin/AdminPage.php:446
+#: src/Api/ImageInput.php:112
+#: src/Api/ImageInput.php:123
+#, php-format
+msgid "The image is larger than the %d MB limit for this model."
+msgstr ""
+
+#. translators: %s: list of image formats.
+#: src/Admin/AdminPage.php:448
+#, php-format
+msgid "This image type is not enabled for the selected model. Allowed: %s."
+msgstr ""
+
+#: src/Admin/AdminPage.php:449
+msgid "Enter a full https:// image URL."
+msgstr ""
+
+#: src/Admin/AdminPage.php:450
+#: src/Admin/views/models.php:108
+msgid "Remove"
+msgstr ""
+
+#. translators: 1: prompt tokens, 2: output tokens.
+#: src/Admin/AdminPage.php:452
+#, php-format
+msgid "%1$s prompt + %2$s output tokens"
+msgstr ""
+
+#. translators: %s: number of seconds.
+#: src/Admin/AdminPage.php:454
+#, php-format
+msgid "%s s"
+msgstr ""
+
+#. translators: %d: number of seconds.
+#: src/Admin/AdminPage.php:456
+#, php-format
+msgid "NVIDIA asked to wait %d seconds before trying again."
+msgstr ""
+
+#: src/Admin/AdminPage.php:457
+msgid "No chat models are enabled. Enable one on the AI Models tab."
+msgstr ""
+
+#: src/Admin/AdminPage.php:458
+msgid "Images you add are sent to NVIDIA for analysis."
+msgstr ""
+
+#: src/Admin/AdminPage.php:470
+msgid "You do not have permission to change these settings."
+msgstr ""
+
+#. translators: 1: date and time, 2: HTTP status.
+#: src/Admin/Ui.php:33
+#, php-format
+msgid "Last checked %1$s (HTTP %2$s)"
+msgstr ""
+
+#: src/Admin/Ui.php:65
+msgid "Text"
+msgstr ""
+
+#: src/Admin/Ui.php:66
+msgid "Chat"
+msgstr ""
+
+#: src/Admin/Ui.php:67
+#: src/Admin/views/model-settings.php:128
+msgid "Image input"
+msgstr ""
+
+#: src/Admin/Ui.php:69
+#: src/Admin/views/model-settings.php:114
+msgid "Streaming"
+msgstr ""
+
+#: src/Admin/Ui.php:70
+msgid "Tools"
+msgstr ""
+
+#: src/Admin/Ui.php:71
+msgid "Image generation"
+msgstr ""
+
+#: src/Admin/views/api.php:22
+#: src/Admin/views/overview.php:65
+#: src/Rest/RestController.php:109
+msgid "API key"
+msgstr ""
+
+#: src/Admin/views/api.php:24
+msgid "Active key:"
+msgstr ""
+
+#: src/Admin/views/api.php:31
+msgid "A key was saved here earlier but can no longer be decrypted, usually because the security salts in wp-config.php changed. Enter the key again."
+msgstr ""
+
+#: src/Admin/views/api.php:35
+msgid "The key is defined in wp-config.php with CHANDAN_NVIDIA_API_KEY, so it cannot be changed here. Edit wp-config.php to change it."
+msgstr ""
+
+#: src/Admin/views/api.php:39
+msgid "NVIDIA API key"
+msgstr ""
+
+#: src/Admin/views/api.php:43
+msgid "Leave empty to keep the current key. The key is encrypted with your site's secret salts before it is stored, and it is never shown again or sent to the browser."
+msgstr ""
+
+#: src/Admin/views/api.php:45
+msgid "Remove the saved key"
+msgstr ""
+
+#: src/Admin/views/api.php:51
+msgid "More secure option: define the key in wp-config.php"
+msgstr ""
+
+#: src/Admin/views/api.php:52
+msgid "Add this line above \"That's all, stop editing!\" in wp-config.php. A key defined there takes priority over the saved key and never touches the database."
+msgstr ""
+
+#: src/Admin/views/api.php:56
+msgid "Key order: CHANDAN_NVIDIA_API_KEY constant, then the key saved here, then an NVIDIA_API_KEY environment variable or constant, then Settings > Connectors."
+msgstr ""
+
+#: src/Admin/views/api.php:60
+msgid "Endpoint and requests"
+msgstr ""
+
+#: src/Admin/views/api.php:63
+msgid "API base URL"
+msgstr ""
+
+#: src/Admin/views/api.php:67
+msgid "Chat completions endpoint used:"
+msgstr ""
+
+#. translators: %s: default URL.
+#: src/Admin/views/api.php:71
+#, php-format
+msgid "Default: %s. Only https:// is accepted."
+msgstr ""
+
+#: src/Admin/views/api.php:75
+msgid "This base URL is not an nvidia.com address. Your API key is sent to it with every request. Use it only for an NVIDIA NIM deployment you control."
+msgstr ""
+
+#: src/Admin/views/api.php:80
+msgid "Request timeout (seconds)"
+msgstr ""
+
+#: src/Admin/views/api.php:83
+msgid "Kimi K3 thinks before it answers, and at maximum reasoning effort a reply can take a few minutes. 120 to 300 seconds works well. Your host may stop PHP sooner."
+msgstr ""
+
+#: src/Admin/views/api.php:87
+msgid "Connection timeout (seconds)"
+msgstr ""
+
+#: src/Admin/views/api.php:91
+msgid "Automatic retries"
+msgstr ""
+
+#: src/Admin/views/api.php:94
+msgid "retries, waiting at most"
+msgstr ""
+
+#: src/Admin/views/api.php:95
+msgid "Longest wait before a retry, in seconds"
+msgstr ""
+
+#: src/Admin/views/api.php:96
+msgid "seconds"
+msgstr ""
+
+#: src/Admin/views/api.php:97
+msgid "Only temporary problems are retried: rate limits (429, respecting Retry-After), NVIDIA outages (500, 502, 503, 504) and network errors. Key, model and request errors are never retried."
+msgstr ""
+
+#: src/Admin/views/api.php:101
+msgid "Key for the WordPress AI Client"
+msgstr ""
+
+#: src/Admin/views/api.php:104
+msgid "Use this plugin's key only when WordPress has no NVIDIA key of its own (recommended)"
+msgstr ""
+
+#: src/Admin/views/api.php:105
+msgid "Always use this plugin's key"
+msgstr ""
+
+#: src/Admin/views/api.php:106
+msgid "Never share it; other plugins use only Settings > Connectors or NVIDIA_API_KEY"
+msgstr ""
+
+#: src/Admin/views/api.php:114
+msgid "Save configuration"
+msgstr ""
+
+#: src/Admin/views/api.php:115
+#: src/Admin/views/overview.php:76
+msgid "Test connection"
+msgstr ""
+
+#: src/Admin/views/api.php:117
+msgid "Save first, then test. The test uses the saved settings."
+msgstr ""
+
+#: src/Admin/views/api.php:122
+msgid "How to get an NVIDIA API key"
+msgstr ""
+
+#: src/Admin/views/api.php:124
+msgid "Go to build.nvidia.com and sign in with your NVIDIA account."
+msgstr ""
+
+#: src/Admin/views/api.php:125
+msgid "Open the Kimi K3 model page (moonshotai/kimi-k3) and choose \"Get API Key\", or create a key from your account's API keys page."
+msgstr ""
+
+#: src/Admin/views/api.php:126
+msgid "Copy the key (it starts with nvapi-), paste it above, save, and press Test connection."
+msgstr ""
+
+#: src/Admin/views/api.php:128
+msgid "If a key was ever shared in a chat, email or screenshot, revoke it on build.nvidia.com and create a new one."
+msgstr ""
+
+#: src/Admin/views/diagnostics.php:24
+msgid "Connection test"
+msgstr ""
+
+#: src/Admin/views/diagnostics.php:25
+msgid "Checks three things separately: that the endpoint answers, that NVIDIA accepts your API key, and that your key can use the chosen model. A key problem and a model-access problem are reported differently."
+msgstr ""
+
+#: src/Admin/views/diagnostics.php:27
+msgid "Model to check"
+msgstr ""
+
+#: src/Admin/views/diagnostics.php:33
+msgid "Run connection test"
+msgstr ""
+
+#: src/Admin/views/diagnostics.php:39
+msgid "Streaming test"
+msgstr ""
+
+#: src/Admin/views/diagnostics.php:40
+msgid "Sends five small events from this server, about 0.4 seconds apart, without contacting NVIDIA. If they arrive one by one, streaming works here. If they arrive together, your host or a proxy buffers output; replies will still work, but turn streaming off for a smoother experience."
+msgstr ""
+
+#: src/Admin/views/diagnostics.php:41
+msgid "Test streaming"
+msgstr ""
+
+#: src/Admin/views/diagnostics.php:46
+msgid "Environment"
+msgstr ""
+
+#: src/Admin/views/diagnostics.php:49
+msgid "Chat endpoint"
+msgstr ""
+
+#: src/Admin/views/diagnostics.php:50
+msgid "API key source"
+msgstr ""
+
+#: src/Admin/views/diagnostics.php:51
+msgid "PHP"
+msgstr ""
+
+#: src/Admin/views/diagnostics.php:52
+msgid "cURL"
+msgstr ""
+
+#: src/Admin/views/diagnostics.php:52
+msgid "Not available: streaming falls back to buffered mode and Stop cannot cancel the upstream request."
+msgstr ""
+
+#: src/Admin/views/diagnostics.php:53
+msgid "WordPress AI Client"
+msgstr ""
+
+#: src/Admin/views/diagnostics.php:53
+msgid "Not available"
+msgstr ""
+
+#: src/Admin/views/diagnostics.php:54
+msgid "Request timeout"
+msgstr ""
+
+#: src/Admin/views/diagnostics.php:55
+msgid "PHP max_execution_time"
+msgstr ""
+
+#: src/Admin/views/diagnostics.php:55
+msgid "No limit"
+msgstr ""
+
+#: src/Admin/views/diagnostics.php:56
+msgid "Server software"
+msgstr ""
+
+#: src/Admin/views/diagnostics.php:57
+msgid "On: add integrate.api.nvidia.com to WP_ACCESSIBLE_HOSTS"
+msgstr ""
+
+#: src/Admin/views/diagnostics.php:57
+msgid "Off"
+msgstr ""
+
+#: src/Admin/views/diagnostics.php:63
+msgid "Recent local log entries"
+msgstr ""
+
+#: src/Admin/views/diagnostics.php:65
+msgid "Local logging is off."
+msgstr ""
+
+#: src/Admin/views/diagnostics.php:65
+msgid "Turn it on under Privacy & Security."
+msgstr ""
+
+#: src/Admin/views/diagnostics.php:67
+msgid "No entries yet."
+msgstr ""
+
+#: src/Admin/views/diagnostics.php:72
+msgid "Time"
+msgstr ""
+
+#: src/Admin/views/diagnostics.php:73
+#: src/Admin/views/models.php:165
+msgid "Type"
+msgstr ""
+
+#: src/Admin/views/diagnostics.php:74
+#: src/Admin/views/models.php:55
+#: src/Admin/views/playground.php:13
+msgid "Model"
+msgstr ""
+
+#: src/Admin/views/diagnostics.php:76
+msgid "Duration"
+msgstr ""
+
+#: src/Admin/views/diagnostics.php:77
+msgid "Result"
+msgstr ""
+
+#: src/Admin/views/diagnostics.php:90
+msgid "Content"
+msgstr ""
+
+#: src/Admin/views/diagnostics.php:91
+msgid "Prompt:"
+msgstr ""
+
+#: src/Admin/views/diagnostics.php:92
+msgid "Response:"
+msgstr ""
+
+#: src/Admin/views/diagnostics.php:103
+#: src/Admin/views/privacy.php:109
+msgid "Delete all local log entries?"
+msgstr ""
+
+#: src/Admin/views/diagnostics.php:107
+#: src/Admin/views/privacy.php:104
+msgid "Clear local logs"
+msgstr ""
+
+#: src/Admin/views/header.php:16
+msgid "Developer:"
+msgstr ""
+
+#: src/Admin/views/header.php:18
+msgid "Website:"
+msgstr ""
+
+#. translators: %s: plugin version.
+#: src/Admin/views/header.php:24
+#, php-format
+msgid "Version %s"
+msgstr ""
+
+#: src/Admin/views/kimi.php:20
+msgid "Kimi K3 by Moonshot AI, hosted by NVIDIA"
+msgstr ""
+
+#: src/Admin/views/kimi.php:22
+#: src/Admin/views/models.php:152
+msgid "Model ID"
+msgstr ""
+
+#: src/Admin/views/kimi.php:24
+#: src/Admin/views/models.php:57
+msgid "Capabilities"
+msgstr ""
+
+#: src/Admin/views/kimi.php:26
+msgid "Context window"
+msgstr ""
+
+#: src/Admin/views/kimi.php:27
+msgid "1,048,576 tokens (input and output together), as published for Kimi K3."
+msgstr ""
+
+#: src/Admin/views/kimi.php:28
+msgid "Access with your key"
+msgstr ""
+
+#: src/Admin/views/kimi.php:30
+msgid "Status in this plugin"
+msgstr ""
+
+#: src/Admin/views/kimi.php:31
+#: src/Admin/views/overview.php:100
+msgid "Enabled"
+msgstr ""
+
+#: src/Admin/views/kimi.php:31
+msgid "Disabled on the AI Models tab"
+msgstr ""
+
+#: src/Admin/views/kimi.php:34
+msgid "Check Kimi K3 access"
+msgstr ""
+
+#: src/Admin/views/kimi.php:35
+msgid "Try it in the Playground"
+msgstr ""
+
+#: src/Admin/views/kimi.php:38
+msgid "What was verified, and what still needs a live test"
+msgstr ""
+
+#: src/Admin/views/kimi.php:40
+msgid "The request format follows NVIDIA's published Kimi K3 example: POST to /v1/chat/completions with model, messages (text and image_url parts), max_tokens, temperature, reasoning_effort, seed and stream."
+msgstr ""
+
+#: src/Admin/views/kimi.php:41
+msgid "Reasoning effort values (low, high, max) and the need to send earlier reasoning back in multi-turn chats come from Moonshot AI's Kimi K3 documentation."
+msgstr ""
+
+#: src/Admin/views/kimi.php:42
+msgid "Moonshot AI fixes temperature at 1.0 on its own API. NVIDIA's example also uses 1. Other values may be rejected; the plugin shows NVIDIA's reason if so."
+msgstr ""
+
+#: src/Admin/views/kimi.php:43
+msgid "NVIDIA's example sends a public image URL. Exact image size limits for this model on NVIDIA are not published; the plugin uses conservative defaults you can change below."
+msgstr ""
+
+#: src/Admin/views/kimi.php:44
+msgid "Use \"Check Kimi K3 access\" and the Playground to confirm everything with your own key."
+msgstr ""
+
+#: src/Admin/views/model-settings.php:20
+msgid "Default (do not send the parameter)"
+msgstr ""
+
+#: src/Admin/views/model-settings.php:21
+msgid "Low"
+msgstr ""
+
+#: src/Admin/views/model-settings.php:22
+msgid "Medium"
+msgstr ""
+
+#: src/Admin/views/model-settings.php:23
+msgid "High"
+msgstr ""
+
+#: src/Admin/views/model-settings.php:24
+msgid "Max"
+msgstr ""
+
+#. translators: %s: model name.
+#: src/Admin/views/model-settings.php:40
+#, php-format
+msgid "%s: generation settings"
+msgstr ""
+
+#: src/Admin/views/model-settings.php:47
+msgid "Leave a number field empty to leave that parameter out of the request, so NVIDIA's own default applies. Values are checked when you save; nothing is changed silently."
+msgstr ""
+
+#: src/Admin/views/model-settings.php:51
+msgid "Temperature"
+msgstr ""
+
+#. translators: %s: default value.
+#: src/Admin/views/model-settings.php:56
+#, php-format
+msgid "0 to 2. Default for this model: %s."
+msgstr ""
+
+#: src/Admin/views/model-settings.php:61
+msgid "Maximum output tokens"
+msgstr ""
+
+#. translators: 1: default value, 2: limit.
+#: src/Admin/views/model-settings.php:66
+#, php-format
+msgid "Default: %1$s. Accepted here: 1 to %2$s."
+msgstr ""
+
+#: src/Admin/views/model-settings.php:69
+msgid "Reasoning tokens count towards this limit. If replies stop early, raise it."
+msgstr ""
+
+#: src/Admin/views/model-settings.php:74
+msgid "Top P"
+msgstr ""
+
+#: src/Admin/views/model-settings.php:77
+msgid "Optional. Empty means it is not sent."
+msgstr ""
+
+#: src/Admin/views/model-settings.php:81
+#: src/Admin/views/models.php:172
+msgid "Reasoning effort"
+msgstr ""
+
+#: src/Admin/views/model-settings.php:87
+msgid "not supported by this model"
+msgstr ""
+
+#. translators: %s: list of values.
+#: src/Admin/views/model-settings.php:95
+#, php-format
+msgid "Values this model accepts: %s. \"Default\" leaves the parameter out so the model uses its own default."
+msgstr ""
+
+#: src/Admin/views/model-settings.php:97
+msgid "This model has no verified reasoning effort control, so the parameter is never sent."
+msgstr ""
+
+#: src/Admin/views/model-settings.php:102
+msgid "Moonshot AI documents low, high and max (default max) for Kimi K3. Medium is not documented, so it is disabled. Kimi K3 always reasons; this only changes how much."
+msgstr ""
+
+#: src/Admin/views/model-settings.php:107
+msgid "Seed"
+msgstr ""
+
+#: src/Admin/views/model-settings.php:110
+msgid "Optional. The same seed can make replies more repeatable. Empty means it is not sent."
+msgstr ""
+
+#: src/Admin/views/model-settings.php:116
+msgid "Stream replies in the Playground (text appears as it is generated)"
+msgstr ""
+
+#: src/Admin/views/model-settings.php:117
+msgid "If your host buffers output, turn this off; the Playground then waits for the full reply. Use API Diagnostics > Test streaming to check."
+msgstr ""
+
+#: src/Admin/views/model-settings.php:125
+msgid "Image support"
+msgstr ""
+
+#: src/Admin/views/model-settings.php:130
+msgid "Allow images in the Playground"
+msgstr ""
+
+#: src/Admin/views/model-settings.php:131
+msgid "Allow public https:// image URLs (NVIDIA downloads them; this site does not)"
+msgstr ""
+
+#: src/Admin/views/model-settings.php:135
+msgid "Allowed formats"
+msgstr ""
+
+#: src/Admin/views/model-settings.php:140
+msgid "NVIDIA documents JPEG, PNG and GIF for its hosted Kimi vision models. JPEG and PNG are on by default. Turn on WebP only after a successful test."
+msgstr ""
+
+#: src/Admin/views/model-settings.php:144
+msgid "Maximum image size"
+msgstr ""
+
+#: src/Admin/views/model-settings.php:146
+msgid "Uploads are checked in memory and are never saved to this site. Large images make requests slower; NVIDIA returns HTTP 413 if a request is too large."
+msgstr ""
+
+#: src/Admin/views/model-settings.php:149
+msgid "Images per request"
+msgstr ""
+
+#: src/Admin/views/model-settings.php:151
+msgid "NVIDIA's vision services default to 4 images per request. When a conversation holds more, the oldest images are left out and you are told."
+msgstr ""
+
+#: src/Admin/views/model-settings.php:158
+msgid "WordPress AI Client requests"
+msgstr ""
+
+#: src/Admin/views/model-settings.php:161
+msgid "Use these settings for other plugins"
+msgstr ""
+
+#: src/Admin/views/model-settings.php:163
+msgid "When another plugin uses this model through the WordPress AI Client and leaves a setting unset, use the value from this page. The request timeout above is also applied."
+msgstr ""
+
+#: src/Admin/views/model-settings.php:167
+msgid "Temperature from other plugins"
+msgstr ""
+
+#: src/Admin/views/model-settings.php:169
+msgid "Send the temperature the other plugin asks for (recommended)"
+msgstr ""
+
+#: src/Admin/views/model-settings.php:170
+msgid "Always send the temperature set on this page (compatibility option for models with a fixed temperature)"
+msgstr ""
+
+#: src/Admin/views/model-settings.php:176
+msgid "Save model settings"
+msgstr ""
+
+#: src/Admin/views/models.php:21
+msgid "Back to all models"
+msgstr ""
+
+#: src/Admin/views/models.php:34
+msgid "Search models"
+msgstr ""
+
+#: src/Admin/views/models.php:35
+msgid "Search by name, ID, developer or capability…"
+msgstr ""
+
+#: src/Admin/views/models.php:36
+msgid "Enabled only"
+msgstr ""
+
+#: src/Admin/views/models.php:39
+msgid "Catalogue refreshed:"
+msgstr ""
+
+#: src/Admin/views/models.php:42
+msgid "Refresh models"
+msgstr ""
+
+#: src/Admin/views/models.php:53
+msgid "On"
+msgstr ""
+
+#: src/Admin/views/models.php:54
+msgid "Default"
+msgstr ""
+
+#: src/Admin/views/models.php:56
+msgid "Developer / provider"
+msgstr ""
+
+#: src/Admin/views/models.php:58
+msgid "Access"
+msgstr ""
+
+#: src/Admin/views/models.php:59
+msgid "In catalogue"
+msgstr ""
+
+#: src/Admin/views/models.php:60
+msgid "Actions"
+msgstr ""
+
+#. translators: %s: model name.
+#: src/Admin/views/models.php:69
+#, php-format
+msgid "Enable %s"
+msgstr ""
+
+#. translators: %s: model name.
+#: src/Admin/views/models.php:70
+#, php-format
+msgid "Make %s the default model"
+msgstr ""
+
+#: src/Admin/views/models.php:73
+msgid "New"
+msgstr ""
+
+#: src/Admin/views/models.php:74
+msgid "Custom"
+msgstr ""
+
+#: src/Admin/views/models.php:84
+msgid "Not offered to other plugins until confirmed."
+msgstr ""
+
+#: src/Admin/views/models.php:87
+msgid "Via AI Client only"
+msgstr ""
+
+#: src/Admin/views/models.php:94
+msgid "Separate endpoint"
+msgstr ""
+
+#: src/Admin/views/models.php:98
+msgid "Listed"
+msgstr ""
+
+#: src/Admin/views/models.php:98
+msgid "Not listed"
+msgstr ""
+
+#: src/Admin/views/models.php:104
+msgid "Check access"
+msgstr ""
+
+#: src/Admin/views/models.php:105
+#: src/Plugin.php:242
+msgid "Settings"
+msgstr ""
+
+#: src/Admin/views/models.php:116
+msgid "No models match your search."
+msgstr ""
+
+#: src/Admin/views/models.php:119
+msgid "Refresh the NVIDIA catalogue automatically once a day (off by default; uses WP-Cron)."
+msgstr ""
+
+#: src/Admin/views/models.php:120
+msgid "Save model choices"
+msgstr ""
+
+#: src/Admin/views/models.php:127
+msgid "Remove this custom model and its settings?"
+msgstr ""
+
+#: src/Admin/views/models.php:136
+msgid "About model availability"
+msgstr ""
+
+#: src/Admin/views/models.php:138
+msgid "\"Refresh models\" downloads NVIDIA's public catalogue. Being listed there does not mean your API key can use a model."
+msgstr ""
+
+#: src/Admin/views/models.php:139
+msgid "\"Check access\" sends a tiny test request (a few output tokens) with your key. Only a successful answer counts as confirmed access."
+msgstr ""
+
+#: src/Admin/views/models.php:140
+msgid "Original built-in models are offered to other plugins while NVIDIA lists them. Kimi K3 and custom models are offered only after access is confirmed."
+msgstr ""
+
+#: src/Admin/views/models.php:141
+msgid "Image generation (FLUX) models run on a separate NVIDIA endpoint and are used through the WordPress AI Client only."
+msgstr ""
+
+#: src/Admin/views/models.php:146
+msgid "Add a custom model"
+msgstr ""
+
+#: src/Admin/views/models.php:154
+msgid "Copy the exact ID from the model's page on build.nvidia.com."
+msgstr ""
+
+#: src/Admin/views/models.php:157
+msgid "Display name"
+msgstr ""
+
+#: src/Admin/views/models.php:161
+msgid "Developer"
+msgstr ""
+
+#: src/Admin/views/models.php:167
+msgid "Text chat"
+msgstr ""
+
+#: src/Admin/views/models.php:168
+msgid "Chat with image input"
+msgstr ""
+
+#: src/Admin/views/models.php:173
+msgid "The model accepts the reasoning_effort parameter (check NVIDIA's documentation first)"
+msgstr ""
+
+#: src/Admin/views/models.php:176
+msgid "Add model"
+msgstr ""
+
+#: src/Admin/views/overview.php:28
+msgid "This plugin (wp-config.php constant)"
+msgstr ""
+
+#: src/Admin/views/overview.php:29
+msgid "This plugin (saved key)"
+msgstr ""
+
+#: src/Admin/views/overview.php:30
+msgid "WordPress (Settings > Connectors or NVIDIA_API_KEY)"
+msgstr ""
+
+#: src/Admin/views/overview.php:31
+msgid "No key available to the AI Client"
+msgstr ""
+
+#: src/Admin/views/overview.php:36
+msgid "Plugin"
+msgstr ""
+
+#: src/Admin/views/overview.php:38
+msgid "Version"
+msgstr ""
+
+#: src/Admin/views/overview.php:40
+msgid "Updates"
+msgstr ""
+
+#: src/Admin/views/overview.php:41
+msgid "Manual only. Upload a new ZIP under Plugins > Add New > Upload Plugin."
+msgstr ""
+
+#: src/Admin/views/overview.php:42
+msgid "WordPress / PHP"
+msgstr ""
+
+#: src/Admin/views/overview.php:48
+msgid "NVIDIA connection"
+msgstr ""
+
+#: src/Admin/views/overview.php:50
+msgid "Status"
+msgstr ""
+
+#: src/Admin/views/overview.php:54
+msgid "Not tested yet"
+msgstr ""
+
+#: src/Admin/views/overview.php:56
+msgid "Working"
+msgstr ""
+
+#: src/Admin/views/overview.php:56
+msgid "Problem found"
+msgstr ""
+
+#: src/Admin/views/overview.php:62
+msgid "Last result"
+msgstr ""
+
+#: src/Admin/views/overview.php:72
+msgid "Endpoint"
+msgstr ""
+
+#: src/Admin/views/overview.php:82
+msgid "Selected model"
+msgstr ""
+
+#: src/Admin/views/overview.php:85
+msgid "Provider: NVIDIA"
+msgstr ""
+
+#: src/Admin/views/overview.php:89
+msgid "Manage models"
+msgstr ""
+
+#: src/Admin/views/overview.php:93
+msgid "Active Kimi K3 configuration"
+msgstr ""
+
+#: src/Admin/views/overview.php:98
+msgid "Streaming on"
+msgstr ""
+
+#: src/Admin/views/overview.php:98
+msgid "Streaming off"
+msgstr ""
+
+#: src/Admin/views/overview.php:99
+msgid "Image input on"
+msgstr ""
+
+#: src/Admin/views/overview.php:99
+msgid "Image input off"
+msgstr ""
+
+#: src/Admin/views/overview.php:100
+msgid "Disabled"
+msgstr ""
+
+#: src/Admin/views/overview.php:103
+msgid "Kimi K3 settings"
+msgstr ""
+
+#: src/Admin/views/overview.php:104
+msgid "Open Playground"
+msgstr ""
+
+#: src/Admin/views/overview.php:108
+msgid "WordPress AI Client integration"
+msgstr ""
+
+#: src/Admin/views/overview.php:110
+msgid "AI Client"
+msgstr ""
+
+#. translators: %s: version number.
+#: src/Admin/views/overview.php:114
+#, php-format
+msgid "Available (version %s)"
+msgstr ""
+
+#: src/Admin/views/overview.php:115
+msgid "Not available. Other plugins cannot use NVIDIA models until WordPress 7.0+ (or the PHP AI Client) is present. The Playground still works."
+msgstr ""
+
+#: src/Admin/views/overview.php:118
+msgid "\"nvidia\" provider"
+msgstr ""
+
+#: src/Admin/views/overview.php:121
+msgid "Registered by this plugin"
+msgstr ""
+
+#: src/Admin/views/overview.php:123
+msgid "Registered by another plugin"
+msgstr ""
+
+#: src/Admin/views/overview.php:125
+msgid "Not registered"
+msgstr ""
+
+#: src/Admin/views/overview.php:128
+msgid "Key used by the AI Client"
+msgstr ""
+
+#: src/Admin/views/overview.php:132
+msgid "Plugins that use the WordPress AI Client can choose provider \"nvidia\". Kimi K3 and custom models are offered to them once their access is confirmed on the AI Models tab."
+msgstr ""
+
+#: src/Admin/views/playground.php:18
+msgid "Stream the reply"
+msgstr ""
+
+#: src/Admin/views/playground.php:19
+msgid "Show reasoning"
+msgstr ""
+
+#: src/Admin/views/playground.php:20
+msgid "Apply Indian English editorial policy"
+msgstr ""
+
+#: src/Admin/views/playground.php:23
+msgid "System prompt (optional)"
+msgstr ""
+
+#: src/Admin/views/playground.php:24
+msgid "System prompt"
+msgstr ""
+
+#: src/Admin/views/playground.php:25
+msgid "For example: You are a helpful assistant for a Kolkata digital marketing agency."
+msgstr ""
+
+#: src/Admin/views/playground.php:29
+msgid "Conversation"
+msgstr ""
+
+#: src/Admin/views/playground.php:31
+msgid "Ask a question, paste some code, or add an image to start."
+msgstr ""
+
+#: src/Admin/views/playground.php:35
+msgid "Prompt"
+msgstr ""
+
+#: src/Admin/views/playground.php:36
+msgid "Type your prompt. Press Ctrl+Enter to send."
+msgstr ""
+
+#: src/Admin/views/playground.php:40
+msgid "Upload image"
+msgstr ""
+
+#: src/Admin/views/playground.php:43
+msgid "Image URL"
+msgstr ""
+
+#: src/Admin/views/playground.php:45
+msgid "Add URL"
+msgstr ""
+
+#: src/Admin/views/playground.php:53
+msgid "Generate response"
+msgstr ""
+
+#: src/Admin/views/playground.php:54
+msgid "Stop"
+msgstr ""
+
+#: src/Admin/views/playground.php:55
+msgid "Clear conversation"
+msgstr ""
+
+#: src/Admin/views/playground.php:60
+msgid "Prompts and images are sent to NVIDIA to generate the reply. The conversation is kept only in this browser tab and is not saved on this site."
+msgstr ""
+
+#: src/Admin/views/privacy.php:17
+msgid "External connection policy"
+msgstr ""
+
+#: src/Admin/views/privacy.php:18
+msgid "This plugin connects only to NVIDIA, and only when someone makes an AI request, runs a test or refreshes models. It does not contact Chandan Digital, the original plugin developer or any analytics service."
+msgstr ""
+
+#: src/Admin/views/privacy.php:21
+msgid "Host"
+msgstr ""
+
+#: src/Admin/views/privacy.php:22
+msgid "When"
+msgstr ""
+
+#: src/Admin/views/privacy.php:23
+msgid "What is sent"
+msgstr ""
+
+#: src/Admin/views/privacy.php:28
+msgid "Chat requests (Playground and other plugins via the WordPress AI Client), access checks, connection tests, model refresh"
+msgstr ""
+
+#: src/Admin/views/privacy.php:29
+msgid "Your API key (Authorization header), the model ID, the messages and any images you add, and the generation settings"
+msgstr ""
+
+#: src/Admin/views/privacy.php:33
+msgid "Only when another plugin asks a FLUX model to generate an image through the WordPress AI Client"
+msgstr ""
+
+#: src/Admin/views/privacy.php:34
+msgid "Your API key, the image prompt and image settings"
+msgstr ""
+
+#: src/Admin/views/privacy.php:39
+msgid "No telemetry, usage tracking, remote update checks, remote code or webhooks."
+msgstr ""
+
+#: src/Admin/views/privacy.php:40
+msgid "No external scripts, fonts or styles are loaded in the dashboard."
+msgstr ""
+
+#: src/Admin/views/privacy.php:41
+msgid "Requests to NVIDIA use a plain user agent and do not include this site's address."
+msgstr ""
+
+#: src/Admin/views/privacy.php:42
+msgid "Images: uploaded files are checked in memory and sent to NVIDIA inside the request; they are not saved on this site. Image URLs are passed to NVIDIA, which downloads them; this site does not."
+msgstr ""
+
+#: src/Admin/views/privacy.php:43
+msgid "NVIDIA's own terms and privacy policy apply to data sent to its API."
+msgstr ""
+
+#: src/Admin/views/privacy.php:51
+msgid "Local logging"
+msgstr ""
+
+#: src/Admin/views/privacy.php:54
+msgid "Diagnostic log"
+msgstr ""
+
+#: src/Admin/views/privacy.php:56
+msgid "Keep a local log of requests (off by default)"
+msgstr ""
+
+#: src/Admin/views/privacy.php:57
+msgid "Records time, request type, model ID, HTTP status, duration and a cleaned error message. Never records API keys, Authorization headers or image data. Stored in this site's database only. Turning logging off deletes existing entries."
+msgstr ""
+
+#: src/Admin/views/privacy.php:61
+msgid "Prompts and responses"
+msgstr ""
+
+#: src/Admin/views/privacy.php:63
+msgid "Also record Playground prompts and responses (shortened to 2,000 characters)"
+msgstr ""
+
+#: src/Admin/views/privacy.php:64
+msgid "Leave this off unless you are troubleshooting. Prompts can contain private information."
+msgstr ""
+
+#: src/Admin/views/privacy.php:68
+msgid "Keep entries for"
+msgstr ""
+
+#: src/Admin/views/privacy.php:69
+msgid "days (at most 500 entries)"
+msgstr ""
+
+#: src/Admin/views/privacy.php:75
+msgid "Access and content"
+msgstr ""
+
+#: src/Admin/views/privacy.php:78
+msgid "Who can use the Playground"
+msgstr ""
+
+#: src/Admin/views/privacy.php:80
+msgid "Administrators only"
+msgstr ""
+
+#: src/Admin/views/privacy.php:81
+msgid "Administrators and Editors (Editors see only the Playground; uploading images also needs the upload_files permission)"
+msgstr ""
+
+#: src/Admin/views/privacy.php:82
+msgid "API settings, model management, diagnostics and logs are always limited to administrators."
+msgstr ""
+
+#: src/Admin/views/privacy.php:86
+msgid "Editorial policy for other plugins"
+msgstr ""
+
+#: src/Admin/views/privacy.php:88
+msgid "Add the Indian English editorial policy to every text request made through the WordPress AI Client, and reject replies that contain an em dash (behaviour from version 1.0.1, on by default)"
+msgstr ""
+
+#: src/Admin/views/privacy.php:92
+msgid "When the plugin is deleted"
+msgstr ""
+
+#: src/Admin/views/privacy.php:94
+msgid "Also delete the saved API key and all settings"
+msgstr ""
+
+#: src/Admin/views/privacy.php:95
+msgid "Off by default, so deleting and reinstalling keeps your configuration. Logs, cached data and temporary data are always removed. Updating by uploading a new ZIP never deletes anything."
+msgstr ""
+
+#: src/Admin/views/privacy.php:100
+msgid "Save privacy and security settings"
+msgstr ""
+
+#. translators: %d: number of log entries.
+#: src/Admin/views/privacy.php:107
+#, php-format
+msgid "%d entry stored."
+msgid_plural "%d entries stored."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Admin/views/privacy.php:113
+msgid "Clear logs"
+msgstr ""
+
+#: src/Api/ApiError.php:262
+msgid "No NVIDIA API key is configured. Add one on the NVIDIA API Settings tab or define CHANDAN_NVIDIA_API_KEY in wp-config.php."
+msgstr ""
+
+#: src/Api/ApiError.php:263
+msgid "NVIDIA rejected the API key (HTTP 401). The key may be wrong, expired or revoked. Create a new key at build.nvidia.com and save it again."
+msgstr ""
+
+#: src/Api/ApiError.php:264
+msgid "The API key works, but NVIDIA refused access to this model or feature (HTTP 403). Check that your NVIDIA account can use this model."
+msgstr ""
+
+#: src/Api/ApiError.php:265
+msgid "This model is not available to your NVIDIA account (HTTP 404). Your API key may be fine; NVIDIA has not enabled this model for it, or the model was retired."
+msgstr ""
+
+#: src/Api/ApiError.php:266
+msgid "NVIDIA does not recognise this model ID. Check the spelling in the AI Models tab."
+msgstr ""
+
+#: src/Api/ApiError.php:267
+msgid "NVIDIA rejected one of the generation settings for this model. See the detail below, then change that setting."
+msgstr ""
+
+#: src/Api/ApiError.php:268
+msgid "NVIDIA could not process the request. See the detail below."
+msgstr ""
+
+#: src/Api/ApiError.php:269
+msgid "NVIDIA could not use the image. Check that the format is supported and that a URL is public and reachable."
+msgstr ""
+
+#: src/Api/ApiError.php:270
+msgid "The request was too large for NVIDIA (HTTP 413). Use a smaller image or a shorter conversation."
+msgstr ""
+
+#: src/Api/ApiError.php:271
+msgid "The request goes over the model's token limit. Reduce maximum output tokens or shorten the conversation."
+msgstr ""
+
+#: src/Api/ApiError.php:272
+msgid "NVIDIA is rate limiting this API key (HTTP 429). Wait a little and try again."
+msgstr ""
+
+#: src/Api/ApiError.php:273
+msgid "The request timed out. The model may be busy or still thinking; try again, or raise the request timeout on the NVIDIA API Settings tab."
+msgstr ""
+
+#: src/Api/ApiError.php:274
+msgid "NVIDIA's service is temporarily unavailable. Try again in a few minutes."
+msgstr ""
+
+#: src/Api/ApiError.php:275
+msgid "NVIDIA's service returned an internal error. Try again shortly."
+msgstr ""
+
+#: src/Api/ApiError.php:276
+msgid "WordPress could not reach the NVIDIA API. Check the server's internet connection, firewall and DNS."
+msgstr ""
+
+#: src/Api/ApiError.php:277
+msgid "A secure (TLS) connection to NVIDIA could not be made. The server's SSL certificates may be out of date."
+msgstr ""
+
+#: src/Api/ApiError.php:278
+msgid "WordPress blocked the outgoing request (WP_HTTP_BLOCK_EXTERNAL). Add the NVIDIA API host to WP_ACCESSIBLE_HOSTS."
+msgstr ""
+
+#: src/Api/ApiError.php:279
+msgid "The API base URL did not respond like an NVIDIA API (HTTP 404). Check the base URL."
+msgstr ""
+
+#: src/Api/ApiError.php:280
+msgid "NVIDIA returned an empty response. Try again."
+msgstr ""
+
+#: src/Api/ApiError.php:281
+msgid "NVIDIA returned a response that could not be read. Try again."
+msgstr ""
+
+#: src/Api/ApiError.php:282
+msgid "The streamed response stopped before it finished. The text shown so far may be incomplete."
+msgstr ""
+
+#: src/Api/ApiError.php:283
+msgid "The request was cancelled."
+msgstr ""
+
+#: src/Api/ApiError.php:284
+msgid "This request is already being processed."
+msgstr ""
+
+#: src/Api/ApiError.php:285
+msgid "The request contains invalid input."
+msgstr ""
+
+#: src/Api/ApiError.php:287
+msgid "An unexpected error occurred while talking to NVIDIA."
+msgstr ""
+
+#: src/Api/ImageInput.php:41
+msgid "Image URLs are turned off for this model. Upload the image instead, or enable image URLs in the model settings."
+msgstr ""
+
+#: src/Api/ImageInput.php:45
+msgid "Enter an image URL of up to 2048 characters."
+msgstr ""
+
+#: src/Api/ImageInput.php:49
+msgid "Only https:// image URLs are accepted."
+msgstr ""
+
+#: src/Api/ImageInput.php:53
+msgid "The image URL is not valid. URLs with a username or password are not accepted."
+msgstr ""
+
+#: src/Api/ImageInput.php:56
+msgid "Image URLs must use the standard https port."
+msgstr ""
+
+#: src/Api/ImageInput.php:64
+#: src/Api/ImageInput.php:68
+msgid "The image URL points to a private, local or unreachable address. Only public addresses can be sent to NVIDIA."
+msgstr ""
+
+#. translators: %s: list of image formats.
+#: src/Api/ImageInput.php:77
+#, php-format
+msgid "This image format is not enabled for this model. Allowed formats: %s."
+msgstr ""
+
+#: src/Api/ImageInput.php:87
+msgid "You do not have permission to use this media file."
+msgstr ""
+
+#: src/Api/ImageInput.php:91
+msgid "This image belongs to unpublished or private content, so its URL is not sent to NVIDIA. Upload the file directly if you want to analyse it."
+msgstr ""
+
+#: src/Api/ImageInput.php:115
+msgid "The uploaded image could not be read. Choose the file again."
+msgstr ""
+
+#: src/Api/ImageInput.php:119
+msgid "The uploaded image could not be decoded."
+msgstr ""
+
+#. translators: %s: list of image formats.
+#: src/Api/ImageInput.php:130
+#, php-format
+msgid "The file is not a supported image. Allowed formats: %s."
+msgstr ""
+
+#. translators: 1: detected format, 2: list of image formats.
+#: src/Api/ImageInput.php:135
+#, php-format
+msgid "%1$s images are not enabled for this model. Allowed formats: %2$s."
+msgstr ""
+
+#. translators: %d: maximum width/height in pixels.
+#: src/Api/ImageInput.php:139
+#, php-format
+msgid "Image width and height must be between 1 and %d pixels."
+msgstr ""
+
+#: src/Api/NvidiaClient.php:162
+#: src/Api/NvidiaClient.php:207
+msgid "The request contains characters that cannot be sent. Remove unusual characters and try again."
+msgstr ""
+
+#: src/Api/PayloadBuilder.php:42
+msgid "Image generation models cannot be used in the chat Playground."
+msgstr ""
+
+#: src/Api/PayloadBuilder.php:45
+msgid "Enter a prompt first."
+msgstr ""
+
+#. translators: %d: maximum number of messages.
+#: src/Api/PayloadBuilder.php:49
+#, php-format
+msgid "The conversation is too long (more than %d messages). Clear the conversation and start again."
+msgstr ""
+
+#: src/Api/PayloadBuilder.php:69
+msgid "The conversation data is not valid."
+msgstr ""
+
+#: src/Api/PayloadBuilder.php:73
+msgid "Conversation messages must come from the user or the assistant."
+msgstr ""
+
+#: src/Api/PayloadBuilder.php:77
+msgid "One message is too long. Shorten it and try again."
+msgstr ""
+
+#: src/Api/PayloadBuilder.php:90
+msgid "An image in the conversation is not valid."
+msgstr ""
+
+#. translators: %s: model name.
+#: src/Api/PayloadBuilder.php:94
+#, php-format
+msgid "%s is not set up for image input. Choose a vision model or enable image input in its settings."
+msgstr ""
+
+#. translators: 1: number of images, 2: image limit.
+#: src/Api/PayloadBuilder.php:112
+#, php-format
+msgid "%1$d older image was left out of this request because the model setting allows %2$d images per request."
+msgid_plural "%1$d older images were left out of this request because the model setting allows %2$d images per request."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Api/PayloadBuilder.php:119
+msgid "A message is empty. Enter a prompt or attach an image."
+msgstr ""
+
+#: src/Api/PayloadBuilder.php:139
+msgid "The conversation is too long. Clear it and start again."
+msgstr ""
+
+#: src/Api/PayloadBuilder.php:143
+msgid "The last message must come from the user."
+msgstr ""
+
+#. translators: 1: value, 2: model name.
+#: src/Api/PayloadBuilder.php:185
+#, php-format
+msgid "Reasoning effort \"%1$s\" is not supported by %2$s. Change it in the model settings."
+msgstr ""
+
+#: src/Plugin.php:225
+msgid "Manual updates only (upload a new ZIP)."
+msgstr ""
+
+#: src/Plugin.php:306
+msgid "Chandan Digital AI for NVIDIA: the original \"AI Provider for NVIDIA\" plugin is also active and has registered the \"nvidia\" provider first. Deactivate it so Kimi K3 and your dashboard settings reach the WordPress AI Client. Your Playground still works."
+msgstr ""
+
+#: src/Plugin.php:307
+msgid "Chandan Digital AI for NVIDIA: another plugin has already registered the \"nvidia\" AI provider, so this plugin's provider was not registered. Deactivate the other NVIDIA provider plugin."
+msgstr ""
+
+#: src/Plugin.php:321
+msgid "Chandan Digital AI for NVIDIA: the WordPress AI Client (bundled with WordPress 7.0 and later) is not available, so other plugins cannot use NVIDIA models yet. The plugin's own dashboard and Playground still work."
+msgstr ""
+
+#: src/Provider/NvidiaProvider.php:89
+msgid "Text generation with NVIDIA-hosted models (Kimi K3, Llama, Nemotron, Mistral, Qwen), image understanding on vision models, and image generation with FLUX models."
+msgstr ""
+
+#. translators: %d: number of models.
+#: src/Rest/RestController.php:121
+#, php-format
+msgid "NVIDIA listed %d models in its public catalogue."
+msgstr ""
+
+#: src/Rest/RestController.php:123
+msgid "API endpoint reachable"
+msgstr ""
+
+#: src/Rest/RestController.php:130
+msgid "NVIDIA accepted the API key."
+msgstr ""
+
+#: src/Rest/RestController.php:137
+msgid "Not checked, because NVIDIA could not be reached."
+msgstr ""
+
+#: src/Rest/RestController.php:139
+msgid "API key accepted"
+msgstr ""
+
+#. translators: %s: model name.
+#: src/Rest/RestController.php:142
+#, php-format
+msgid "Access to %s"
+msgstr ""
+
+#: src/Rest/RestController.php:149
+msgid "Connection works: the key is valid and the model answered."
+msgstr ""
+
+#: src/Rest/RestController.php:181
+#: src/Support/ModelRegistry.php:412
+msgid "Unknown model."
+msgstr ""
+
+#: src/Rest/RestController.php:184
+msgid "Image generation models use a separate NVIDIA endpoint and cannot be checked here. They are used through the WordPress AI Client."
+msgstr ""
+
+#: src/Rest/RestController.php:363
+msgid "Missing request ID."
+msgstr ""
+
+#: src/Rest/RestController.php:374
+msgid "Choose an enabled chat model."
+msgstr ""
+
+#: src/Rest/RestController.php:379
+msgid "You need permission to upload files to send images."
+msgstr ""
+
+#: src/Rest/RestController.php:389
+msgid "The system prompt is too long or contains invalid characters."
+msgstr ""
+
+#: src/Support/ModelRegistry.php:440
+msgid "Temperature must be a number from 0 to 2, or empty to let NVIDIA use its default."
+msgstr ""
+
+#. translators: %d: maximum number of tokens.
+#: src/Support/ModelRegistry.php:452
+#, php-format
+msgid "Maximum output tokens must be a whole number from 1 to %d."
+msgstr ""
+
+#: src/Support/ModelRegistry.php:462
+msgid "Top P must be greater than 0 and at most 1, or empty to leave it out of the request."
+msgstr ""
+
+#. translators: 1: chosen value, 2: model name, 3: list of supported values.
+#: src/Support/ModelRegistry.php:471
+#, php-format
+msgid "Reasoning effort \"%1$s\" is not supported by %2$s. Supported values: %3$s."
+msgstr ""
+
+#. translators: %s: model name.
+#: src/Support/ModelRegistry.php:473
+#, php-format
+msgid "%s has no verified reasoning effort control. Keep it on Default."
+msgstr ""
+
+#: src/Support/ModelRegistry.php:484
+msgid "Seed must be a whole number from 0 to 2147483647, or empty to leave it out."
+msgstr ""
+
+#: src/Support/ModelRegistry.php:500
+msgid "Maximum image size must be from 1 MB to 20 MB."
+msgstr ""
+
+#: src/Support/ModelRegistry.php:506
+msgid "Images per request must be from 1 to 10."
+msgstr ""
+
+#: src/Support/ModelRegistry.php:513
+msgid "Choose at least one image format, or turn image input off."
+msgstr ""
+
+#: src/Support/ModelRegistry.php:555
+msgid "Enter a model ID in the form publisher/model-name, for example moonshotai/kimi-k3."
+msgstr ""
+
+#: src/Support/ModelRegistry.php:558
+msgid "This model is already built in."
+msgstr ""
+
+#: src/Support/ModelRegistry.php:562
+msgid "You can register up to 100 custom models."
+msgstr ""
+
+#: src/Support/Settings.php:99
+msgid "The API base URL must be a valid https:// address. The previous value was kept."
+msgstr ""
+
+#. translators: 1: minimum value, 2: maximum value.
+#: src/Support/Settings.php:119
+#, php-format
+msgid "Enter a whole number between %1$d and %2$d."
+msgstr ""
+
+#: src/Support/Settings.php:150
+msgid "The selected default model is not registered."
+msgstr ""
+
+#: src/Support/Settings.php:266
+msgid "wp-config.php constant CHANDAN_NVIDIA_API_KEY"
+msgstr ""
+
+#: src/Support/Settings.php:268
+msgid "Saved in this plugin (encrypted)"
+msgstr ""
+
+#: src/Support/Settings.php:270
+msgid "Server environment variable NVIDIA_API_KEY"
+msgstr ""
+
+#: src/Support/Settings.php:272
+msgid "wp-config.php constant NVIDIA_API_KEY"
+msgstr ""
+
+#: src/Support/Settings.php:274
+msgid "WordPress Settings > Connectors"
+msgstr ""
+
+#: src/Support/Settings.php:276
+msgid "Not configured"
+msgstr ""
+
+#: src/Support/Settings.php:334
+msgid "The API key is empty."
+msgstr ""
+
+#: src/Support/Settings.php:337
+msgid "The API key contains characters that NVIDIA keys never use. Paste the key again without spaces or quotes."
+msgstr ""
+
+#: src/Support/Settings.php:341
+msgid "The key could not be encrypted on this server, so it was not saved. Define CHANDAN_NVIDIA_API_KEY in wp-config.php instead."
+msgstr ""

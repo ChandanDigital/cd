@@ -51,3 +51,13 @@ Copy the HTML code block below and paste it directly into the `<head>` section o
 * **Official Website**: [https://chandandigital.com](https://chandandigital.com)
 * **Developer/Founder**: Chandan Mandal
 * **Location**: Kalikapur, Eastern Metropolitan Bypass, Kolkata, West Bengal 700075
+
+---
+
+## 🤖 Chandan Digital AI for NVIDIA (WordPress plugin)
+
+This repository also contains **Chandan Digital AI for NVIDIA** (version 1.1.0), a private WordPress plugin that connects WordPress to NVIDIA-hosted AI models, including Moonshot AI **Kimi K3**.
+
+* **Install file:** [`dist/chandan-digital-ai-for-nvidia-v1.1.0.zip`](dist/chandan-digital-ai-for-nvidia-v1.1.0.zip)
+* **Source code:** [`chandan-digital-ai-for-nvidia/`](chandan-digital-ai-for-nvidia/)
+* **Guides and reports:** [`docs/chandan-digital-ai-for-nvidia/`](docs/chandan-digital-ai-for-nvidia/README.md)

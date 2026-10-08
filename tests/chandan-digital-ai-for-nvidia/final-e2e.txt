@@ -1,0 +1,82 @@
+PASS  overview heading
+PASS  developer + website shown
+PASS  seven tabs
+PASS  key saved notice
+PASS  full key never rendered in HTML
+PASS  masked key shown
+PASS  key field left empty after save
+PASS  http base URL rejected
+PASS  connection test: endpoint, key, model all OK
+PASS  key not exposed in JS config
+PASS  model manager lists 49 models
+PASS  search filters to Kimi models
+PASS  capability search (reasoning + vision) -> Kimi K3
+PASS  refresh models shows count
+PASS  unregistered catalogue models listed
+PASS  add-as-custom fills form
+PASS  custom model added
+PASS  custom row present
+PASS  Kimi K3 access confirmed in table
+PASS  model choices saved
+PASS  disabled model persisted
+PASS  default model persisted
+PASS  custom model removed
+PASS  model settings page
+PASS  reasoning options disabled for model without control
+PASS  kimi tab shows exact model id
+PASS  kimi temperature default 1
+PASS  kimi max tokens default 16384
+PASS  kimi reasoning default max
+PASS  kimi seed default 0
+PASS  kimi medium disabled
+PASS  kimi streaming + images on
+PASS  kimi settings saved
+PASS  out-of-range max tokens rejected, value kept
+PASS  playground default model is Kimi K3
+PASS  stream checkbox follows model setting
+PASS  image controls visible for Kimi
+PASS  streamed text rendered incrementally
+PASS  streamed reply complete
+PASS  reasoning shown separately
+PASS  usage + time shown
+PASS  copy response copies answer text
+PASS  multi-turn: turn 2 with reasoning passed back
+PASS  non-streaming reply
+PASS  two pending images
+PASS  image upload + URL analysed
+PASS  multibyte text intact through stream
+PASS  GIF rejected in browser
+PASS  http image URL rejected in browser
+PASS  server rejects private-network image URL
+PASS  server rejects disguised non-image upload
+PASS  duplicate request id rejected (409)
+PASS  stop cancels and marks reply
+PASS  buttons re-enabled after stop
+PASS  model-access error is distinct from key error
+PASS  streaming self-test reports a verdict
+      stream test said: Streaming works: events arrived one by one (first after 42 ms, last after 1642 ms).
+PASS  log entry recorded
+PASS  log has no prompt by default
+PASS  log has no key
+PASS  logs cleared
+PASS  plugins screen says manual updates only
+PASS  settings link on plugins screen
+PASS  no horizontal page overflow at 390px: overview
+PASS  no horizontal page overflow at 390px: api
+PASS  no horizontal page overflow at 390px: models
+PASS  no horizontal page overflow at 390px: kimi
+PASS  no horizontal page overflow at 390px: playground
+PASS  no horizontal page overflow at 390px: diagnostics
+PASS  no horizontal page overflow at 390px: privacy
+PASS  no JavaScript console errors
+PASS  no external requests from plugin screens (WordPress core avatars excluded)
+PASS  anonymous REST chat refused
+PASS  anonymous connection test refused
+PASS  logged-in request without nonce refused (CSRF)
+PASS  editor blocked when Playground is admin-only
+PASS  editor sees only Playground tab
+PASS  editor cannot call admin REST routes
+PASS  editor cannot save API settings
+PASS  editor can use Playground when allowed
+
+RESULT: 79 passed, 0 failed

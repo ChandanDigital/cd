@@ -1,0 +1,144 @@
+== Settings and key storage ==
+PASS  no key -> source none
+PASS  save valid key
+PASS  key stored encrypted (not plaintext)
+PASS  key decrypts
+PASS  key not autoloaded
+PASS  source plugin
+PASS  mask hides key
+PASS  reject key with spaces
+PASS  bad key did not overwrite good key
+PASS  base url rejects http
+PASS  base url strips chat path
+PASS  base url rejects credentials
+PASS  timeout below range rejected
+PASS  unknown default model rejected
+== Model registry ==
+PASS  original 48 models + Kimi K3 registered
+PASS  kimi present with exact id
+PASS  kimi is vision + reasoning
+PASS  kimi reasoning values low/high/max
+PASS  kimi defaults match spec
+PASS  kimi medium reasoning rejected on save
+PASS  kimi settings unchanged after rejected save
+PASS  reasoning rejected for model without verified control
+PASS  temperature > 2 rejected
+PASS  valid settings saved
+PASS  custom model invalid id rejected
+PASS  custom model added
+PASS  custom models listed
+== SSE parser ==
+PASS  SSE split chunks + CRLF + multi-line data
+PASS  SSE final event without terminator
+PASS  SSE oversize buffer guarded
+== Think splitter ==
+PASS  think tags split across chunks
+== Error classification ==
+PASS  401 -> invalid key
+PASS  403 -> access denied
+PASS  403 expired key -> invalid key
+PASS  404 function -> model not available
+PASS  400 reasoning -> unsupported parameter
+PASS  400 context -> token limit
+PASS  413 -> payload too large
+PASS  429 + Retry-After
+PASS  408 -> timeout
+PASS  422 image -> invalid image
+PASS  500 -> service_error
+PASS  502 -> service_unavailable
+PASS  503 -> service_unavailable
+PASS  504 -> timeout
+PASS  detail redacts keys
+PASS  wp_error timeout
+== Image validation ==
+PASS  valid PNG upload accepted
+PASS  GIF rejected when not enabled
+PASS  non-image bytes with image MIME rejected
+PASS  image over size limit rejected
+PASS  https public url accepted
+PASS  http url rejected
+PASS  loopback url rejected (SSRF guard)
+PASS  private network url rejected
+PASS  url with credentials rejected
+PASS  svg url rejected (format)
+PASS  non-standard port rejected
+== Payload builder ==
+PASS  kimi payload matches NVIDIA reference structure
+PASS  kimi multi-turn passes reasoning_content back
+PASS  non-kimi does not send reasoning_content
+PASS  image on text-only model rejected
+PASS  image count limit keeps 4 and reports it
+PASS  system role from browser rejected
+PASS  empty prompt rejected
+PASS  stored invalid reasoning value refused at request time
+== NVIDIA client against mock ==
+PASS  client created
+PASS  list models
+PASS  Authorization header sent as Bearer
+PASS  user agent does not leak site URL
+PASS  probe kimi ok
+PASS  non-stream chat content + reasoning
+PASS  usage parsed
+PASS  non-stream sends stream=false + Accept json
+PASS  stream ok
+PASS  stream delivered live chunks
+PASS  stream content equals streamed text
+PASS  stream reasoning separated
+PASS  stream finish + usage
+PASS  stream request headers/body
+PASS  CRLF stream parsed
+PASS  streamed <think> tags routed to reasoning
+PASS  non-stream <think> tags split
+PASS  interrupted stream detected
+PASS  stream cancellation stops request
+PASS  chat acme/no-access -> model_not_available
+PASS  stream acme/no-access -> model_not_available
+PASS  chat acme/forbidden -> access_denied
+PASS  stream acme/forbidden -> access_denied
+PASS  chat acme/error500 -> service_error
+PASS  stream acme/error500 -> service_error
+PASS  429 retried once after Retry-After then succeeds
+PASS  429 not retried when retries = 0
+PASS  NVIDIA-rejected parameter surfaces real reason
+PASS  temperature rejection shows NVIDIA reason (no silent change)
+PASS  invalid key -> invalid_api_key (not model error)
+PASS  missing key -> missing_api_key
+== WordPress AI Client integration ==
+PASS  plugin key bound to AI Client (fallback, no WP key)
+PASS  AI Client sees nvidia provider configured
+PASS  unverified Kimi K3 not offered yet
+PASS  catalogue-listed built-ins offered
+PASS  FLUX image models offered (separate endpoint)
+PASS  AI Client 1.3.1: unverified Kimi K3 not usable until access confirmed
+PASS  verified Kimi K3 offered and listed first (default model)
+PASS  disabled model removed from AI Client list immediately
+PASS  AI Client -> Kimi K3 uses exact model id
+PASS  AI Client gets dashboard defaults (temp 1, 16384, max, seed 0)
+PASS  AI Client result text
+PASS  editorial policy still applied to AI Client (default on)
+PASS  caller-set max_tokens respected
+PASS  AI Client multi-turn passes reasoning_content to Kimi
+PASS  original models keep original behaviour (no reasoning_content, no defaults)
+PASS  AI Client image input reaches Kimi as image_url
+PASS  AI Client invalid reasoning effort rejected before sending
+PASS  AI Client 404 marks model not available
+PASS  model that lost access is no longer offered
+PASS  fallback mode keeps existing WordPress key
+PASS  always mode uses plugin key
+== Logging ==
+PASS  logging off by default -> nothing stored
+PASS  log entry stored without content by default
+PASS  log redacts key and bearer
+PASS  content logging opt-in works and strips image data
+PASS  retention prunes old entries
+PASS  clear logs
+== Update / lifecycle safety ==
+PASS  auto-update forced off for this plugin
+PASS  other plugins auto-update untouched
+PASS  Update URI header set off WordPress.org
+PASS  plugin header branding
+PASS  re-activation keeps existing settings
+PASS  re-activation keeps saved key
+PASS  no cron scheduled by default
+
+RESULT: 131 passed, 0 failed
