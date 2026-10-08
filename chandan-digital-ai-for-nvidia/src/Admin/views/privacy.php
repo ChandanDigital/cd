@@ -7,6 +7,7 @@
 
 defined('ABSPATH') || exit;
 
+use ChandanDigital\NvidiaAi\Content\IndianEnglishPolicy;
 use ChandanDigital\NvidiaAi\Support\Logger;
 use ChandanDigital\NvidiaAi\Support\Settings;
 
@@ -71,6 +72,42 @@ $cdnv_log_count = count(Logger::entries());
         </table>
     </section>
 
+    <section class="cdnv-card" id="cdnv-writing-style">
+        <h2><?php esc_html_e('Writing style for AI answers', 'chandan-digital-ai-for-nvidia'); ?></h2>
+        <p><?php esc_html_e('These rules go to the model as instructions with each request, so answers come back in simple, active, natural Indian English. They cover word choice, sentence rhythm, active voice, repetition, structure, formatting, sources and a final self-check.', 'chandan-digital-ai-for-nvidia'); ?></p>
+        <table class="form-table" role="presentation">
+            <tr>
+                <th scope="row"><?php esc_html_e('Other plugins (WordPress AI Client)', 'chandan-digital-ai-for-nvidia'); ?></th>
+                <td>
+                    <label><input type="checkbox" name="editorial_policy" value="1" <?php checked((bool) $cdnv_settings['editorial_policy']); ?>> <?php esc_html_e('Add the writing style to every text request, and reject replies that contain an em dash (on by default)', 'chandan-digital-ai-for-nvidia'); ?></label>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row"><?php esc_html_e('AI Playground', 'chandan-digital-ai-for-nvidia'); ?></th>
+                <td>
+                    <label><input type="checkbox" name="playground_policy" value="1" <?php checked((bool) $cdnv_settings['playground_policy']); ?>> <?php esc_html_e('Tick "Use Chandan Digital writing style" by default (you can still untick it for a single request)', 'chandan-digital-ai-for-nvidia'); ?></label>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row"><label for="cdnv-writing-style-text"><?php esc_html_e('Writing rules', 'chandan-digital-ai-for-nvidia'); ?></label></th>
+                <td>
+                    <textarea id="cdnv-writing-style-text" name="writing_style" rows="18" class="large-text code" maxlength="<?php echo esc_attr((string) IndianEnglishPolicy::MAX_LENGTH); ?>" spellcheck="true"><?php echo esc_textarea(IndianEnglishPolicy::instruction()); ?></textarea>
+                    <p class="description">
+                        <?php
+                        echo esc_html(IndianEnglishPolicy::is_customised()
+                            ? __('You are using your own edited rules.', 'chandan-digital-ai-for-nvidia')
+                            : __('You are using the built-in Chandan Digital rules.', 'chandan-digital-ai-for-nvidia'));
+                        ?>
+                        <?php esc_html_e('Longer rules use more tokens on every request. The built-in rules are about 1,300 words (roughly 1,900 tokens).', 'chandan-digital-ai-for-nvidia'); ?>
+                    </p>
+                    <?php if (IndianEnglishPolicy::is_customised()) : ?>
+                        <p><label><input type="checkbox" name="writing_style_reset" value="1"> <?php esc_html_e('Go back to the built-in rules', 'chandan-digital-ai-for-nvidia'); ?></label></p>
+                    <?php endif; ?>
+                </td>
+            </tr>
+        </table>
+    </section>
+
     <section class="cdnv-card">
         <h2><?php esc_html_e('Access and content', 'chandan-digital-ai-for-nvidia'); ?></h2>
         <table class="form-table" role="presentation">
@@ -80,12 +117,6 @@ $cdnv_log_count = count(Logger::entries());
                     <label><input type="radio" name="playground_access" value="administrator" <?php checked($cdnv_settings['playground_access'], 'administrator'); ?>> <?php esc_html_e('Administrators only', 'chandan-digital-ai-for-nvidia'); ?></label><br>
                     <label><input type="radio" name="playground_access" value="editor" <?php checked($cdnv_settings['playground_access'], 'editor'); ?>> <?php esc_html_e('Administrators and Editors (Editors see only the Playground; uploading images also needs the upload_files permission)', 'chandan-digital-ai-for-nvidia'); ?></label>
                     <p class="description"><?php esc_html_e('API settings, model management, diagnostics and logs are always limited to administrators.', 'chandan-digital-ai-for-nvidia'); ?></p>
-                </td>
-            </tr>
-            <tr>
-                <th scope="row"><?php esc_html_e('Editorial policy for other plugins', 'chandan-digital-ai-for-nvidia'); ?></th>
-                <td>
-                    <label><input type="checkbox" name="editorial_policy" value="1" <?php checked((bool) $cdnv_settings['editorial_policy']); ?>> <?php esc_html_e('Add the Indian English editorial policy to every text request made through the WordPress AI Client, and reject replies that contain an em dash (behaviour from version 1.0.1, on by default)', 'chandan-digital-ai-for-nvidia'); ?></label>
                 </td>
             </tr>
             <tr>

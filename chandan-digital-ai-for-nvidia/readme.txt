@@ -3,7 +3,7 @@ Contributors: chandandigital
 Tags: ai, nvidia, kimi, ai-provider, connector
 Requires at least: 6.9
 Tested up to: 7.1.3
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 Requires PHP: 7.4
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -34,7 +34,7 @@ This is a private plugin. It is maintained by Chandan Digital (https://chandandi
 
 == Installation ==
 
-1. In WordPress, go to Plugins > Add New > Upload Plugin and upload `chandan-digital-ai-for-nvidia-v1.1.0.zip`.
+1. In WordPress, go to Plugins > Add New > Upload Plugin and upload `chandan-digital-ai-for-nvidia-v1.1.1.zip`.
 2. Activate the plugin.
 3. Open NVIDIA AI > NVIDIA API Settings, paste your API key and save. For extra security, define `CHANDAN_NVIDIA_API_KEY` in wp-config.php instead.
 4. Press "Test connection", then open the AI Models tab and press "Check access" on Kimi K3.
@@ -80,11 +80,23 @@ NVIDIA is a trademark of NVIDIA Corporation. Kimi is a trademark of Moonshot AI.
 
 Based on "AI Provider for NVIDIA" version 1.0.2 by Deepak Bhojwani, released under GPL-2.0-or-later. Modified and maintained by Chandan Digital. This modified version is also released under GPL-2.0-or-later; see LICENSE.
 
-== Content writing policy ==
+== Writing style for AI answers ==
 
-Version 1.0.1 of the original plugin added a shared Indian English editorial instruction to every text request made through the WordPress AI Client, and rejects replies that contain an em dash. This behaviour is kept and is on by default. It can be turned off under Privacy & Security. In the Playground the policy is optional per request.
+Every text answer can follow the Chandan Digital writing style: simple Indian English that a class 10 student can read, a natural mix of short and long sentences, active voice, no stock AI phrases, no padding, no repeated warnings, real examples, clean tables and lists, sourced claims, and a silent self-check before the answer is returned. Code, JSON, HTML, links and other technical output are left exactly as they need to be.
+
+* Other plugins (WordPress AI Client): the style goes with every text request, and replies containing an em dash are rejected. On by default.
+* AI Playground: the "Use Chandan Digital writing style" box is ticked by default and can be unticked for any request.
+* You can edit the rules under NVIDIA AI > Privacy & Security > Writing style for AI answers, and go back to the built-in rules at any time.
+
+The style is an instruction to the model. How closely an answer follows it still depends on the model. The plugin does not check grammar, plagiarism or facts after the answer arrives, apart from the em dash check.
 
 == Changelog ==
+
+= 1.1.1 =
+
+* New Chandan Digital writing style for AI answers: simple Indian English, varied sentence rhythm, active voice, no repetition or hedging, real substance, clean structure and formatting, careful handling of health, legal, financial and safety topics, and a final self-check.
+* The writing rules can now be edited on the Privacy & Security tab, with a reset to the built-in rules.
+* The AI Playground uses the writing style by default (can be turned off per request or as a default).
 
 = 1.1.0 =
 

@@ -17,7 +17,7 @@ defined('ABSPATH') || exit;
         <div class="cdnv-field cdnv-field--inline">
             <label><input type="checkbox" id="cdnv-pg-stream"> <?php esc_html_e('Stream the reply', 'chandan-digital-ai-for-nvidia'); ?></label>
             <label><input type="checkbox" id="cdnv-pg-show-reasoning" checked> <?php esc_html_e('Show reasoning', 'chandan-digital-ai-for-nvidia'); ?></label>
-            <label><input type="checkbox" id="cdnv-pg-policy"> <?php esc_html_e('Apply Indian English editorial policy', 'chandan-digital-ai-for-nvidia'); ?></label>
+            <label><input type="checkbox" id="cdnv-pg-policy" <?php checked((bool) \ChandanDigital\NvidiaAi\Support\Settings::get('playground_policy')); ?>> <?php esc_html_e('Use Chandan Digital writing style', 'chandan-digital-ai-for-nvidia'); ?></label>
         </div>
         <details class="cdnv-details">
             <summary><?php esc_html_e('System prompt (optional)', 'chandan-digital-ai-for-nvidia'); ?></summary>

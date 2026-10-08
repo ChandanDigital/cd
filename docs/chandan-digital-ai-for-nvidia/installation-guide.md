@@ -1,8 +1,8 @@
 # Installation Guide
 
-**Plugin:** Chandan Digital AI for NVIDIA 1.1.0
-**File:** `chandan-digital-ai-for-nvidia-v1.1.0.zip`
-**SHA-256:** `c9cd94cdd43d1b9146eb9ddf3dc9db9d5ce21c54ee840eaa5f102c55dc7243cc`
+**Plugin:** Chandan Digital AI for NVIDIA 1.1.1
+**File:** `chandan-digital-ai-for-nvidia-v1.1.1.zip`
+**SHA-256:** `ae536ce4cc76c68609a9284e43478688991526a7a9388bdc7405512852c7ccdd`
 
 ## Before you start
 
@@ -19,7 +19,7 @@ If the original **AI Provider for NVIDIA** plugin is installed, deactivate it fi
 
 1. Log in to WordPress as an administrator.
 2. Go to **Plugins > Add New Plugin > Upload Plugin**.
-3. Choose `chandan-digital-ai-for-nvidia-v1.1.0.zip` and press **Install Now**.
+3. Choose `chandan-digital-ai-for-nvidia-v1.1.1.zip` and press **Install Now**.
 4. Press **Activate Plugin**.
 5. A new menu item, **NVIDIA AI**, appears in the admin sidebar.
 

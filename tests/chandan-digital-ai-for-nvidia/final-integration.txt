@@ -115,7 +115,7 @@ PASS  disabled model removed from AI Client list immediately
 PASS  AI Client -> Kimi K3 uses exact model id
 PASS  AI Client gets dashboard defaults (temp 1, 16384, max, seed 0)
 PASS  AI Client result text
-PASS  editorial policy still applied to AI Client (default on)
+PASS  writing style applied to AI Client requests (default on)
 PASS  caller-set max_tokens respected
 PASS  AI Client multi-turn passes reasoning_content to Kimi
 PASS  original models keep original behaviour (no reasoning_content, no defaults)
@@ -125,6 +125,20 @@ PASS  AI Client 404 marks model not available
 PASS  model that lost access is no longer offered
 PASS  fallback mode keeps existing WordPress key
 PASS  always mode uses plugin key
+== Writing style ==
+PASS  built-in writing style in use
+PASS  style covers rhythm, active voice and self-check
+PASS  style lists banned words
+PASS  style keeps code and JSON intact
+PASS  style text itself has no em dash
+PASS  Playground sends system prompt + writing style
+PASS  Playground without style sends no system message
+PASS  saving custom rules works
+PASS  AI Client uses edited rules
+PASS  too-long rules refused, old rules kept
+PASS  saving the built-in text clears the custom copy
+PASS  reset (empty) returns to built-in rules
+PASS  style off: no system message for AI Client
 == Logging ==
 PASS  logging off by default -> nothing stored
 PASS  log entry stored without content by default
@@ -141,4 +155,4 @@ PASS  re-activation keeps existing settings
 PASS  re-activation keeps saved key
 PASS  no cron scheduled by default
 
-RESULT: 131 passed, 0 failed
+RESULT: 144 passed, 0 failed

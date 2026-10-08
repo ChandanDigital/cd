@@ -35,7 +35,9 @@ PASS  out-of-range max tokens rejected, value kept
 PASS  playground default model is Kimi K3
 PASS  stream checkbox follows model setting
 PASS  image controls visible for Kimi
+PASS  writing style ticked by default in Playground
 PASS  streamed text rendered incrementally
+PASS  Playground request carries the writing style
 PASS  streamed reply complete
 PASS  reasoning shown separately
 PASS  usage + time shown
@@ -54,10 +56,13 @@ PASS  stop cancels and marks reply
 PASS  buttons re-enabled after stop
 PASS  model-access error is distinct from key error
 PASS  streaming self-test reports a verdict
-      stream test said: Streaming works: events arrived one by one (first after 42 ms, last after 1642 ms).
+      stream test said: Streaming works: events arrived one by one (first after 29 ms, last after 1631 ms).
 PASS  log entry recorded
 PASS  log has no prompt by default
 PASS  log has no key
+PASS  writing rules shown in editor
+PASS  edited writing rules saved
+PASS  reset brings back built-in rules
 PASS  logs cleared
 PASS  plugins screen says manual updates only
 PASS  settings link on plugins screen
@@ -79,4 +84,4 @@ PASS  editor cannot call admin REST routes
 PASS  editor cannot save API settings
 PASS  editor can use Playground when allowed
 
-RESULT: 79 passed, 0 failed
+RESULT: 84 passed, 0 failed

@@ -146,6 +146,7 @@ async function shot(page, name, fullPage = true) {
 	check('playground default model is Kimi K3', (await page.inputValue('#cdnv-pg-model')) === 'moonshotai/kimi-k3');
 	check('stream checkbox follows model setting', await page.isChecked('#cdnv-pg-stream'));
 	check('image controls visible for Kimi', await page.isVisible('#cdnv-pg-images'));
+	check('writing style ticked by default in Playground', await page.isChecked('#cdnv-pg-policy'));
 	await page.fill('#cdnv-pg-prompt', 'Write one line about Kolkata.');
 	const t0 = Date.now();
 	await page.click('#cdnv-pg-send');
@@ -155,6 +156,11 @@ async function shot(page, name, fullPage = true) {
 	await page.waitForSelector('.cdnv-msg--assistant .cdnv-msg__meta button', { timeout: 60000 });
 	const fullText = await page.$eval('.cdnv-msg--assistant .cdnv-msg__body', (b) => b.textContent);
 	check('streamed text rendered incrementally', partialLen < fullText.length, partialLen + ' < ' + fullText.length);
+	if (process.env.MOCK_LOG) {
+		const reqs = fs.readFileSync(process.env.MOCK_LOG, 'utf8').trim().split('\n').map((l) => JSON.parse(l));
+		const sent = reqs.reverse().find((r) => r.body && r.body.stream === true && JSON.stringify(r.body.messages).includes('Write one line about Kolkata'));
+		check('Playground request carries the writing style', !!sent && sent.body.messages[0].role === 'system' && sent.body.messages[0].content.includes('WRITING STYLE FOR ALL READER-FACING CONTENT'));
+	}
 	check('streamed reply complete', fullText.startsWith('Hello from moonshotai/kimi-k3. You said: Write one line about Kolkata.'), fullText);
 	check('reasoning shown separately', (await page.textContent('.cdnv-msg__reasoning-body')).includes('step by step'));
 	check('usage + time shown', (await page.textContent('.cdnv-msg__meta')).includes('42 prompt + 17 output tokens'));
@@ -268,6 +274,14 @@ async function shot(page, name, fullPage = true) {
 	check('log has no prompt by default', !logHtml.includes('log me privately'));
 	check('log has no key', !logHtml.includes('E2eSecretKey'));
 	await page.goto(ADMIN + '&tab=privacy');
+	const rules = await page.inputValue('#cdnv-writing-style-text');
+	check('writing rules shown in editor', rules.startsWith('WRITING STYLE FOR ALL READER-FACING CONTENT') && (await page.textContent('#cdnv-writing-style')).includes('built-in Chandan Digital rules'));
+	await page.fill('#cdnv-writing-style-text', rules + '\nAlways mention our Kolkata office hours: 10 am to 7 pm.');
+	await Promise.all([page.waitForNavigation(), page.click('input[type=submit][value="Save privacy and security settings"]')]);
+	check('edited writing rules saved', (await page.inputValue('#cdnv-writing-style-text')).includes('Kolkata office hours') && (await page.textContent('#cdnv-writing-style')).includes('your own edited rules'));
+	await page.check('input[name=writing_style_reset]');
+	await Promise.all([page.waitForNavigation(), page.click('input[type=submit][value="Save privacy and security settings"]')]);
+	check('reset brings back built-in rules', !(await page.inputValue('#cdnv-writing-style-text')).includes('Kolkata office hours') && (await page.textContent('#cdnv-writing-style')).includes('built-in Chandan Digital rules'));
 	await shot(page, '09-privacy');
 	page.once('dialog', (d) => d.accept());
 	await Promise.all([page.waitForNavigation(), page.click('input[type=submit][value="Clear logs"]')]);

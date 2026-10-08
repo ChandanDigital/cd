@@ -1,14 +1,14 @@
 # Testing Report
 
-**Plugin:** Chandan Digital AI for NVIDIA 1.1.0
+**Plugin:** Chandan Digital AI for NVIDIA 1.1.1
 **Test date:** 8 October 2026
 
 ## Summary
 
 | Test suite | Result |
 |---|---|
-| Integration tests inside WordPress (WP-CLI) | **131 passed, 0 failed** |
-| Browser end-to-end tests (Chromium, Playwright) | **79 passed, 0 failed** |
+| Integration tests inside WordPress (WP-CLI) | **144 passed, 0 failed** |
+| Browser end-to-end tests (Chromium, Playwright) | **84 passed, 0 failed** |
 | Lifecycle tests with the real ZIP | All steps behaved as expected (details below) |
 | PHP 7.4 to 8.4 compatibility scan (PHPCompatibility) | 0 errors |
 | WordPress security sniffs (escaping, nonces, input, SQL, i18n) | 0 issues in new code; 1 warning on an unchanged original file (not browser output) |
@@ -98,7 +98,7 @@ Please follow section 4 of the API Configuration Guide on your site to confirm l
 | Interrupted connection | **Pass**: reported as incomplete; partial text kept but not used as context |
 | Non-streaming fallback | **Pass**: non-streaming mode works, and the Playground switches automatically if a stream cannot start |
 | Duplicate requests | **Pass**: a reused request ID gets HTTP 409 |
-| Server streaming self-test | **Pass**: "events arrived one by one (first after 42 ms, last after 1642 ms)" on the test server |
+| Server streaming self-test | **Pass**: "events arrived one by one (first after 29 ms, last after 1631 ms)" on the test server |
 | Streaming on your real host (nginx, Apache, CDN) | **Not performed**: use API Diagnostics > Test streaming |
 
 ### Reasoning
@@ -135,6 +135,20 @@ Please follow section 4 of the API Configuration Guide on your site to confirm l
 | No external requests from plugin screens | **Pass** (WordPress core's Gravatar avatars excluded) |
 | No remote code execution path introduced | **Pass** by code review: no `eval`, no dynamic includes from input, uploads never written to disk |
 
+### Writing style (added in 1.1.1)
+
+| Check | Result |
+|---|---|
+| Built-in rules cover language, rhythm, active voice, repetition, hedging, substance, structure, formatting, sensitive topics, technical output and the final check | **Pass** |
+| The rules text contains no em dash | **Pass** |
+| Other plugins' requests carry the rules (on by default) | **Pass (mock)** |
+| Switching the style off sends no extra system message | **Pass (mock)** |
+| Playground box ticked by default, and its request carries the rules after the user's own system prompt | **Pass** |
+| Editing the rules on the Privacy tab saves them, and they reach the AI Client | **Pass** |
+| "Go back to the built-in rules" restores them; saving the built-in text unchanged stores nothing extra | **Pass** |
+| Rules longer than 20,000 characters refused, old rules kept | **Pass** |
+| Whether a live model actually follows the rules | **Not performed** (needs live NVIDIA access) |
+
 ### Plugin lifecycle (with the real ZIP)
 
 | Check | Result |
@@ -144,6 +158,7 @@ Please follow section 4 of the API Configuration Guide on your site to confirm l
 | Settings save correctly | **Pass** |
 | Deactivation keeps settings | **Pass** |
 | Reinstallation (delete, then install again) keeps key and settings | **Pass** |
+| Upgrade from 1.1.0 to 1.1.1 through the upload screen | **Pass**: key, default model, Kimi settings and an earlier "style off" choice all kept |
 | Manual ZIP update via **Upload Plugin > Replace current with uploaded** | **Pass**: WordPress offered "replace", reported "Plugin updated successfully", and key, default model and Kimi settings were kept |
 | Delete with "delete all data" removes every plugin option | **Pass** |
 | Running alongside the original plugin | **Pass**: no fatal error; clear notice; this plugin takes over once the original is deactivated |

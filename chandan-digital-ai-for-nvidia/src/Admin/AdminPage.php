@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ChandanDigital\NvidiaAi\Admin;
 
+use ChandanDigital\NvidiaAi\Content\IndianEnglishPolicy;
 use ChandanDigital\NvidiaAi\Plugin;
 use ChandanDigital\NvidiaAi\Rest\RestController;
 use ChandanDigital\NvidiaAi\Support\Logger;
@@ -324,9 +325,18 @@ final class AdminPage
             'log_content' => !empty($post['log_content']),
             'log_retention_days' => $post['log_retention_days'] ?? 7,
             'editorial_policy' => !empty($post['editorial_policy']),
+            'playground_policy' => !empty($post['playground_policy']),
             'playground_access' => (string) ($post['playground_access'] ?? 'administrator'),
             'delete_data_on_uninstall' => !empty($post['delete_data_on_uninstall']),
         ]);
+        if (!empty($post['writing_style_reset'])) {
+            IndianEnglishPolicy::save('');
+        } elseif (isset($post['writing_style'])) {
+            $styleError = IndianEnglishPolicy::save((string) $post['writing_style']);
+            if ($styleError !== null) {
+                $errors['writing_style'] = $styleError;
+            }
+        }
         if (empty($post['logging'])) {
             Logger::clear();
         } else {

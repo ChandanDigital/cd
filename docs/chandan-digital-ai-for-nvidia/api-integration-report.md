@@ -1,6 +1,6 @@
 # API Integration Report: Kimi K3 on NVIDIA
 
-**Plugin:** Chandan Digital AI for NVIDIA 1.1.0
+**Plugin:** Chandan Digital AI for NVIDIA 1.1.1
 **Model:** Moonshot AI Kimi K3, model ID `moonshotai/kimi-k3`
 **Endpoint:** `https://integrate.api.nvidia.com/v1/chat/completions` (POST, JSON, Bearer token)
 
@@ -14,7 +14,7 @@ The uploaded `ai-provider-for-nvidia.zip` (version 1.0.2) is a provider add-on f
 - read the API key from the `NVIDIA_API_KEY` environment variable or constant (WordPress 7.0+ can also supply it from Settings > Connectors);
 - added an Indian English editorial policy to every text request (version 1.0.1) and careful JSON handling (version 1.0.2).
 
-All of this is kept. Kimi K3 was added **through the same provider**, so any plugin that uses the WordPress AI Client with provider `nvidia` can use Kimi K3. The dashboard is an addition, not a separate chatbot.
+All of this is kept. In 1.1.1 the old editorial policy was replaced by the new Chandan Digital writing style (see section 9). Kimi K3 was added **through the same provider**, so any plugin that uses the WordPress AI Client with provider `nvidia` can use Kimi K3. The dashboard is an addition, not a separate chatbot.
 
 ## 2. What was added for Kimi K3
 
@@ -119,6 +119,17 @@ Some sources disagreed. A few third-party write-ups said Kimi K3 accepts only `m
 - **Image URLs** are checked with a DNS lookup on your server, but never downloaded by it. A server without outside DNS will reject image URLs; uploads still work.
 - **Streaming in the AI Client:** the WordPress AI Client works with complete replies, so other plugins get non-streamed results. Streaming is used in the Playground.
 - **FLUX image generation** is unchanged and is used through the AI Client only. The Playground is for chat models.
+
+## 9. Writing style for AI answers (1.1.1)
+
+The plugin sends a set of writing rules to the model as a system instruction. The rules ask for simple Indian English, a mix of short and long sentences, active voice, no stock AI phrases or padding, one clear caution instead of many, real examples, clean tables and lists, linked sources, extra care on health, legal, money and safety topics, and a silent self-check before answering. A separate rule tells the model to keep code, JSON, HTML, links and tool data exactly as they must be.
+
+- Other plugins: added to every text request, on by default. Replies with an em dash are rejected, as in 1.0.1.
+- Playground: on by default, and you can untick it for one request.
+- The rules are about 1,300 words, roughly 1,900 tokens, added to each request that uses them.
+- You can edit them on the Privacy & Security tab and go back to the built-in version at any time.
+
+These are instructions to the model, so results depend on how well the model follows them. The plugin does not rewrite or grade the answer afterwards, apart from the em dash check.
 
 ## Sources
 

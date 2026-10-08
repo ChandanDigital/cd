@@ -47,6 +47,7 @@ final class Settings
             'default_model' => ModelRegistry::KIMI_K3,
             'ai_client_key_mode' => 'fallback',
             'editorial_policy' => 1,
+            'playground_policy' => 1,
             'playground_access' => 'administrator',
             'logging' => 0,
             'log_content' => 0,
@@ -122,7 +123,7 @@ final class Settings
             $current[$key] = $value;
         }
 
-        foreach (['editorial_policy', 'logging', 'log_content', 'auto_refresh_models', 'delete_data_on_uninstall'] as $flag) {
+        foreach (['editorial_policy', 'playground_policy', 'logging', 'log_content', 'auto_refresh_models', 'delete_data_on_uninstall'] as $flag) {
             if (array_key_exists($flag, $input)) {
                 $current[$flag] = empty($input[$flag]) ? 0 : 1;
             }

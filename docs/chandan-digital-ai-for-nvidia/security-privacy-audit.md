@@ -1,6 +1,6 @@
 # Security and Privacy Audit
 
-**Plugin:** Chandan Digital AI for NVIDIA 1.1.0
+**Plugin:** Chandan Digital AI for NVIDIA 1.1.1
 **Compared with:** AI Provider for NVIDIA 1.0.2 (the uploaded ZIP)
 
 ## 1. Review of the original plugin
@@ -82,7 +82,7 @@ Tested: logged-out requests get HTTP 401, a logged-in request without a nonce is
 ### Outgoing request hygiene
 
 - Redirects are not followed, so the API key cannot be forwarded to another host.
-- A plain user agent (`ChandanDigitalAIforNVIDIA/1.1.0`) is used. WordPress's default would also send your site's address.
+- A plain user agent (`ChandanDigitalAIforNVIDIA/1.1.1`) is used. WordPress's default would also send your site's address.
 - Requests go through the WordPress HTTP API, so proxy settings, SSL certificates and `WP_HTTP_BLOCK_EXTERNAL` still apply.
 - A base URL that is not on `nvidia.com` shows a warning, because the key is sent there. Only `https://` base URLs are accepted.
 
@@ -109,5 +109,5 @@ Tested: logged-out requests get HTTP 401, a logged-in request without a nonce is
 3. **Editor access** to the Playground lets Editors spend your NVIDIA credits. It is off by default.
 4. **Custom base URL:** any host you enter receives your API key. Leave the default unless you run your own NVIDIA NIM.
 5. **The key mentioned earlier in your conversation** should be treated as exposed. Revoke it on build.nvidia.com and create a new one.
-6. **Inherited editorial policy:** the original 1.0.1 behaviour of rejecting AI Client replies that contain an em dash is kept. It is a content rule, not a security control, and can be turned off on the Privacy & Security tab.
+6. **Writing style rules:** the 1.1.1 rules, and the em dash check for other plugins, are content rules, not security controls. Anyone with administrator access can edit the rules. They are sent to NVIDIA with each request, so do not put private business data in them.
 7. **Not tested:** WordPress multisite, and hosts that run PHP without cURL.
