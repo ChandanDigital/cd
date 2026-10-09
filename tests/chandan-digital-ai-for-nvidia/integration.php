@@ -220,7 +220,7 @@ $list = $client->list_models();
 check('list models', $list['ok'] && in_array('moonshotai/kimi-k3', $list['ids'], true), wp_json_encode($list['error'] ? $list['error']->to_array() : null));
 $req = last_request($mockLog);
 check('Authorization header sent as Bearer', $req['auth'] === 'Bearer nvapi-TestKey_123-abcdef');
-check('user agent does not leak site URL', strpos($req['ua'], '127.0.0.1') === false && strpos($req['ua'], 'ChandanDigitalAIforNVIDIA/1.2.0') === 0, $req['ua']);
+check('user agent does not leak site URL', strpos($req['ua'], '127.0.0.1') === false && strpos($req['ua'], 'ChandanDigitalAIforNVIDIA/' . \ChandanDigital\NvidiaAi\VERSION) === 0, $req['ua']);
 $probe = $client->probe('moonshotai/kimi-k3');
 check('probe kimi ok', $probe['ok'] && $probe['finish_reason'] === 'length');
 $chat = $client->chat((new PayloadBuilder())->chat($kimi, ModelRegistry::settings('moonshotai/kimi-k3'), [['role' => 'user', 'text' => 'Hello Kimi']], false));
@@ -283,12 +283,67 @@ check('NVIDIA-rejected parameter surfaces real reason', !$r['ok'] && $r['error']
 $r = NvidiaClient::create()->chat(['model' => 'moonshotai/kimi-k3', 'messages' => [['role' => 'user', 'content' => 'x']], 'temperature' => 0.5]);
 check('temperature rejection shows NVIDIA reason (no silent change)', !$r['ok'] && strpos($r['error']->detail, 'temperature') !== false);
 
+delete_option(Settings::CONNECTORS_OPTION);
 Settings::save_api_key('nvapi-invalid-key-0000');
 $r = NvidiaClient::create()->probe('moonshotai/kimi-k3');
 check('invalid key -> invalid_api_key (not model error)', !$r['ok'] && $r['error']->code === 'invalid_api_key' && $r['error']->is_key_error());
 Settings::delete_api_key();
 check('missing key -> missing_api_key', NvidiaClient::create() instanceof ApiError && NvidiaClient::create()->code === 'missing_api_key');
 Settings::save_api_key('nvapi-TestKey_123-abcdef');
+
+echo "== API key sync with Settings > Connectors (1.2.1) ==\n";
+$saveConnectors = static function (string $key): void {
+    wp_set_current_user(1);
+    $r = new WP_REST_Request('POST', '/wp/v2/settings');
+    $r->set_param(Settings::CONNECTORS_OPTION, $key);
+    $res = rest_do_request($r);
+    apply_filters('rest_post_dispatch', $res, rest_get_server(), $r);
+};
+$hooks = ['update_option_' . Settings::CONNECTORS_OPTION, 'add_option_' . Settings::CONNECTORS_OPTION];
+delete_option(Settings::CONNECTORS_OPTION);
+Settings::save_api_key('nvapi-Old_Key-AAAA');
+check('key saved here is not copied into an empty Connectors option', Settings::connectors_key() === '');
+$saveConnectors('nvapi-New_Key-BBBB');
+check('new key saved in Settings > Connectors is used by this plugin too', Settings::stored_key() === 'nvapi-New_Key-BBBB' && Settings::api_key() === 'nvapi-New_Key-BBBB');
+Settings::save_api_key('nvapi-Newer_Key-CCCC');
+check('new key saved here updates Settings > Connectors too', Settings::connectors_key() === 'nvapi-Newer_Key-CCCC');
+check('saved key stays encrypted in this plugin', strpos((string) get_option(Settings::KEY_OPTION), 'nvapi-') === false);
+update_option(Settings::CONNECTORS_OPTION, '');
+check('key rejected and cleared by WordPress: this plugin keeps its previous key', Settings::stored_key() === 'nvapi-Newer_Key-CCCC');
+// Old state from 1.2.0: two different keys, one of them revoked. Written without the sync hooks.
+$saved = [];
+foreach ($hooks as $hook) { $saved[$hook] = $GLOBALS['wp_filter'][$hook] ?? null; remove_all_actions($hook); }
+Settings::save_api_key('nvapi-invalid-key-0000');
+update_option(Settings::CONNECTORS_OPTION, 'nvapi-Good_Key-GGGG');
+foreach ($saved as $hook => $value) { if ($value !== null) { $GLOBALS['wp_filter'][$hook] = $value; } }
+check('old mismatch detected', Settings::keys_differ());
+$r = NvidiaClient::create()->probe('meta/llama-3.3-70b-instruct');
+check('revoked key here: request retried with the Connectors key and works', $r['ok'] === true, $r['error'] ? $r['error']->code : '');
+check('working key then saved in both places', Settings::stored_key() === 'nvapi-Good_Key-GGGG' && Settings::connectors_key() === 'nvapi-Good_Key-GGGG' && !Settings::keys_differ());
+foreach ($hooks as $hook) { $saved[$hook] = $GLOBALS['wp_filter'][$hook] ?? null; remove_all_actions($hook); }
+Settings::save_api_key('nvapi-Good_Key-HHHH');
+update_option(Settings::CONNECTORS_OPTION, 'nvapi-invalid-key-0000');
+foreach ($saved as $hook => $value) { if ($value !== null) { $GLOBALS['wp_filter'][$hook] = $value; } }
+$r = NvidiaClient::create()->probe('meta/llama-3.3-70b-instruct');
+check('revoked key in Connectors: a working request copies the good key there', $r['ok'] && Settings::connectors_key() === 'nvapi-Good_Key-HHHH');
+$r = NvidiaClient::create()->stream(['model' => 'meta/llama-3.3-70b-instruct', 'messages' => [['role' => 'user', 'content' => 'hi']]], static function (): void {}, static function (): bool { return true; });
+check('streaming works after the sync', $r['ok'] === true);
+Settings::save_api_key('nvapi-invalid-key-0000');
+delete_option(Settings::CONNECTORS_OPTION);
+$r = NvidiaClient::create()->probe('meta/llama-3.3-70b-instruct');
+check('only one (revoked) key: clear key error, no endless retries', !$r['ok'] && $r['error']->code === 'invalid_api_key');
+// Other plugins (WordPress AI Client) with a revoked Connectors key and a good key saved here.
+Settings::save_api_key('nvapi-TestKey_123-abcdef');
+foreach ($hooks as $hook) { $saved[$hook] = $GLOBALS['wp_filter'][$hook] ?? null; remove_all_actions($hook); }
+update_option(Settings::CONNECTORS_OPTION, 'nvapi-invalid-key-0000');
+foreach ($saved as $hook => $value) { if ($value !== null) { $GLOBALS['wp_filter'][$hook] = $value; } }
+AiClient::defaultRegistry()->setProviderRequestAuthentication('nvidia', new ApiKeyRequestAuthentication('nvapi-invalid-key-0000'));
+ModelRegistry::set_status('meta/llama-3.3-70b-instruct', 'verified', 200);
+$aiResult = wp_ai_client_prompt('Say hi')->using_provider('nvidia')->using_model_preference('meta/llama-3.3-70b-instruct')->generate_text();
+check('AI Client: revoked Connectors key retried with the key saved here, and synced', !is_wp_error($aiResult) && Settings::connectors_key() === 'nvapi-TestKey_123-abcdef', is_wp_error($aiResult) ? $aiResult->get_error_message() : '');
+delete_option(Settings::CONNECTORS_OPTION);
+Settings::save_api_key('nvapi-TestKey_123-abcdef');
+AiClient::defaultRegistry()->setProviderRequestAuthentication('nvidia', new ApiKeyRequestAuthentication('nvapi-TestKey_123-abcdef'));
 
 echo "== WordPress AI Client integration ==\n";
 $registry = AiClient::defaultRegistry();
@@ -434,7 +489,7 @@ $st = get_option(ModelRegistry::OPTION); $st['settings']['moonshotai/kimi-k3'] =
 update_option(ModelRegistry::OPTION, $st); ModelRegistry::flush(); update_option(Plugin::VERSION_OPTION, '1.1.1');
 Plugin::maybe_upgrade(); ModelRegistry::flush();
 $ks = ModelRegistry::settings('moonshotai/kimi-k3');
-check('upgrade fills unset Kimi top_p with 0.95, keeps other choices', $ks['top_p'] === 0.95 && $ks['reasoning_effort'] === 'high' && get_option(Plugin::VERSION_OPTION) === '1.2.0');
+check('upgrade fills unset Kimi top_p with 0.95, keeps other choices', $ks['top_p'] === 0.95 && $ks['reasoning_effort'] === 'high' && get_option(Plugin::VERSION_OPTION) === \ChandanDigital\NvidiaAi\VERSION);
 $st = get_option(ModelRegistry::OPTION); $st['settings']['moonshotai/kimi-k3']['top_p'] = 0.8;
 update_option(ModelRegistry::OPTION, $st); ModelRegistry::flush(); update_option(Plugin::VERSION_OPTION, '1.1.1');
 Plugin::maybe_upgrade(); ModelRegistry::flush();
@@ -592,7 +647,7 @@ check('auto-update forced off for this plugin', Plugin::disable_auto_update(true
 check('other plugins auto-update untouched', Plugin::disable_auto_update(true, (object) ['plugin' => 'akismet/akismet.php']) === true);
 $headers = get_plugin_data(WP_PLUGIN_DIR . '/chandan-digital-ai-for-nvidia/chandan-digital-ai-for-nvidia.php', false, false);
 check('Update URI header set off WordPress.org', strpos($headers['UpdateURI'], 'chandandigital.com') !== false);
-check('plugin header branding', $headers['Name'] === 'Chandan Digital AI for NVIDIA' && $headers['Author'] === 'Chandan Digital' && $headers['Version'] === '1.2.0');
+check('plugin header branding', $headers['Name'] === 'Chandan Digital AI for NVIDIA' && $headers['Author'] === 'Chandan Digital' && $headers['Version'] === \ChandanDigital\NvidiaAi\VERSION);
 $before = get_option(Settings::OPTION);
 Plugin::activate();
 check('re-activation keeps existing settings', get_option(Settings::OPTION) === $before);

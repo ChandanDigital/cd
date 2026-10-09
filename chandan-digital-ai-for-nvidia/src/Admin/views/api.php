@@ -53,6 +53,7 @@ $cdnv_settings = Settings::all();
                 <pre class="cdnv-code">define( 'CHANDAN_NVIDIA_API_KEY', 'nvapi-your-new-key' );</pre>
             </details>
         <?php endif; ?>
+        <p class="description"><?php esc_html_e('The key saved here and the key in Settings > Connectors are kept the same: saving a new key in either place updates the other, so this plugin and the WordPress AI plugin always use one key.', 'chandan-digital-ai-for-nvidia'); ?></p>
         <p class="description"><?php esc_html_e('Key order: CHANDAN_NVIDIA_API_KEY constant, then the key saved here, then an NVIDIA_API_KEY environment variable or constant, then Settings > Connectors.', 'chandan-digital-ai-for-nvidia'); ?></p>
     </section>
 

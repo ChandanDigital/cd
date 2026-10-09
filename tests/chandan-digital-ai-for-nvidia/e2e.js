@@ -414,7 +414,7 @@ async function shot(page, name, fullPage = true) {
 
 	// SEO tab
 	await page.goto(ADMIN + '&tab=seo');
-	check('SEO tab shows Chandan Digital SEO as active and the six skills', (await page.textContent('.cdnv-panel')).includes('saved into it') && (await page.$$('.cdnv-panel details.cdnv-details')).length === 6);
+	check('SEO tab has no SEO-plugin status text, and lists the six skills', !(await page.textContent('.cdnv-panel')).includes('Chandan Digital SEO:') && (await page.$$('.cdnv-panel details.cdnv-details')).length === 6);
 
 	// Security: unauthenticated and nonce-less REST calls.
 	const anon = await browser.newContext();

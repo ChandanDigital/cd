@@ -1,13 +1,13 @@
 # Testing Report
 
-**Plugin:** Chandan Digital AI for NVIDIA 1.2.0
+**Plugin:** Chandan Digital AI for NVIDIA 1.2.1
 **Test date:** 8 October 2026
 
 ## Summary
 
 | Test suite | Result |
 |---|---|
-| Integration tests inside WordPress (WP-CLI) | **196 passed, 0 failed** |
+| Integration tests inside WordPress (WP-CLI) | **208 passed, 0 failed** |
 | Browser end-to-end tests (Chromium, Playwright) | **112 passed, 0 failed** |
 | Lifecycle tests with the real ZIP | All steps behaved as expected (details below) |
 | Editor 403 reproduced with the real WordPress AI plugin 1.4.0 | Cause confirmed, fix confirmed (details below) |
@@ -103,7 +103,7 @@ Please follow section 4 of the API Configuration Guide on your site to confirm l
 | Interrupted connection | **Pass**: reported as incomplete; partial text kept but not used as context |
 | Non-streaming fallback | **Pass**: non-streaming mode works, and the Playground switches automatically if a stream cannot start |
 | Duplicate requests | **Pass**: a reused request ID gets HTTP 409 |
-| Server streaming self-test | **Pass**: "events arrived one by one (first after 30 ms, last after 1630 ms)" on the test server |
+| Server streaming self-test | **Pass**: "events arrived one by one (first after 26 ms, last after 1626 ms)" on the test server |
 | Streaming on your real host (nginx, Apache, CDN) | **Not performed**: use API Diagnostics > Test streaming |
 
 ### Reasoning
@@ -139,6 +139,23 @@ Please follow section 4 of the API Configuration Guide on your site to confirm l
 | No hidden update downloader | **Pass**: no update code; `Update URI` set; auto-update off for this plugin only |
 | No external requests from plugin screens | **Pass** (WordPress core's Gravatar avatars excluded) |
 | No remote code execution path introduced | **Pass** by code review: no `eval`, no dynamic includes from input; Playground uploads never written to disk; SEO images saved only after an image-type check, with the extension taken from the detected type |
+
+### API key sync (added in 1.2.1)
+
+Before 1.2.1, this plugin and WordPress **Settings > Connectors** each kept their own NVIDIA key. When a new key was saved in Connectors while an older key was still saved in this plugin, this plugin kept using the old key, so the Playground, the SEO Assistant and the connection test all failed. This was reproduced on the test site.
+
+| Check | Result |
+|---|---|
+| New key saved in Settings > Connectors is used by this plugin too | **Pass** |
+| New key saved in this plugin also updates Settings > Connectors (only when a key is kept there) | **Pass** |
+| Key saved here stays encrypted; nothing is copied into an empty Connectors option | **Pass** |
+| WordPress rejects and clears a Connectors key: this plugin keeps its previous key | **Pass** |
+| Old revoked key in this plugin, good key in Connectors: the request is retried once with the good key and works, then both places hold the good key | **Pass (mock)** |
+| Good key here, revoked key in Connectors: the good key is copied to Connectors after a working request | **Pass (mock)** |
+| Other plugins (WordPress AI Client) with a revoked Connectors key: retried with the key saved here, works, and the keys are synced | **Pass (mock)** |
+| Only one key and it is revoked: one clear "invalid API key" error, no endless retries | **Pass (mock)** |
+| Real upgrade 1.2.0 to 1.2.1 through the upload screen, with a revoked key saved in the plugin and a good key in Connectors: request failed on 1.2.0, worked on the first try after upgrading, and both places then held the good key | **Pass (mock)** |
+| SEO Assistant with Chandan Digital SEO switched off: all six buttons work, and no "Not active" text is shown | **Pass (mock)** |
 
 ### The 403 error in posts and pages (added in 1.2.0)
 

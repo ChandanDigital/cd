@@ -2,14 +2,14 @@
 # This file is distributed under the GPL-2.0-or-later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Chandan Digital AI for NVIDIA 1.2.0\n"
+"Project-Id-Version: Chandan Digital AI for NVIDIA 1.2.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/chandan-digital-ai-for-nvidia\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-08T18:53:41+00:00\n"
+"POT-Creation-Date: 2026-10-09T01:39:45+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: chandan-digital-ai-for-nvidia\n"
@@ -67,7 +67,7 @@ msgid "Kimi K3 Settings"
 msgstr ""
 
 #: src/Admin/AdminPage.php:139
-#: src/Admin/views/seo.php:56
+#: src/Admin/views/seo.php:44
 msgid "SEO Assistant"
 msgstr ""
 
@@ -286,7 +286,7 @@ msgid "Copy response"
 msgstr ""
 
 #: src/Admin/AdminPage.php:463
-#: src/Seo/SeoAssistant.php:190
+#: src/Seo/SeoAssistant.php:187
 msgid "Copied"
 msgstr ""
 
@@ -445,109 +445,113 @@ msgid "Add this line above \"That's all, stop editing!\" in wp-config.php. A key
 msgstr ""
 
 #: src/Admin/views/api.php:56
+msgid "The key saved here and the key in Settings > Connectors are kept the same: saving a new key in either place updates the other, so this plugin and the WordPress AI plugin always use one key."
+msgstr ""
+
+#: src/Admin/views/api.php:57
 msgid "Key order: CHANDAN_NVIDIA_API_KEY constant, then the key saved here, then an NVIDIA_API_KEY environment variable or constant, then Settings > Connectors."
 msgstr ""
 
-#: src/Admin/views/api.php:60
+#: src/Admin/views/api.php:61
 msgid "Endpoint and requests"
 msgstr ""
 
-#: src/Admin/views/api.php:63
+#: src/Admin/views/api.php:64
 msgid "API base URL"
 msgstr ""
 
-#: src/Admin/views/api.php:67
+#: src/Admin/views/api.php:68
 msgid "Chat completions endpoint used:"
 msgstr ""
 
 #. translators: %s: default URL.
-#: src/Admin/views/api.php:71
+#: src/Admin/views/api.php:72
 #, php-format
 msgid "Default: %s. Only https:// is accepted."
 msgstr ""
 
-#: src/Admin/views/api.php:75
+#: src/Admin/views/api.php:76
 msgid "This base URL is not an nvidia.com address. Your API key is sent to it with every request. Use it only for an NVIDIA NIM deployment you control."
 msgstr ""
 
-#: src/Admin/views/api.php:80
+#: src/Admin/views/api.php:81
 msgid "Request timeout (seconds)"
 msgstr ""
 
-#: src/Admin/views/api.php:83
+#: src/Admin/views/api.php:84
 msgid "Kimi K3 thinks before it answers, and at maximum reasoning effort a reply can take a few minutes. 120 to 300 seconds works well. Your host may stop PHP sooner."
 msgstr ""
 
-#: src/Admin/views/api.php:87
+#: src/Admin/views/api.php:88
 msgid "Connection timeout (seconds)"
 msgstr ""
 
-#: src/Admin/views/api.php:91
+#: src/Admin/views/api.php:92
 msgid "Automatic retries"
 msgstr ""
 
-#: src/Admin/views/api.php:94
+#: src/Admin/views/api.php:95
 msgid "retries, waiting at most"
 msgstr ""
 
-#: src/Admin/views/api.php:95
+#: src/Admin/views/api.php:96
 msgid "Longest wait before a retry, in seconds"
 msgstr ""
 
-#: src/Admin/views/api.php:96
+#: src/Admin/views/api.php:97
 msgid "seconds"
 msgstr ""
 
-#: src/Admin/views/api.php:97
+#: src/Admin/views/api.php:98
 msgid "Only temporary problems are retried: rate limits (429, respecting Retry-After), NVIDIA outages (500, 502, 503, 504) and network errors. Key, model and request errors are never retried."
 msgstr ""
 
-#: src/Admin/views/api.php:101
+#: src/Admin/views/api.php:102
 msgid "Key for the WordPress AI Client"
 msgstr ""
 
-#: src/Admin/views/api.php:104
+#: src/Admin/views/api.php:105
 msgid "Use this plugin's key only when WordPress has no NVIDIA key of its own (recommended)"
 msgstr ""
 
-#: src/Admin/views/api.php:105
+#: src/Admin/views/api.php:106
 msgid "Always use this plugin's key"
 msgstr ""
 
-#: src/Admin/views/api.php:106
+#: src/Admin/views/api.php:107
 msgid "Never share it; other plugins use only Settings > Connectors or NVIDIA_API_KEY"
 msgstr ""
 
-#: src/Admin/views/api.php:114
+#: src/Admin/views/api.php:115
 msgid "Save configuration"
 msgstr ""
 
-#: src/Admin/views/api.php:115
+#: src/Admin/views/api.php:116
 #: src/Admin/views/overview.php:87
 msgid "Test connection"
 msgstr ""
 
-#: src/Admin/views/api.php:117
+#: src/Admin/views/api.php:118
 msgid "Save first, then test. The test uses the saved settings."
 msgstr ""
 
-#: src/Admin/views/api.php:122
+#: src/Admin/views/api.php:123
 msgid "How to get an NVIDIA API key"
 msgstr ""
 
-#: src/Admin/views/api.php:124
+#: src/Admin/views/api.php:125
 msgid "Go to build.nvidia.com and sign in with your NVIDIA account."
 msgstr ""
 
-#: src/Admin/views/api.php:125
+#: src/Admin/views/api.php:126
 msgid "Open the Kimi K3 model page (moonshotai/kimi-k3) and choose \"Get API Key\", or create a key from your account's API keys page."
 msgstr ""
 
-#: src/Admin/views/api.php:126
+#: src/Admin/views/api.php:127
 msgid "Copy the key (it starts with nvapi-), paste it above, save, and press Test connection."
 msgstr ""
 
-#: src/Admin/views/api.php:128
+#: src/Admin/views/api.php:129
 msgid "If a key was ever shared in a chat, email or screenshot, revoke it on build.nvidia.com and create a new one."
 msgstr ""
 
@@ -1133,8 +1137,8 @@ msgid "Check access"
 msgstr ""
 
 #: src/Admin/views/models.php:105
-#: src/Admin/views/seo.php:53
-#: src/Plugin.php:251
+#: src/Admin/views/seo.php:41
+#: src/Plugin.php:258
 msgid "Settings"
 msgstr ""
 
@@ -1629,161 +1633,141 @@ msgstr[1] ""
 msgid "Clear logs"
 msgstr ""
 
-#: src/Admin/views/seo.php:23
+#: src/Admin/views/seo.php:21
 msgid "SEO Assistant in posts and pages"
 msgstr ""
 
-#: src/Admin/views/seo.php:24
+#: src/Admin/views/seo.php:22
 msgid "Open any post or page and you will find the \"SEO Assistant (NVIDIA AI)\" box under the editor. It works with this plugin's own NVIDIA connection, so it does not depend on the WordPress AI plugin or its approvals."
 msgstr ""
 
-#: src/Admin/views/seo.php:26
+#: src/Admin/views/seo.php:24
 msgid "Button"
 msgstr ""
 
-#: src/Admin/views/seo.php:26
+#: src/Admin/views/seo.php:24
 msgid "What it does"
 msgstr ""
 
-#: src/Admin/views/seo.php:28
+#: src/Admin/views/seo.php:26
 #: src/Seo/SeoAssistant.php:139
 msgid "SEO titles"
 msgstr ""
 
-#: src/Admin/views/seo.php:28
+#: src/Admin/views/seo.php:26
 msgid "Five title options of 50 to 60 characters with the focus keyword near the start. Use one as the post title or as the SEO title."
 msgstr ""
 
-#: src/Admin/views/seo.php:29
+#: src/Admin/views/seo.php:27
 #: src/Seo/SeoAssistant.php:140
 msgid "Meta description"
 msgstr ""
 
-#: src/Admin/views/seo.php:29
-msgid "Three options of 150 to 160 characters. \"Use\" saves it straight into Chandan Digital SEO."
+#: src/Admin/views/seo.php:27
+msgid "Three options of 150 to 160 characters, ready to use or copy."
 msgstr ""
 
-#: src/Admin/views/seo.php:30
+#: src/Admin/views/seo.php:28
 #: src/Seo/SeoAssistant.php:141
 msgid "SEO check"
 msgstr ""
 
-#: src/Admin/views/seo.php:30
+#: src/Admin/views/seo.php:28
 msgid "A score with the most important fixes first: keyword placement, headings, E-E-A-T, readability, links and AI-search readiness."
 msgstr ""
 
-#: src/Admin/views/seo.php:31
+#: src/Admin/views/seo.php:29
 #: src/Seo/SeoAssistant.php:142
 msgid "Improve content"
 msgstr ""
 
-#: src/Admin/views/seo.php:31
+#: src/Admin/views/seo.php:29
 msgid "A better version of the content that keeps your facts, links and images. Preview it first, then replace or copy."
 msgstr ""
 
-#: src/Admin/views/seo.php:32
+#: src/Admin/views/seo.php:30
 #: src/Seo/SeoAssistant.php:143
 msgid "Internal links"
 msgstr ""
 
-#: src/Admin/views/seo.php:32
+#: src/Admin/views/seo.php:30
 msgid "Up to 8 links to your real published posts and pages, using phrases already in your text. Invented or already-linked pages are removed automatically."
 msgstr ""
 
-#: src/Admin/views/seo.php:33
+#: src/Admin/views/seo.php:31
 #: src/Seo/SeoAssistant.php:145
 msgid "Featured image"
 msgstr ""
 
-#: src/Admin/views/seo.php:33
+#: src/Admin/views/seo.php:31
 msgid "Writes an image brief, creates the image with FLUX, saves it to the Media Library with SEO alt text and file name, and lets you set it as the featured image."
 msgstr ""
 
-#: src/Admin/views/seo.php:37
-msgid "Chandan Digital SEO:"
-msgstr ""
-
-#: src/Admin/views/seo.php:39
-msgid "Active"
-msgstr ""
-
-#: src/Admin/views/seo.php:40
-msgid "SEO title, meta description and focus keyword are saved into it."
-msgstr ""
-
-#: src/Admin/views/seo.php:42
-msgid "Not active"
-msgstr ""
-
-#: src/Admin/views/seo.php:43
-msgid "SEO titles and descriptions can be copied, not saved."
-msgstr ""
-
-#: src/Admin/views/seo.php:46
+#: src/Admin/views/seo.php:34
 msgid "WordPress 6.6 and newer show boxes like this one in a \"Meta Boxes\" pane at the bottom of the block editor, and the pane starts closed. Click that bar to open it, or use the \"Open SEO Assistant\" button in the Post sidebar."
 msgstr ""
 
-#: src/Admin/views/seo.php:57
+#: src/Admin/views/seo.php:45
 msgid "Show the SEO Assistant box in the post and page editor"
 msgstr ""
 
-#: src/Admin/views/seo.php:60
+#: src/Admin/views/seo.php:48
 msgid "Who can use it"
 msgstr ""
 
-#: src/Admin/views/seo.php:62
+#: src/Admin/views/seo.php:50
 msgid "Administrators"
 msgstr ""
 
-#: src/Admin/views/seo.php:63
+#: src/Admin/views/seo.php:51
 msgid "Administrators and Editors"
 msgstr ""
 
-#: src/Admin/views/seo.php:64
+#: src/Admin/views/seo.php:52
 msgid "Administrators, Editors and Authors"
 msgstr ""
 
-#: src/Admin/views/seo.php:65
+#: src/Admin/views/seo.php:53
 msgid "People can only use it on posts they are allowed to edit. Creating images also needs permission to upload files."
 msgstr ""
 
-#: src/Admin/views/seo.php:69
+#: src/Admin/views/seo.php:57
 msgid "Default model"
 msgstr ""
 
-#: src/Admin/views/seo.php:72
+#: src/Admin/views/seo.php:60
 msgid "Same as the dashboard default model"
 msgstr ""
 
-#: src/Admin/views/seo.php:77
+#: src/Admin/views/seo.php:65
 msgid "Can be changed for each request in the editor box. Fast models such as GLM-5.3 Flash, DeepSeek V4.1 Flash or Llama 3.3 70B suit titles and descriptions; Kimi K3 thinks longer and suits content work. The assistant raises maximum output tokens to at least 2,048 (8,192 for \"Improve content\") for these tasks."
 msgstr ""
 
-#: src/Admin/views/seo.php:81
+#: src/Admin/views/seo.php:69
 msgid "Image model"
 msgstr ""
 
-#: src/Admin/views/seo.php:88
+#: src/Admin/views/seo.php:76
 msgid "FLUX.1 Schnell is the fastest. Images are created through NVIDIA's ai.api.nvidia.com service with your API key."
 msgstr ""
 
-#: src/Admin/views/seo.php:93
+#: src/Admin/views/seo.php:81
 msgid "Save SEO Assistant settings"
 msgstr ""
 
-#: src/Admin/views/seo.php:97
+#: src/Admin/views/seo.php:85
 msgid "SEO skills used"
 msgstr ""
 
-#: src/Admin/views/seo.php:99
+#: src/Admin/views/seo.php:87
 msgid "The SEO rules the model follows are adapted from claude-seo by AgriciDaniel (MIT License). The original skills are made for Claude Code and also run scripts and paid SEO data tools; only the on-page writing and checking rules that work inside WordPress are used here. They are also available in the AI Playground."
 msgstr ""
 
-#: src/Admin/views/seo.php:100
+#: src/Admin/views/seo.php:88
 msgid "claude-seo on GitHub"
 msgstr ""
 
-#: src/Admin/views/seo.php:110
+#: src/Admin/views/seo.php:98
 msgid "AI buttons from the WordPress AI plugin showing a 403 error? See the editor AI check on the Diagnostics tab."
 msgstr ""
 
@@ -2047,19 +2031,19 @@ msgstr ""
 msgid "The AI plugin's Connector Approval has not approved %s to use the NVIDIA connector, so WordPress stops those requests before they reach NVIDIA."
 msgstr ""
 
-#: src/Plugin.php:234
+#: src/Plugin.php:241
 msgid "Manual updates only (upload a new ZIP)."
 msgstr ""
 
-#: src/Plugin.php:315
+#: src/Plugin.php:322
 msgid "Chandan Digital AI for NVIDIA: the original \"AI Provider for NVIDIA\" plugin is also active and has registered the \"nvidia\" provider first. Deactivate it so Kimi K3 and your dashboard settings reach the WordPress AI Client. Your Playground still works."
 msgstr ""
 
-#: src/Plugin.php:316
+#: src/Plugin.php:323
 msgid "Chandan Digital AI for NVIDIA: another plugin has already registered the \"nvidia\" AI provider, so this plugin's provider was not registered. Deactivate the other NVIDIA provider plugin."
 msgstr ""
 
-#: src/Plugin.php:330
+#: src/Plugin.php:337
 msgid "Chandan Digital AI for NVIDIA: the WordPress AI Client (bundled with WordPress 7.0 and later) is not available, so other plugins cannot use NVIDIA models yet. The plugin's own dashboard and Playground still work."
 msgstr ""
 
@@ -2129,7 +2113,7 @@ msgid "The system prompt is too long or contains invalid characters."
 msgstr ""
 
 #: src/Seo/SeoAssistant.php:108
-#: src/Seo/SeoAssistant.php:237
+#: src/Seo/SeoAssistant.php:234
 msgid "SEO Assistant (NVIDIA AI)"
 msgstr ""
 
@@ -2149,166 +2133,162 @@ msgstr ""
 msgid "Uses the title and content currently in the editor, including unsaved changes. Text and images are sent to NVIDIA. Nothing changes in your post until you press a \"Use\" button."
 msgstr ""
 
-#: src/Seo/SeoAssistant.php:153
-msgid "Chandan Digital SEO is not active, so SEO titles and descriptions can be copied but not saved automatically."
-msgstr ""
-
-#: src/Seo/SeoAssistant.php:182
+#: src/Seo/SeoAssistant.php:179
 msgid "Asking NVIDIA… this can take up to a minute."
 msgstr ""
 
-#: src/Seo/SeoAssistant.php:183
+#: src/Seo/SeoAssistant.php:180
 msgid "Writing an image brief, then generating the image… this can take a minute or two."
 msgstr ""
 
-#: src/Seo/SeoAssistant.php:184
+#: src/Seo/SeoAssistant.php:181
 msgid "The request failed. Check your connection and try again."
 msgstr ""
 
-#: src/Seo/SeoAssistant.php:185
-#: src/Seo/SeoAssistant.php:314
+#: src/Seo/SeoAssistant.php:182
+#: src/Seo/SeoAssistant.php:311
 msgid "Add a title or some content first."
 msgstr ""
 
-#: src/Seo/SeoAssistant.php:186
+#: src/Seo/SeoAssistant.php:183
 msgid "Use as post title"
 msgstr ""
 
-#: src/Seo/SeoAssistant.php:187
+#: src/Seo/SeoAssistant.php:184
 msgid "Use as SEO title"
 msgstr ""
 
-#: src/Seo/SeoAssistant.php:188
+#: src/Seo/SeoAssistant.php:185
 msgid "Use as meta description"
 msgstr ""
 
-#: src/Seo/SeoAssistant.php:189
+#: src/Seo/SeoAssistant.php:186
 msgid "Copy"
 msgstr ""
 
-#: src/Seo/SeoAssistant.php:191
+#: src/Seo/SeoAssistant.php:188
 msgid "Saved"
 msgstr ""
 
-#: src/Seo/SeoAssistant.php:192
+#: src/Seo/SeoAssistant.php:189
 msgid "Done. Remember to save or update the post."
 msgstr ""
 
 #. translators: %d: number of characters.
-#: src/Seo/SeoAssistant.php:194
+#: src/Seo/SeoAssistant.php:191
 #, php-format
 msgid "%d characters"
 msgstr ""
 
 #. translators: %d: score out of 100.
-#: src/Seo/SeoAssistant.php:196
+#: src/Seo/SeoAssistant.php:193
 #, php-format
 msgid "SEO score (a guide, not a Google ranking): %d/100"
 msgstr ""
 
-#: src/Seo/SeoAssistant.php:197
+#: src/Seo/SeoAssistant.php:194
 msgid "What is already good"
 msgstr ""
 
-#: src/Seo/SeoAssistant.php:198
+#: src/Seo/SeoAssistant.php:195
 msgid "What to fix"
 msgstr ""
 
-#: src/Seo/SeoAssistant.php:199
+#: src/Seo/SeoAssistant.php:196
 msgid "Replace post content"
 msgstr ""
 
-#: src/Seo/SeoAssistant.php:200
+#: src/Seo/SeoAssistant.php:197
 msgid "Copy HTML"
 msgstr ""
 
-#: src/Seo/SeoAssistant.php:201
+#: src/Seo/SeoAssistant.php:198
 msgid "Replace the content in the editor with this version? You can undo with Ctrl+Z, and WordPress keeps a revision when you save."
 msgstr ""
 
-#: src/Seo/SeoAssistant.php:202
+#: src/Seo/SeoAssistant.php:199
 msgid "Why"
 msgstr ""
 
-#: src/Seo/SeoAssistant.php:203
+#: src/Seo/SeoAssistant.php:200
 msgid "Copy link HTML"
 msgstr ""
 
-#: src/Seo/SeoAssistant.php:204
+#: src/Seo/SeoAssistant.php:201
 msgid "No suitable internal links were found for this content."
 msgstr ""
 
-#: src/Seo/SeoAssistant.php:205
+#: src/Seo/SeoAssistant.php:202
 msgid "Set as featured image"
 msgstr ""
 
-#: src/Seo/SeoAssistant.php:206
+#: src/Seo/SeoAssistant.php:203
 msgid "Featured image set."
 msgstr ""
 
-#: src/Seo/SeoAssistant.php:207
+#: src/Seo/SeoAssistant.php:204
 msgid "Alt text"
 msgstr ""
 
-#: src/Seo/SeoAssistant.php:208
+#: src/Seo/SeoAssistant.php:205
 msgid "Prompt used"
 msgstr ""
 
-#: src/Seo/SeoAssistant.php:209
+#: src/Seo/SeoAssistant.php:206
 msgid "Focus keyword saved."
 msgstr ""
 
-#: src/Seo/SeoAssistant.php:238
+#: src/Seo/SeoAssistant.php:235
 msgid "SEO titles, meta description, SEO check, content improvement, internal links and featured image."
 msgstr ""
 
-#: src/Seo/SeoAssistant.php:239
+#: src/Seo/SeoAssistant.php:236
 msgid "Open SEO Assistant"
 msgstr ""
 
-#: src/Seo/SeoAssistant.php:296
+#: src/Seo/SeoAssistant.php:293
 msgid "You need permission to upload files to create images."
 msgstr ""
 
-#: src/Seo/SeoAssistant.php:304
+#: src/Seo/SeoAssistant.php:301
 msgid "No chat model is enabled. Enable one on the AI Models tab."
 msgstr ""
 
-#: src/Seo/SeoAssistant.php:310
+#: src/Seo/SeoAssistant.php:307
 msgid "This post is too long for the SEO Assistant. Try it on a shorter post."
 msgstr ""
 
-#: src/Seo/SeoAssistant.php:327
+#: src/Seo/SeoAssistant.php:324
 msgid "There are no other published posts or pages to link to yet."
 msgstr ""
 
-#: src/Seo/SeoAssistant.php:357
+#: src/Seo/SeoAssistant.php:354
 msgid "The model ran out of output tokens before finishing. Raise \"Maximum output tokens\" for this model, or choose a model that thinks less."
 msgstr ""
 
-#: src/Seo/SeoAssistant.php:375
+#: src/Seo/SeoAssistant.php:372
 msgid "The model stopped at its output limit, so the end of this version may be missing. Raise \"Maximum output tokens\" for this model before using it."
 msgstr ""
 
-#: src/Seo/SeoAssistant.php:400
-msgid "Chandan Digital SEO is not active, so this cannot be saved automatically. Copy it into your SEO plugin instead."
+#: src/Seo/SeoAssistant.php:397
+msgid "This cannot be saved automatically on this site. Use the Copy button instead."
 msgstr ""
 
-#: src/Seo/SeoAssistant.php:420
+#: src/Seo/SeoAssistant.php:417
 msgid "That image could not be used."
 msgstr ""
 
 #. translators: %s: upload error.
-#: src/Seo/SeoAssistant.php:665
+#: src/Seo/SeoAssistant.php:662
 #, php-format
 msgid "The image was created but could not be saved: %s"
 msgstr ""
 
-#: src/Seo/SeoAssistant.php:677
+#: src/Seo/SeoAssistant.php:674
 msgid "The image was created but could not be added to the Media Library."
 msgstr ""
 
-#: src/Seo/SeoAssistant.php:797
+#: src/Seo/SeoAssistant.php:794
 msgid "The model did not reply in the expected format. Try again, or choose another model in the SEO Assistant."
 msgstr ""
 
@@ -2414,60 +2394,60 @@ msgstr ""
 msgid "You can register up to 100 custom models."
 msgstr ""
 
-#: src/Support/Settings.php:104
+#: src/Support/Settings.php:116
 msgid "The API base URL must be a valid https:// address. The previous value was kept."
 msgstr ""
 
 #. translators: 1: minimum value, 2: maximum value.
-#: src/Support/Settings.php:124
+#: src/Support/Settings.php:136
 #, php-format
 msgid "Enter a whole number between %1$d and %2$d."
 msgstr ""
 
-#: src/Support/Settings.php:163
+#: src/Support/Settings.php:175
 msgid "Choose a chat model for the SEO Assistant."
 msgstr ""
 
-#: src/Support/Settings.php:173
+#: src/Support/Settings.php:185
 msgid "Choose a FLUX image model."
 msgstr ""
 
-#: src/Support/Settings.php:182
+#: src/Support/Settings.php:194
 msgid "The selected default model is not registered."
 msgstr ""
 
-#: src/Support/Settings.php:315
+#: src/Support/Settings.php:327
 msgid "wp-config.php constant CHANDAN_NVIDIA_API_KEY"
 msgstr ""
 
-#: src/Support/Settings.php:317
+#: src/Support/Settings.php:329
 msgid "Saved in this plugin (encrypted)"
 msgstr ""
 
-#: src/Support/Settings.php:319
+#: src/Support/Settings.php:331
 msgid "Server environment variable NVIDIA_API_KEY"
 msgstr ""
 
-#: src/Support/Settings.php:321
+#: src/Support/Settings.php:333
 msgid "wp-config.php constant NVIDIA_API_KEY"
 msgstr ""
 
-#: src/Support/Settings.php:323
+#: src/Support/Settings.php:335
 msgid "WordPress Settings > Connectors"
 msgstr ""
 
-#: src/Support/Settings.php:325
+#: src/Support/Settings.php:337
 msgid "Not configured"
 msgstr ""
 
-#: src/Support/Settings.php:383
+#: src/Support/Settings.php:395
 msgid "The API key is empty."
 msgstr ""
 
-#: src/Support/Settings.php:386
+#: src/Support/Settings.php:398
 msgid "The API key contains characters that NVIDIA keys never use. Paste the key again without spaces or quotes."
 msgstr ""
 
-#: src/Support/Settings.php:390
+#: src/Support/Settings.php:402
 msgid "The key could not be encrypted on this server, so it was not saved. Define CHANDAN_NVIDIA_API_KEY in wp-config.php instead."
 msgstr ""

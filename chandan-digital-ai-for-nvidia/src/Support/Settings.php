@@ -16,6 +16,12 @@ namespace ChandanDigital\NvidiaAi\Support;
  *
  * The key is never printed back to the browser. Screens only ever show a masked version.
  *
+ * Since 1.2.1 the key saved here and the key under Settings > Connectors are kept in sync, so the
+ * plugin and every plugin that uses the WordPress AI Client work with the same key: saving a new key
+ * in either place updates the other one. If an old key was left behind in one place, a request that
+ * NVIDIA rejects with that key is tried once with the other saved key, and the key that works is then
+ * used in both places.
+ *
  * @since 1.1.0
  */
 final class Settings
@@ -30,6 +36,12 @@ final class Settings
 
     /** @var array<string, mixed>|null */
     private static ?array $cache = null;
+
+    /** True while this class writes the Connectors option, so its own change is not copied back. */
+    private static bool $syncing = false;
+
+    /** Encrypted key that was replaced by a Connectors key in this request, or null. */
+    private static ?string $replacedKey = null;
 
     /**
      * Default values for every general setting.
@@ -392,7 +404,119 @@ final class Settings
         // Not autoloaded: the key is only read when an NVIDIA request is made.
         delete_option(self::KEY_OPTION);
         add_option(self::KEY_OPTION, $encrypted, '', false);
+        self::$replacedKey = null;
+        self::sync_to_connectors($key);
         return null;
+    }
+
+    /**
+     * The key saved under Settings > Connectors (WordPress 7.0+), or an empty string.
+     */
+    public static function connectors_key(): string
+    {
+        $value = get_option(self::CONNECTORS_OPTION, '');
+        return is_string($value) ? trim($value) : '';
+    }
+
+    /**
+     * Whether this plugin and Settings > Connectors hold two different keys.
+     */
+    public static function keys_differ(): bool
+    {
+        $stored = self::stored_key();
+        $connectors = self::connectors_key();
+        return $stored !== '' && $connectors !== '' && !hash_equals($stored, $connectors);
+    }
+
+    /**
+     * Puts a newly saved key into Settings > Connectors too, when a key is kept there.
+     *
+     * Nothing is written when Connectors has no key, so a site that only uses this plugin keeps its
+     * key encrypted and out of that plain option.
+     *
+     * @param string $key Key that was just saved.
+     */
+    private static function sync_to_connectors(string $key): void
+    {
+        $connectors = self::connectors_key();
+        if ($connectors === '' || hash_equals($connectors, $key)) {
+            return;
+        }
+        self::$syncing = true;
+        update_option(self::CONNECTORS_OPTION, $key);
+        self::$syncing = false;
+    }
+
+    /**
+     * Copies a key saved under Settings > Connectors into this plugin, so both use the new key.
+     * Hooked to the Connectors option being added or updated.
+     *
+     * WordPress clears that option again when it rejects a key; the key it replaced here in the same
+     * request is then put back.
+     *
+     * @param mixed $value New option value.
+     */
+    public static function connectors_key_changed($value): void
+    {
+        if (self::$syncing) {
+            return;
+        }
+        $key = is_string($value) ? trim($value) : '';
+        if ($key === '') {
+            if (self::$replacedKey !== null) {
+                update_option(self::KEY_OPTION, self::$replacedKey, false);
+                self::$replacedKey = null;
+            }
+            return;
+        }
+        $stored = self::stored_key();
+        // Only replace a key saved here. With no key here the Connectors key is already used.
+        if ($stored === '' || hash_equals($stored, $key) || strlen($key) > 512 || !preg_match('/^[A-Za-z0-9._\-]+$/', $key)) {
+            return;
+        }
+        $encrypted = self::encrypt($key);
+        if ($encrypted === '') {
+            return;
+        }
+        self::$replacedKey = (string) get_option(self::KEY_OPTION, '');
+        update_option(self::KEY_OPTION, $encrypted, false);
+    }
+
+    /**
+     * Another saved key to try when NVIDIA rejects the given one, or an empty string.
+     *
+     * @param string $rejected The key NVIDIA rejected.
+     */
+    public static function other_saved_key(string $rejected): string
+    {
+        if (self::key_source() === 'constant') {
+            return '';
+        }
+        foreach ([self::stored_key(), self::connectors_key()] as $candidate) {
+            if ($candidate !== '' && !hash_equals($candidate, $rejected)) {
+                return $candidate;
+            }
+        }
+        return '';
+    }
+
+    /**
+     * Called after NVIDIA accepted a key. If this plugin and Settings > Connectors hold different
+     * keys, the working key is saved in both places.
+     *
+     * @param string $key Key NVIDIA accepted.
+     */
+    public static function key_accepted(string $key): void
+    {
+        if ($key === '' || self::key_source() === 'constant') {
+            return;
+        }
+        $stored = self::stored_key();
+        if ($stored !== '' && !hash_equals($stored, $key)) {
+            self::save_api_key($key);
+            return;
+        }
+        self::sync_to_connectors($key);
     }
 
     /**

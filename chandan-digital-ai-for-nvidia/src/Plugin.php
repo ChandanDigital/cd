@@ -56,6 +56,13 @@ final class Plugin
         add_action('init', [self::class, 'register_provider'], 5);
         // After WordPress core binds Settings > Connectors keys at priority 20.
         add_action('init', [self::class, 'bind_ai_client_key'], 30);
+        // Keep this plugin's key and the Settings > Connectors key the same.
+        add_action('add_option_' . Settings::CONNECTORS_OPTION, static function ($option, $value): void {
+            Settings::connectors_key_changed($value);
+        }, 10, 2);
+        add_action('update_option_' . Settings::CONNECTORS_OPTION, static function ($oldValue, $value): void {
+            Settings::connectors_key_changed($value);
+        }, 10, 2);
 
         add_action('http_api_curl', [NvidiaClient::class, 'configure_curl'], 10, 2);
         add_action(self::REFRESH_EVENT, [self::class, 'scheduled_refresh']);

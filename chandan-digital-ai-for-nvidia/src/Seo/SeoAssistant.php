@@ -149,9 +149,6 @@ final class SeoAssistant
             <div class="cdnv-seo__results" aria-live="polite"></div>
             <p class="description">
                 <?php esc_html_e('Uses the title and content currently in the editor, including unsaved changes. Text and images are sent to NVIDIA. Nothing changes in your post until you press a "Use" button.', 'chandan-digital-ai-for-nvidia'); ?>
-                <?php if (!self::has_seo_plugin()) : ?>
-                    <?php esc_html_e('Chandan Digital SEO is not active, so SEO titles and descriptions can be copied but not saved automatically.', 'chandan-digital-ai-for-nvidia'); ?>
-                <?php endif; ?>
             </p>
         </div>
         <?php
@@ -397,7 +394,7 @@ final class SeoAssistant
             if ($field === 'keyword') {
                 return new WP_REST_Response(['ok' => true, 'saved' => ['keyword']], 200);
             }
-            return self::error(new ApiError('invalid_input', 0, '', null, __('Chandan Digital SEO is not active, so this cannot be saved automatically. Copy it into your SEO plugin instead.', 'chandan-digital-ai-for-nvidia')), 400);
+            return self::error(new ApiError('invalid_input', 0, '', null, __('This cannot be saved automatically on this site. Use the Copy button instead.', 'chandan-digital-ai-for-nvidia')), 400);
         }
         if ($value === '') {
             delete_post_meta($postId, self::SEOM_FIELDS[$field]);

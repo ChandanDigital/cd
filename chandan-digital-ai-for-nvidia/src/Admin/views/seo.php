@@ -8,8 +8,6 @@
 defined('ABSPATH') || exit;
 
 use ChandanDigital\NvidiaAi\Admin\AdminPage;
-use ChandanDigital\NvidiaAi\Admin\Ui;
-use ChandanDigital\NvidiaAi\Seo\SeoAssistant;
 use ChandanDigital\NvidiaAi\Seo\SeoSkills;
 use ChandanDigital\NvidiaAi\Support\ModelRegistry;
 use ChandanDigital\NvidiaAi\Support\Settings;
@@ -26,23 +24,13 @@ $cdnv_image_models = array_filter(ModelRegistry::all(), static function (array $
         <thead><tr><th scope="col"><?php esc_html_e('Button', 'chandan-digital-ai-for-nvidia'); ?></th><th scope="col"><?php esc_html_e('What it does', 'chandan-digital-ai-for-nvidia'); ?></th></tr></thead>
         <tbody>
             <tr><td><?php esc_html_e('SEO titles', 'chandan-digital-ai-for-nvidia'); ?></td><td><?php esc_html_e('Five title options of 50 to 60 characters with the focus keyword near the start. Use one as the post title or as the SEO title.', 'chandan-digital-ai-for-nvidia'); ?></td></tr>
-            <tr><td><?php esc_html_e('Meta description', 'chandan-digital-ai-for-nvidia'); ?></td><td><?php esc_html_e('Three options of 150 to 160 characters. "Use" saves it straight into Chandan Digital SEO.', 'chandan-digital-ai-for-nvidia'); ?></td></tr>
+            <tr><td><?php esc_html_e('Meta description', 'chandan-digital-ai-for-nvidia'); ?></td><td><?php esc_html_e('Three options of 150 to 160 characters, ready to use or copy.', 'chandan-digital-ai-for-nvidia'); ?></td></tr>
             <tr><td><?php esc_html_e('SEO check', 'chandan-digital-ai-for-nvidia'); ?></td><td><?php esc_html_e('A score with the most important fixes first: keyword placement, headings, E-E-A-T, readability, links and AI-search readiness.', 'chandan-digital-ai-for-nvidia'); ?></td></tr>
             <tr><td><?php esc_html_e('Improve content', 'chandan-digital-ai-for-nvidia'); ?></td><td><?php esc_html_e('A better version of the content that keeps your facts, links and images. Preview it first, then replace or copy.', 'chandan-digital-ai-for-nvidia'); ?></td></tr>
             <tr><td><?php esc_html_e('Internal links', 'chandan-digital-ai-for-nvidia'); ?></td><td><?php esc_html_e('Up to 8 links to your real published posts and pages, using phrases already in your text. Invented or already-linked pages are removed automatically.', 'chandan-digital-ai-for-nvidia'); ?></td></tr>
             <tr><td><?php esc_html_e('Featured image', 'chandan-digital-ai-for-nvidia'); ?></td><td><?php esc_html_e('Writes an image brief, creates the image with FLUX, saves it to the Media Library with SEO alt text and file name, and lets you set it as the featured image.', 'chandan-digital-ai-for-nvidia'); ?></td></tr>
         </tbody>
     </table>
-    <p>
-        <?php esc_html_e('Chandan Digital SEO:', 'chandan-digital-ai-for-nvidia'); ?>
-        <?php if (SeoAssistant::has_seo_plugin()) : ?>
-            <?php echo Ui::pill(__('Active', 'chandan-digital-ai-for-nvidia'), 'ok'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in Ui. ?>
-            <?php esc_html_e('SEO title, meta description and focus keyword are saved into it.', 'chandan-digital-ai-for-nvidia'); ?>
-        <?php else : ?>
-            <?php echo Ui::pill(__('Not active', 'chandan-digital-ai-for-nvidia'), 'warn'); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in Ui. ?>
-            <?php esc_html_e('SEO titles and descriptions can be copied, not saved.', 'chandan-digital-ai-for-nvidia'); ?>
-        <?php endif; ?>
-    </p>
     <p class="description"><?php esc_html_e('WordPress 6.6 and newer show boxes like this one in a "Meta Boxes" pane at the bottom of the block editor, and the pane starts closed. Click that bar to open it, or use the "Open SEO Assistant" button in the Post sidebar.', 'chandan-digital-ai-for-nvidia'); ?></p>
 </section>
 

@@ -291,6 +291,7 @@ final class NvidiaClient
 
         $start = microtime(true);
         $garbledRetries = 0;
+        $switchedKey = false;
         for ($attempt = 0; ; $attempt++) {
             $result = $this->stream_once($body, $onText, $onTick);
             $error = $result['error'];
@@ -304,6 +305,11 @@ final class NvidiaClient
                     $result['error'] = new ApiError('cancelled');
                     break;
                 }
+                continue;
+            }
+            // An old key left in one place: try the other saved key once.
+            if ($error instanceof ApiError && $error->code === 'invalid_api_key' && !$result['received_any'] && !$switchedKey && $this->use_other_key()) {
+                $switchedKey = true;
                 continue;
             }
             $canRetry = $error instanceof ApiError
@@ -325,6 +331,9 @@ final class NvidiaClient
         }
 
         $out = array_merge($out, $result);
+        if ($out['error'] === null) {
+            Settings::key_accepted($this->apiKey);
+        }
         $out['garbled_retries'] = $garbledRetries;
         unset($out['received_any']);
         $out['duration_ms'] = (int) round((microtime(true) - $start) * 1000);
@@ -555,6 +564,7 @@ final class NvidiaClient
     {
         $start = microtime(true);
         $attempt = 0;
+        $switchedKey = false;
         while (true) {
             $attemptStart = microtime(true);
             $response = wp_remote_request($url, $args);
@@ -566,9 +576,20 @@ final class NvidiaClient
                 $status = (int) wp_remote_retrieve_response_code($response);
                 $body = (string) wp_remote_retrieve_body($response);
                 if ($status >= 200 && $status < 300) {
+                    // The model list is public, so only other endpoints prove that the key works.
+                    if ($context !== 'models') {
+                        Settings::key_accepted($this->apiKey);
+                    }
                     return ['status' => $status, 'body' => $body, 'duration_ms' => self::ms($start), 'error' => null, 'attempts' => $attempt + 1];
                 }
                 $error = ApiError::from_http($status, substr($body, 0, self::ERROR_BODY_LIMIT), self::header($response, 'retry-after'), $context);
+            }
+
+            // An old key left in one place: try the other saved key once.
+            if ($error->code === 'invalid_api_key' && !$switchedKey && $this->use_other_key()) {
+                $switchedKey = true;
+                $args['headers']['Authorization'] = 'Bearer ' . $this->apiKey;
+                continue;
             }
 
             $slowTimeout = $error->code === 'timeout' && (microtime(true) - $attemptStart) > 30;
@@ -583,6 +604,21 @@ final class NvidiaClient
             $attempt++;
         }
         return ['status' => $status, 'body' => '', 'duration_ms' => self::ms($start), 'error' => $error, 'attempts' => $attempt + 1];
+    }
+
+    /**
+     * Switches to another saved key after NVIDIA rejected the current one.
+     *
+     * @return bool Whether there was another key to try.
+     */
+    private function use_other_key(): bool
+    {
+        $other = Settings::other_saved_key($this->apiKey);
+        if ($other === '') {
+            return false;
+        }
+        $this->apiKey = $other;
+        return true;
     }
 
     /**

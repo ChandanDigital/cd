@@ -42,6 +42,8 @@ The plugin uses the first key it finds, in this order:
 3. An `NVIDIA_API_KEY` environment variable or constant (the method the original plugin used)
 4. WordPress **Settings > Connectors** (WordPress 7.0+)
 
+**From 1.2.1 the two places stay in sync.** Save a new key on the plugin's settings screen or under Settings > Connectors, and the other one is updated too, so this plugin and the WordPress AI plugin always use the same key. If an old key is still saved in one place, the plugin tries the other saved key once when NVIDIA rejects a request, then keeps the key that works in both places.
+
 The **Key for the WordPress AI Client** setting decides what other plugins use:
 
 - **Recommended:** use this plugin's key only when WordPress has no NVIDIA key of its own.

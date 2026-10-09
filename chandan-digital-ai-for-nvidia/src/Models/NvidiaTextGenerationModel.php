@@ -16,6 +16,7 @@ use WordPress\AiClient\Messages\DTO\MessagePart;
 use WordPress\AiClient\Messages\Enums\MessagePartChannelEnum;
 use WordPress\AiClient\Messages\Enums\MessageRoleEnum;
 use WordPress\AiClient\Providers\ApiBasedImplementation\AbstractApiBasedModel;
+use WordPress\AiClient\Providers\Http\DTO\ApiKeyRequestAuthentication;
 use WordPress\AiClient\Providers\Http\DTO\Request;
 use WordPress\AiClient\Providers\Http\DTO\RequestOptions;
 use WordPress\AiClient\Providers\Http\DTO\Response;
@@ -93,28 +94,66 @@ class NvidiaTextGenerationModel extends AbstractApiBasedModel implements TextGen
         );
 
         // Add authentication credentials to the request.
-        $request = $this->getRequestAuthentication()->authenticateRequest($request);
+        $unsigned = $request;
+        $authentication = $this->getRequestAuthentication();
+        $request = $authentication->authenticateRequest($unsigned);
+        $usedKey = $authentication instanceof ApiKeyRequestAuthentication ? $authentication->getApiKey() : '';
 
         // Send and process the request. A garbled reply is sent again once, and never returned.
         $start = microtime(true);
-        for ($attempt = 0; ; $attempt++) {
+        $garbled = 0;
+        $switchedKey = false;
+        while (true) {
             try {
                 $response = $httpTransporter->send($request);
             } catch (\Throwable $e) {
                 $this->recordOutcome(0, '', $start, $e->getMessage());
                 throw $e;
             }
+            // An old key left in one place (this plugin or Settings > Connectors): try the other once.
+            if (!$switchedKey && $usedKey !== '' && $this->isRejectedKey($response)) {
+                $other = Settings::other_saved_key($usedKey);
+                if ($other !== '') {
+                    $switchedKey = true;
+                    $usedKey = $other;
+                    $request = (new ApiKeyRequestAuthentication($other))->authenticateRequest($unsigned);
+                    continue;
+                }
+            }
             if (!$response->isSuccessful() || !$this->isGarbledResponse($response)) {
                 break;
             }
-            if ($attempt >= 1) {
+            if (++$garbled > 1) {
                 $this->recordOutcome($response->getStatusCode(), '', $start, '', new ApiError('garbled_output', $response->getStatusCode()));
                 throw new RuntimeException(ApiError::message_for('garbled_output'));
+            }
+        }
+        if ($response->isSuccessful() && $usedKey !== '') {
+            Settings::key_accepted($usedKey);
+            if ($switchedKey) {
+                // Use the working key for the rest of this page load too.
+                $this->setRequestAuthentication(new ApiKeyRequestAuthentication($usedKey));
             }
         }
         $this->recordOutcome($response->getStatusCode(), (string) $response->getBody(), $start);
         ResponseUtil::throwIfNotSuccessful($response);
         return $this->parseResponseToGenerativeAiResult($response);
+    }
+
+    /**
+     * Whether NVIDIA refused the API key itself (not the model).
+     *
+     * @since 1.2.1
+     *
+     * @param Response $response The response from the API endpoint.
+     */
+    protected function isRejectedKey(Response $response): bool
+    {
+        $status = $response->getStatusCode();
+        if ($status !== 401 && $status !== 403) {
+            return false;
+        }
+        return ApiError::from_http($status, substr((string) $response->getBody(), 0, 2000), null, 'chat')->code === 'invalid_api_key';
     }
 
     /**

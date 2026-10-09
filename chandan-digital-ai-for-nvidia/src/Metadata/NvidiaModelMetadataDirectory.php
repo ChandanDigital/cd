@@ -11,6 +11,7 @@ use WordPress\AiClient\Files\Enums\FileTypeEnum;
 use WordPress\AiClient\Files\Enums\MediaOrientationEnum;
 use WordPress\AiClient\Messages\Enums\ModalityEnum;
 use WordPress\AiClient\Providers\Http\DTO\ApiKeyRequestAuthentication;
+use WordPress\AiClient\Providers\Http\Exception\ClientException;
 use WordPress\AiClient\Providers\Http\DTO\Request;
 use WordPress\AiClient\Providers\Http\DTO\Response;
 use WordPress\AiClient\Providers\Http\Enums\HttpMethodEnum;
@@ -93,7 +94,23 @@ class NvidiaModelMetadataDirectory extends AbstractOpenAiCompatibleModelMetadata
                 return $this->toMap($this->buildModelMetadataList(array_fill_keys($cached, true)));
             }
         }
-        return parent::sendListModelsRequest();
+        try {
+            return parent::sendListModelsRequest();
+        } catch (ClientException $e) {
+            // An old key left in Settings > Connectors or in this plugin: try the other saved key once.
+            $auth = $this->getRequestAuthentication();
+            $other = ($e->getCode() === 401 || strpos($e->getMessage(), '(401)') !== false) && $auth instanceof ApiKeyRequestAuthentication
+                ? Settings::other_saved_key($auth->getApiKey())
+                : '';
+            if ($other === '') {
+                throw $e;
+            }
+            $this->setRequestAuthentication(new ApiKeyRequestAuthentication($other));
+            $models = parent::sendListModelsRequest();
+            // Models created from now on in this page load use the working key.
+            \WordPress\AiClient\AiClient::defaultRegistry()->setProviderRequestAuthentication('nvidia', new ApiKeyRequestAuthentication($other));
+            return $models;
+        }
     }
 
     /**

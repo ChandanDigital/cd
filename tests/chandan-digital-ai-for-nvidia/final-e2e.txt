@@ -62,7 +62,7 @@ PASS  stop cancels and marks reply
 PASS  buttons re-enabled after stop
 PASS  model-access error is distinct from key error
 PASS  streaming self-test reports a verdict
-      stream test said: Streaming works: events arrived one by one (first after 30 ms, last after 1630 ms).
+      stream test said: Streaming works: events arrived one by one (first after 26 ms, last after 1626 ms).
 PASS  log entry recorded
 PASS  log has no prompt by default
 PASS  log has no key
@@ -102,7 +102,7 @@ PASS  after saving the post, title and featured image saved
 PASS  Diagnostics explains the editor 403 and names the blocked plugin
 PASS  Diagnostics links to the approval screen
 PASS  Overview warns about blocked editor AI
-PASS  SEO tab shows Chandan Digital SEO as active and the six skills
+PASS  SEO tab has no SEO-plugin status text, and lists the six skills
 PASS  anonymous REST chat refused
 PASS  anonymous connection test refused
 PASS  logged-in request without nonce refused (CSRF)

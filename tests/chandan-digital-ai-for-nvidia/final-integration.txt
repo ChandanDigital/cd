@@ -103,6 +103,19 @@ PASS  NVIDIA-rejected parameter surfaces real reason
 PASS  temperature rejection shows NVIDIA reason (no silent change)
 PASS  invalid key -> invalid_api_key (not model error)
 PASS  missing key -> missing_api_key
+== API key sync with Settings > Connectors (1.2.1) ==
+PASS  key saved here is not copied into an empty Connectors option
+PASS  new key saved in Settings > Connectors is used by this plugin too
+PASS  new key saved here updates Settings > Connectors too
+PASS  saved key stays encrypted in this plugin
+PASS  key rejected and cleared by WordPress: this plugin keeps its previous key
+PASS  old mismatch detected
+PASS  revoked key here: request retried with the Connectors key and works
+PASS  working key then saved in both places
+PASS  revoked key in Connectors: a working request copies the good key there
+PASS  streaming works after the sync
+PASS  only one (revoked) key: clear key error, no endless retries
+PASS  AI Client: revoked Connectors key retried with the key saved here, and synced
 == WordPress AI Client integration ==
 PASS  plugin key bound to AI Client (fallback, no WP key)
 PASS  AI Client sees nvidia provider configured
@@ -213,4 +226,4 @@ PASS  re-activation keeps existing settings
 PASS  re-activation keeps saved key
 PASS  no cron scheduled by default
 
-RESULT: 196 passed, 0 failed
+RESULT: 208 passed, 0 failed

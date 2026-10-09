@@ -1,6 +1,6 @@
 # Security and Privacy Audit
 
-**Plugin:** Chandan Digital AI for NVIDIA 1.2.0
+**Plugin:** Chandan Digital AI for NVIDIA 1.2.1
 **Compared with:** AI Provider for NVIDIA 1.0.2 (the uploaded ZIP)
 
 ## 1. Review of the original plugin
@@ -50,7 +50,8 @@ These are addressed below.
 | No secrets in errors | Upstream messages are shortened and scrubbed of `nvapi-` keys, Bearer tokens and the active key before they are shown or logged. |
 | Not overwritten on update | Activation uses `add_option()`, which never replaces existing values. A failed or invalid key entry leaves the old key in place (tested). |
 | Key versus model errors | 401 is reported as a key problem, 403/404 as model-access problems. The connection test shows these as separate steps. |
-| Sharing with other plugins | By default the key is given to the WordPress AI Client only when WordPress has no NVIDIA key of its own, so an existing Connectors key is not replaced. |
+| Sharing with other plugins | By default the key is given to the WordPress AI Client only when WordPress has no NVIDIA key of its own. |
+| Sync with Settings > Connectors (1.2.1) | A key saved in Connectors is copied into this plugin (encrypted). A key saved here is written to Connectors **only if a key is already kept there**, so the two never drift apart. WordPress stores Connectors keys as plain text, so if you want the key out of the database entirely, use the `CHANDAN_NVIDIA_API_KEY` constant. When NVIDIA rejects a key, the request is tried once with the other saved key; keys are never logged or sent anywhere except NVIDIA. |
 
 ### Endpoints and permissions
 
