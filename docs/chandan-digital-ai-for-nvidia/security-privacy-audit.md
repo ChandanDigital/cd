@@ -1,6 +1,6 @@
 # Security and Privacy Audit
 
-**Plugin:** Chandan Digital AI for NVIDIA 1.2.1
+**Plugin:** Chandan Digital AI for NVIDIA 1.2.2
 **Compared with:** AI Provider for NVIDIA 1.0.2 (the uploaded ZIP)
 
 ## 1. Review of the original plugin

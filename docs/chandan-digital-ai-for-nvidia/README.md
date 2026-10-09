@@ -2,13 +2,13 @@
 
 Private WordPress plugin by [Chandan Digital](https://chandandigital.com/) that connects WordPress to NVIDIA-hosted AI models, including **Moonshot AI Kimi K3** (`moonshotai/kimi-k3`), GLM-5.3, GLM-5.3 Flash and DeepSeek V4.1 Flash, plus an **SEO Assistant** in the post and page editor.
 
-Version 1.2.1 · Requires WordPress 6.9+ (7.0+ recommended) and PHP 7.4+ · GPL-2.0-or-later · Manual updates only
+Version 1.2.2 · Requires WordPress 6.9+ (7.0+ recommended) and PHP 7.4+ · GPL-2.0-or-later · Manual updates only
 
 ## Deliverables
 
 | # | Deliverable | Location |
 |---|---|---|
-| 1 | Installable plugin ZIP | [`dist/chandan-digital-ai-for-nvidia-v1.2.1.zip`](../../dist/chandan-digital-ai-for-nvidia-v1.2.1.zip) |
+| 1 | Installable plugin ZIP | [`dist/chandan-digital-ai-for-nvidia-v1.2.2.zip`](../../dist/chandan-digital-ai-for-nvidia-v1.2.2.zip) |
 | 2 | Complete source code | [`chandan-digital-ai-for-nvidia/`](../../chandan-digital-ai-for-nvidia/) |
 | 3 | API integration report | [api-integration-report.md](api-integration-report.md) |
 | 4 | Security and privacy audit | [security-privacy-audit.md](security-privacy-audit.md) |
@@ -17,7 +17,7 @@ Version 1.2.1 · Requires WordPress 6.9+ (7.0+ recommended) and PHP 7.4+ · GPL-
 | 7 | Testing report | [testing-report.md](testing-report.md) |
 | | Test harness and raw results | [`tests/chandan-digital-ai-for-nvidia/`](../../tests/chandan-digital-ai-for-nvidia/) |
 
-ZIP SHA-256: `95da832e40bbfe8375b2c8eeb765d187da352ff464259872feaf4f36e1c422f9`
+ZIP SHA-256: `27665767880e682bb4034b7357965316cc43c84b99af15d1f541b83ac4b533ee`
 
 ## Dashboard
 

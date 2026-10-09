@@ -6,6 +6,8 @@
  */
 
 defined('ABSPATH') || exit;
+
+$cdnv_system_prompt = \ChandanDigital\NvidiaAi\Rest\RestController::saved_system_prompt();
 ?>
 <div class="cdnv-playground" id="cdnv-playground">
     <section class="cdnv-card cdnv-playground__controls">
@@ -29,10 +31,15 @@ defined('ABSPATH') || exit;
             </select>
             <p class="description"><?php esc_html_e('Adds the chosen SEO rules (adapted from claude-seo) to your request. For example, pick "On-page SEO" and ask for a title and meta description for an article.', 'chandan-digital-ai-for-nvidia'); ?></p>
         </div>
-        <details class="cdnv-details">
+        <details class="cdnv-details"<?php echo $cdnv_system_prompt !== '' ? ' open' : ''; ?>>
             <summary><?php esc_html_e('System prompt (optional)', 'chandan-digital-ai-for-nvidia'); ?></summary>
             <label for="cdnv-pg-system" class="screen-reader-text"><?php esc_html_e('System prompt', 'chandan-digital-ai-for-nvidia'); ?></label>
-            <textarea id="cdnv-pg-system" rows="3" class="large-text" maxlength="20000" placeholder="<?php esc_attr_e('For example: You are a helpful assistant for a Kolkata digital marketing agency.', 'chandan-digital-ai-for-nvidia'); ?>"></textarea>
+            <textarea id="cdnv-pg-system" rows="6" class="large-text" maxlength="20000" placeholder="<?php esc_attr_e('For example: You are a helpful assistant for a Kolkata digital marketing agency.', 'chandan-digital-ai-for-nvidia'); ?>"><?php echo esc_textarea($cdnv_system_prompt); ?></textarea>
+            <p class="cdnv-field--inline">
+                <button type="button" class="button" id="cdnv-pg-system-save"><?php esc_html_e('Save system prompt', 'chandan-digital-ai-for-nvidia'); ?></button>
+                <span id="cdnv-pg-system-status" class="cdnv-chat__status" role="status"></span>
+            </p>
+            <p class="description"><?php esc_html_e('Saved for your user account, so it is here every time you open the Playground. It is also saved when you press "Generate response".', 'chandan-digital-ai-for-nvidia'); ?></p>
         </details>
     </section>
 

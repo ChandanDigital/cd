@@ -282,6 +282,26 @@ async function shot(page, name, fullPage = true) {
 	check('model-access error is distinct from key error', errText.includes('not available to your NVIDIA account') && errText.includes('Your API key may be fine') && errText.includes('404'), errText);
 	await shot(page, '07-playground-error');
 
+	// Saved system prompt (1.2.2): Save button, then automatic save on Generate.
+	await page.goto(ADMIN + '&tab=playground');
+	if (!(await page.isVisible('#cdnv-pg-system'))) {
+		await page.click('.cdnv-playground summary:has-text("System prompt")');
+	}
+	await page.fill('#cdnv-pg-system', 'You write for a Kolkata digital marketing agency.');
+	await page.click('#cdnv-pg-system-save');
+	await page.waitForFunction(() => document.getElementById('cdnv-pg-system-status').textContent === 'Saved', null, { timeout: 15000 });
+	await page.reload();
+	check('system prompt saved and shown again after reload', (await page.isVisible('#cdnv-pg-system')) && (await page.inputValue('#cdnv-pg-system')) === 'You write for a Kolkata digital marketing agency.');
+	await page.fill('#cdnv-pg-system', 'Second saved prompt.');
+	await page.fill('#cdnv-pg-prompt', 'hello');
+	await page.click('#cdnv-pg-send');
+	await page.waitForSelector('.cdnv-msg--assistant .cdnv-msg__meta button', { timeout: 60000 });
+	await page.reload();
+	check('system prompt also saved when a message is sent', (await page.inputValue('#cdnv-pg-system')) === 'Second saved prompt.');
+	await page.fill('#cdnv-pg-system', '');
+	await page.click('#cdnv-pg-system-save');
+	await page.waitForFunction(() => document.getElementById('cdnv-pg-system-status').textContent === 'Saved', null, { timeout: 15000 });
+
 	// Diagnostics: streaming test + connection test with model choice
 	await page.goto(ADMIN + '&tab=diagnostics');
 	await page.click('[data-cdnv-action="stream-test"]');

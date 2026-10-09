@@ -76,11 +76,53 @@ final class RestController
             'permission_callback' => $playground,
             'args' => $chatArgs,
         ]);
+        register_rest_route(self::NAMESPACE, '/playground/system-prompt', [
+            'methods' => WP_REST_Server::CREATABLE,
+            'callback' => [self::class, 'save_system_prompt'],
+            'permission_callback' => $playground,
+            'args' => ['system_prompt' => ['type' => 'string', 'required' => true]],
+        ]);
         register_rest_route(self::NAMESPACE, '/stream-test', [
             'methods' => WP_REST_Server::CREATABLE,
             'callback' => [self::class, 'stream_test'],
             'permission_callback' => $admin,
         ]);
+    }
+
+    /** User meta holding each user's saved Playground system prompt. */
+    public const SYSTEM_PROMPT_META = 'cdnv_playground_system_prompt';
+
+    /** Longest system prompt that can be saved, in characters. */
+    private const SYSTEM_PROMPT_MAX = 20000;
+
+    /**
+     * The current user's saved Playground system prompt.
+     */
+    public static function saved_system_prompt(): string
+    {
+        $value = get_user_meta(get_current_user_id(), self::SYSTEM_PROMPT_META, true);
+        return is_string($value) ? $value : '';
+    }
+
+    /**
+     * Saves the Playground system prompt for the current user, so it is there next time.
+     *
+     * @param WP_REST_Request $request Request.
+     */
+    public static function save_system_prompt(WP_REST_Request $request): WP_REST_Response
+    {
+        $value = trim(sanitize_textarea_field((string) $request->get_param('system_prompt')));
+        $length = function_exists('mb_strlen') ? mb_strlen($value) : strlen($value);
+        if ($length > self::SYSTEM_PROMPT_MAX) {
+            /* translators: %d: maximum number of characters. */
+            return self::error_response(new ApiError('invalid_input', 0, '', null, sprintf(__('The system prompt is too long. Keep it under %d characters.', 'chandan-digital-ai-for-nvidia'), self::SYSTEM_PROMPT_MAX)), 400);
+        }
+        if ($value === '') {
+            delete_user_meta(get_current_user_id(), self::SYSTEM_PROMPT_META);
+        } else {
+            update_user_meta(get_current_user_id(), self::SYSTEM_PROMPT_META, $value);
+        }
+        return new WP_REST_Response(['ok' => true], 200);
     }
 
     /**

@@ -1,14 +1,14 @@
 # Testing Report
 
-**Plugin:** Chandan Digital AI for NVIDIA 1.2.1
+**Plugin:** Chandan Digital AI for NVIDIA 1.2.2
 **Test date:** 8 October 2026
 
 ## Summary
 
 | Test suite | Result |
 |---|---|
-| Integration tests inside WordPress (WP-CLI) | **208 passed, 0 failed** |
-| Browser end-to-end tests (Chromium, Playwright) | **112 passed, 0 failed** |
+| Integration tests inside WordPress (WP-CLI) | **213 passed, 0 failed** |
+| Browser end-to-end tests (Chromium, Playwright) | **114 passed, 0 failed** |
 | Lifecycle tests with the real ZIP | All steps behaved as expected (details below) |
 | Editor 403 reproduced with the real WordPress AI plugin 1.4.0 | Cause confirmed, fix confirmed (details below) |
 | PHP 7.4 to 8.4 compatibility scan (PHPCompatibility) | 0 errors |
@@ -103,7 +103,7 @@ Please follow section 4 of the API Configuration Guide on your site to confirm l
 | Interrupted connection | **Pass**: reported as incomplete; partial text kept but not used as context |
 | Non-streaming fallback | **Pass**: non-streaming mode works, and the Playground switches automatically if a stream cannot start |
 | Duplicate requests | **Pass**: a reused request ID gets HTTP 409 |
-| Server streaming self-test | **Pass**: "events arrived one by one (first after 26 ms, last after 1626 ms)" on the test server |
+| Server streaming self-test | **Pass**: "events arrived one by one (first after 29 ms, last after 1629 ms)" on the test server |
 | Streaming on your real host (nginx, Apache, CDN) | **Not performed**: use API Diagnostics > Test streaming |
 
 ### Reasoning
@@ -139,6 +139,18 @@ Please follow section 4 of the API Configuration Guide on your site to confirm l
 | No hidden update downloader | **Pass**: no update code; `Update URI` set; auto-update off for this plugin only |
 | No external requests from plugin screens | **Pass** (WordPress core's Gravatar avatars excluded) |
 | No remote code execution path introduced | **Pass** by code review: no `eval`, no dynamic includes from input; Playground uploads never written to disk; SEO images saved only after an image-type check, with the extension taken from the detected type |
+
+### Saved Playground system prompt (added in 1.2.2)
+
+| Check | Result |
+|---|---|
+| "Save system prompt" saves it, and it is there after reloading the page | **Pass** |
+| The system prompt is also saved when "Generate response" is pressed | **Pass** |
+| The full Chandan Digital writing rules (about 7,600 characters) save and come back unchanged | **Pass** |
+| Rules pasted into the system prompt with "Use Chandan Digital writing style" ticked are sent once, not twice | **Pass** |
+| Over 20,000 characters refused, the earlier saved prompt kept | **Pass** |
+| Logged-out users cannot save; an empty box clears the saved prompt | **Pass** |
+| Upgrade from 1.2.1 through the upload screen keeps the key | **Pass** |
 
 ### API key sync (added in 1.2.1)
 

@@ -210,6 +210,12 @@ PASS  author refused by default (Editors and above)
 PASS  editor allowed by default
 PASS  SEO Assistant off: refused
 PASS  logged-out refused
+== Saved Playground system prompt (1.2.2) ==
+PASS  system prompt saved for the user
+PASS  writing rules pasted as system prompt are not sent twice
+PASS  over-long system prompt refused, old one kept
+PASS  logged-out user cannot save a system prompt
+PASS  empty system prompt clears the saved one
 == Logging ==
 PASS  logging off by default -> nothing stored
 PASS  log entry stored without content by default
@@ -226,4 +232,4 @@ PASS  re-activation keeps existing settings
 PASS  re-activation keeps saved key
 PASS  no cron scheduled by default
 
-RESULT: 208 passed, 0 failed
+RESULT: 213 passed, 0 failed

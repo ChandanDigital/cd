@@ -54,7 +54,11 @@ final class PayloadBuilder
         $apiMessages = [];
         $system = trim($systemPrompt);
         if ($editorialPolicy) {
-            $system = ($system !== '' ? $system . "\n\n" : '') . IndianEnglishPolicy::instruction();
+            $policy = IndianEnglishPolicy::instruction();
+            // Do not send the writing rules twice when they were pasted into the system prompt.
+            if (strpos(self::squash($system), self::squash($policy)) === false) {
+                $system = ($system !== '' ? $system . "\n\n" : '') . $policy;
+            }
         }
         $skillText = $skill !== '' ? SeoSkills::instruction($skill) : '';
         if ($skillText !== '') {
@@ -199,6 +203,16 @@ final class PayloadBuilder
             $params['seed'] = (int) $settings['seed'];
         }
         return $params;
+    }
+
+    /**
+     * Text with all whitespace runs turned into single spaces, for comparing prompts.
+     *
+     * @param string $text Text.
+     */
+    private static function squash(string $text): string
+    {
+        return trim((string) preg_replace('/\s+/u', ' ', $text));
     }
 
     /**

@@ -25,6 +25,8 @@
 		policy: $('cdnv-pg-policy'),
 		skill: $('cdnv-pg-skill'),
 		system: $('cdnv-pg-system'),
+		systemSave: $('cdnv-pg-system-save'),
+		systemStatus: $('cdnv-pg-system-status'),
 		log: $('cdnv-pg-log'),
 		form: $('cdnv-pg-form'),
 		prompt: $('cdnv-pg-prompt'),
@@ -518,10 +520,52 @@
 		return out;
 	}
 
+	/* Saved system prompt */
+	var savedSystem = els.system.value;
+
+	function saveSystem(quiet) {
+		var value = els.system.value;
+		if (!quiet && els.systemStatus) {
+			els.systemStatus.textContent = t.working || '';
+			els.systemStatus.className = 'cdnv-chat__status';
+		}
+		return post('playground/system-prompt', { system_prompt: value }).then(function (response) {
+			return response.json();
+		}).then(function (data) {
+			var ok = !!(data && data.ok);
+			if (ok) {
+				savedSystem = value;
+			}
+			if (els.systemStatus && (!quiet || !ok)) {
+				els.systemStatus.textContent = ok ? t.systemSaved : ((data && data.error && data.error.message) || t.systemNotSaved);
+				els.systemStatus.className = 'cdnv-chat__status cdnv-chat__status--' + (ok ? 'ok' : 'bad');
+			}
+		}).catch(function () {
+			if (els.systemStatus) {
+				els.systemStatus.textContent = t.systemNotSaved;
+				els.systemStatus.className = 'cdnv-chat__status cdnv-chat__status--bad';
+			}
+		});
+	}
+
+	if (els.systemSave) {
+		els.systemSave.addEventListener('click', function () {
+			saveSystem(false);
+		});
+		els.system.addEventListener('input', function () {
+			if (els.systemStatus) {
+				els.systemStatus.textContent = '';
+			}
+		});
+	}
+
 	els.form.addEventListener('submit', function (event) {
 		event.preventDefault();
 		if (busy) {
 			return;
+		}
+		if (els.systemSave && els.system.value !== savedSystem) {
+			saveSystem(true);
 		}
 		var model = currentModel();
 		var text = els.prompt.value;

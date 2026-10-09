@@ -61,8 +61,10 @@ PASS  non-streaming: garbled reply retried, clean answer and note
 PASS  stop cancels and marks reply
 PASS  buttons re-enabled after stop
 PASS  model-access error is distinct from key error
+PASS  system prompt saved and shown again after reload
+PASS  system prompt also saved when a message is sent
 PASS  streaming self-test reports a verdict
-      stream test said: Streaming works: events arrived one by one (first after 26 ms, last after 1626 ms).
+      stream test said: Streaming works: events arrived one by one (first after 29 ms, last after 1629 ms).
 PASS  log entry recorded
 PASS  log has no prompt by default
 PASS  log has no key
@@ -112,4 +114,4 @@ PASS  editor cannot call admin REST routes
 PASS  editor cannot save API settings
 PASS  editor can use Playground when allowed
 
-RESULT: 112 passed, 0 failed
+RESULT: 114 passed, 0 failed

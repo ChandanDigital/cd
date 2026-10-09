@@ -622,6 +622,26 @@ wp_set_current_user(0);
 check('logged-out refused', $code === 401 || $code === 403);
 wp_set_current_user(1);
 
+echo "== Saved Playground system prompt (1.2.2) ==\n";
+wp_set_current_user(1);
+$rules = IndianEnglishPolicy::default_instruction();
+$req = new WP_REST_Request('POST', '/chandan-digital-ai/v1/playground/system-prompt');
+$req->set_header('content-type', 'application/json');
+$req->set_body(wp_json_encode(['system_prompt' => $rules]));
+$res = rest_do_request($req);
+check('system prompt saved for the user', $res->get_status() === 200 && ChandanDigital\NvidiaAi\Rest\RestController::saved_system_prompt() === trim($rules));
+$pl = (new PayloadBuilder())->chat(ModelRegistry::get('moonshotai/kimi-k3'), ModelRegistry::settings('moonshotai/kimi-k3'), [['role' => 'user', 'text' => 'hi']], false, $rules, true);
+check('writing rules pasted as system prompt are not sent twice', is_array($pl) && substr_count($pl['messages'][0]['content'], 'CHECK BEFORE DELIVERING') === 1);
+$req->set_body(wp_json_encode(['system_prompt' => str_repeat('a', 20001)]));
+check('over-long system prompt refused, old one kept', rest_do_request($req)->get_status() === 400 && ChandanDigital\NvidiaAi\Rest\RestController::saved_system_prompt() === trim($rules));
+wp_set_current_user(0);
+$req->set_body(wp_json_encode(['system_prompt' => 'x']));
+check('logged-out user cannot save a system prompt', rest_do_request($req)->get_status() === 401);
+wp_set_current_user(1);
+$req->set_body(wp_json_encode(['system_prompt' => '']));
+rest_do_request($req);
+check('empty system prompt clears the saved one', ChandanDigital\NvidiaAi\Rest\RestController::saved_system_prompt() === '');
+
 echo "== Logging ==\n";
 Logger::clear();
 Logger::log(['type' => 't', 'model' => 'm/x', 'status' => 200]);

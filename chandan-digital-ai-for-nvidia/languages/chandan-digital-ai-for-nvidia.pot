@@ -2,14 +2,14 @@
 # This file is distributed under the GPL-2.0-or-later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Chandan Digital AI for NVIDIA 1.2.1\n"
+"Project-Id-Version: Chandan Digital AI for NVIDIA 1.2.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/chandan-digital-ai-for-nvidia\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-09T01:39:45+00:00\n"
+"POT-Creation-Date: 2026-10-09T02:07:14+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: chandan-digital-ai-for-nvidia\n"
@@ -182,147 +182,156 @@ msgid "Working…"
 msgstr ""
 
 #: src/Admin/AdminPage.php:438
-msgid "Thinking…"
+#: src/Seo/SeoAssistant.php:188
+msgid "Saved"
 msgstr ""
 
 #: src/Admin/AdminPage.php:439
+msgid "Could not save. Try again."
+msgstr ""
+
+#: src/Admin/AdminPage.php:440
+msgid "Thinking…"
+msgstr ""
+
+#: src/Admin/AdminPage.php:441
 #: src/Admin/views/diagnostics.php:132
 msgid "OK"
 msgstr ""
 
-#: src/Admin/AdminPage.php:440
+#: src/Admin/AdminPage.php:442
 msgid "Failed"
 msgstr ""
 
-#: src/Admin/AdminPage.php:441
+#: src/Admin/AdminPage.php:443
 #: src/Admin/Ui.php:27
 msgid "Not checked"
 msgstr ""
 
-#: src/Admin/AdminPage.php:442
+#: src/Admin/AdminPage.php:444
 #: src/Admin/Ui.php:23
 msgid "Access confirmed"
 msgstr ""
 
-#: src/Admin/AdminPage.php:443
+#: src/Admin/AdminPage.php:445
 #: src/Admin/Ui.php:24
 msgid "Not available to this key"
 msgstr ""
 
-#: src/Admin/AdminPage.php:444
+#: src/Admin/AdminPage.php:446
 #: src/Admin/Ui.php:25
 msgid "Access denied"
 msgstr ""
 
-#: src/Admin/AdminPage.php:445
+#: src/Admin/AdminPage.php:447
 #: src/Admin/Ui.php:26
 msgid "Check failed"
 msgstr ""
 
-#: src/Admin/AdminPage.php:446
+#: src/Admin/AdminPage.php:448
 msgid "The request to this WordPress site failed. Check your connection and try again."
 msgstr ""
 
 #. translators: %d: number of models.
-#: src/Admin/AdminPage.php:448
+#: src/Admin/AdminPage.php:450
 #, php-format
 msgid "NVIDIA catalogue refreshed: %d models listed."
 msgstr ""
 
-#: src/Admin/AdminPage.php:449
+#: src/Admin/AdminPage.php:451
 msgid "Catalogue models that are not in your list yet (not checked for access):"
 msgstr ""
 
-#: src/Admin/AdminPage.php:450
+#: src/Admin/AdminPage.php:452
 msgid "Registered models that NVIDIA no longer lists:"
 msgstr ""
 
-#: src/Admin/AdminPage.php:451
+#: src/Admin/AdminPage.php:453
 msgid "Add as custom model"
 msgstr ""
 
-#: src/Admin/AdminPage.php:452
+#: src/Admin/AdminPage.php:454
 #: src/Admin/views/diagnostics.php:36
-#: src/Admin/views/playground.php:25
+#: src/Admin/views/playground.php:27
 msgid "None"
 msgstr ""
 
 #. translators: 1: milliseconds until the first event, 2: milliseconds until the last event.
-#: src/Admin/AdminPage.php:454
+#: src/Admin/AdminPage.php:456
 #, php-format
 msgid "Streaming works: events arrived one by one (first after %1$d ms, last after %2$d ms)."
 msgstr ""
 
 #. translators: %d: milliseconds.
-#: src/Admin/AdminPage.php:456
+#: src/Admin/AdminPage.php:458
 #, php-format
 msgid "Streaming is being buffered by the server or a proxy: all events arrived together after %d ms. Responses will still work, but text will appear all at once. Turn streaming off for your models, or ask your host to disable output buffering for this site."
 msgstr ""
 
-#: src/Admin/AdminPage.php:457
+#: src/Admin/AdminPage.php:459
 msgid "The streaming test failed. Turn streaming off for your models; the non-streaming mode will be used."
 msgstr ""
 
-#: src/Admin/AdminPage.php:458
+#: src/Admin/AdminPage.php:460
 #: src/Admin/views/diagnostics.php:119
 msgid "HTTP"
 msgstr ""
 
-#: src/Admin/AdminPage.php:459
+#: src/Admin/AdminPage.php:461
 msgid "You"
 msgstr ""
 
-#: src/Admin/AdminPage.php:460
+#: src/Admin/AdminPage.php:462
 msgid "Assistant"
 msgstr ""
 
-#: src/Admin/AdminPage.php:461
+#: src/Admin/AdminPage.php:463
 #: src/Admin/Ui.php:68
 msgid "Reasoning"
 msgstr ""
 
-#: src/Admin/AdminPage.php:462
+#: src/Admin/AdminPage.php:464
 msgid "Copy response"
 msgstr ""
 
-#: src/Admin/AdminPage.php:463
+#: src/Admin/AdminPage.php:465
 #: src/Seo/SeoAssistant.php:187
 msgid "Copied"
 msgstr ""
 
-#: src/Admin/AdminPage.php:464
+#: src/Admin/AdminPage.php:466
 msgid "Copy failed. Select the text and copy it manually."
 msgstr ""
 
-#: src/Admin/AdminPage.php:465
+#: src/Admin/AdminPage.php:467
 msgid "Stopped. The text above may be incomplete and will not be used as context."
 msgstr ""
 
-#: src/Admin/AdminPage.php:466
+#: src/Admin/AdminPage.php:468
 msgid "This reply is incomplete and will not be used as context for the next message."
 msgstr ""
 
-#: src/Admin/AdminPage.php:467
+#: src/Admin/AdminPage.php:469
 msgid "The reply stopped because it reached the maximum output tokens setting."
 msgstr ""
 
-#: src/Admin/AdminPage.php:468
+#: src/Admin/AdminPage.php:470
 msgid "Streaming did not start on this server, so the standard (non-streaming) mode was used."
 msgstr ""
 
-#: src/Admin/AdminPage.php:469
+#: src/Admin/AdminPage.php:471
 msgid "Enter a prompt or add an image first."
 msgstr ""
 
 #. translators: %d: number of images.
-#: src/Admin/AdminPage.php:471
+#: src/Admin/AdminPage.php:473
 #, php-format
 msgid "This model accepts up to %d images per request."
 msgstr ""
 
 #. translators: %d: size in megabytes.
 #. translators: %d: size limit in megabytes.
-#: src/Admin/AdminPage.php:473
+#: src/Admin/AdminPage.php:475
 #: src/Api/ImageInput.php:112
 #: src/Api/ImageInput.php:123
 #, php-format
@@ -330,47 +339,47 @@ msgid "The image is larger than the %d MB limit for this model."
 msgstr ""
 
 #. translators: %s: list of image formats.
-#: src/Admin/AdminPage.php:475
+#: src/Admin/AdminPage.php:477
 #, php-format
 msgid "This image type is not enabled for the selected model. Allowed: %s."
 msgstr ""
 
-#: src/Admin/AdminPage.php:476
+#: src/Admin/AdminPage.php:478
 msgid "Enter a full https:// image URL."
 msgstr ""
 
-#: src/Admin/AdminPage.php:477
+#: src/Admin/AdminPage.php:479
 #: src/Admin/views/models.php:108
 msgid "Remove"
 msgstr ""
 
 #. translators: 1: prompt tokens, 2: output tokens.
-#: src/Admin/AdminPage.php:479
+#: src/Admin/AdminPage.php:481
 #, php-format
 msgid "%1$s prompt + %2$s output tokens"
 msgstr ""
 
 #. translators: %s: number of seconds.
-#: src/Admin/AdminPage.php:481
+#: src/Admin/AdminPage.php:483
 #, php-format
 msgid "%s s"
 msgstr ""
 
 #. translators: %d: number of seconds.
-#: src/Admin/AdminPage.php:483
+#: src/Admin/AdminPage.php:485
 #, php-format
 msgid "NVIDIA asked to wait %d seconds before trying again."
 msgstr ""
 
-#: src/Admin/AdminPage.php:484
+#: src/Admin/AdminPage.php:486
 msgid "No chat models are enabled. Enable one on the AI Models tab."
 msgstr ""
 
-#: src/Admin/AdminPage.php:485
+#: src/Admin/AdminPage.php:487
 msgid "Images you add are sent to NVIDIA for analysis."
 msgstr ""
 
-#: src/Admin/AdminPage.php:497
+#: src/Admin/AdminPage.php:499
 msgid "You do not have permission to change these settings."
 msgstr ""
 
@@ -408,7 +417,7 @@ msgstr ""
 
 #: src/Admin/views/api.php:22
 #: src/Admin/views/overview.php:76
-#: src/Rest/RestController.php:110
+#: src/Rest/RestController.php:152
 msgid "API key"
 msgstr ""
 
@@ -755,7 +764,7 @@ msgstr ""
 
 #: src/Admin/views/diagnostics.php:118
 #: src/Admin/views/models.php:55
-#: src/Admin/views/playground.php:13
+#: src/Admin/views/playground.php:15
 #: src/Seo/SeoAssistant.php:131
 msgid "Model"
 msgstr ""
@@ -1377,79 +1386,87 @@ msgstr ""
 msgid "Plugins that use the WordPress AI Client can choose provider \"nvidia\". Kimi K3 and custom models are offered to them once their access is confirmed on the AI Models tab."
 msgstr ""
 
-#: src/Admin/views/playground.php:18
+#: src/Admin/views/playground.php:20
 msgid "Stream the reply"
 msgstr ""
 
-#: src/Admin/views/playground.php:19
+#: src/Admin/views/playground.php:21
 msgid "Show reasoning"
 msgstr ""
 
-#: src/Admin/views/playground.php:20
+#: src/Admin/views/playground.php:22
 msgid "Use Chandan Digital writing style"
 msgstr ""
 
-#: src/Admin/views/playground.php:23
+#: src/Admin/views/playground.php:25
 msgid "SEO skill"
 msgstr ""
 
-#: src/Admin/views/playground.php:30
+#: src/Admin/views/playground.php:32
 msgid "Adds the chosen SEO rules (adapted from claude-seo) to your request. For example, pick \"On-page SEO\" and ask for a title and meta description for an article."
 msgstr ""
 
-#: src/Admin/views/playground.php:33
+#: src/Admin/views/playground.php:35
 msgid "System prompt (optional)"
 msgstr ""
 
-#: src/Admin/views/playground.php:34
+#: src/Admin/views/playground.php:36
 msgid "System prompt"
 msgstr ""
 
-#: src/Admin/views/playground.php:35
+#: src/Admin/views/playground.php:37
 msgid "For example: You are a helpful assistant for a Kolkata digital marketing agency."
 msgstr ""
 
 #: src/Admin/views/playground.php:39
-msgid "Conversation"
+msgid "Save system prompt"
 msgstr ""
 
-#: src/Admin/views/playground.php:41
-msgid "Ask a question, paste some code, or add an image to start."
-msgstr ""
-
-#: src/Admin/views/playground.php:45
-msgid "Prompt"
+#: src/Admin/views/playground.php:42
+msgid "Saved for your user account, so it is here every time you open the Playground. It is also saved when you press \"Generate response\"."
 msgstr ""
 
 #: src/Admin/views/playground.php:46
-msgid "Type your prompt. Press Ctrl+Enter to send."
+msgid "Conversation"
 msgstr ""
 
-#: src/Admin/views/playground.php:50
-msgid "Upload image"
+#: src/Admin/views/playground.php:48
+msgid "Ask a question, paste some code, or add an image to start."
+msgstr ""
+
+#: src/Admin/views/playground.php:52
+msgid "Prompt"
 msgstr ""
 
 #: src/Admin/views/playground.php:53
+msgid "Type your prompt. Press Ctrl+Enter to send."
+msgstr ""
+
+#: src/Admin/views/playground.php:57
+msgid "Upload image"
+msgstr ""
+
+#: src/Admin/views/playground.php:60
 msgid "Image URL"
 msgstr ""
 
-#: src/Admin/views/playground.php:55
+#: src/Admin/views/playground.php:62
 msgid "Add URL"
 msgstr ""
 
-#: src/Admin/views/playground.php:63
+#: src/Admin/views/playground.php:70
 msgid "Generate response"
 msgstr ""
 
-#: src/Admin/views/playground.php:64
+#: src/Admin/views/playground.php:71
 msgid "Stop"
 msgstr ""
 
-#: src/Admin/views/playground.php:65
+#: src/Admin/views/playground.php:72
 msgid "Clear conversation"
 msgstr ""
 
-#: src/Admin/views/playground.php:70
+#: src/Admin/views/playground.php:77
 msgid "Prompts and images are sent to NVIDIA to generate the reply. The conversation is kept only in this browser tab and is not saved on this site."
 msgstr ""
 
@@ -1967,50 +1984,50 @@ msgstr ""
 msgid "The conversation is too long (more than %d messages). Clear the conversation and start again."
 msgstr ""
 
-#: src/Api/PayloadBuilder.php:75
+#: src/Api/PayloadBuilder.php:79
 msgid "The conversation data is not valid."
 msgstr ""
 
-#: src/Api/PayloadBuilder.php:79
+#: src/Api/PayloadBuilder.php:83
 msgid "Conversation messages must come from the user or the assistant."
 msgstr ""
 
-#: src/Api/PayloadBuilder.php:83
+#: src/Api/PayloadBuilder.php:87
 msgid "One message is too long. Shorten it and try again."
 msgstr ""
 
-#: src/Api/PayloadBuilder.php:96
+#: src/Api/PayloadBuilder.php:100
 msgid "An image in the conversation is not valid."
 msgstr ""
 
 #. translators: %s: model name.
-#: src/Api/PayloadBuilder.php:100
+#: src/Api/PayloadBuilder.php:104
 #, php-format
 msgid "%s is not set up for image input. Choose a vision model or enable image input in its settings."
 msgstr ""
 
 #. translators: 1: number of images, 2: image limit.
-#: src/Api/PayloadBuilder.php:118
+#: src/Api/PayloadBuilder.php:122
 #, php-format
 msgid "%1$d older image was left out of this request because the model setting allows %2$d images per request."
 msgid_plural "%1$d older images were left out of this request because the model setting allows %2$d images per request."
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Api/PayloadBuilder.php:125
+#: src/Api/PayloadBuilder.php:129
 msgid "A message is empty. Enter a prompt or attach an image."
 msgstr ""
 
-#: src/Api/PayloadBuilder.php:145
+#: src/Api/PayloadBuilder.php:149
 msgid "The conversation is too long. Clear it and start again."
 msgstr ""
 
-#: src/Api/PayloadBuilder.php:149
+#: src/Api/PayloadBuilder.php:153
 msgid "The last message must come from the user."
 msgstr ""
 
 #. translators: 1: value, 2: model name.
-#: src/Api/PayloadBuilder.php:191
+#: src/Api/PayloadBuilder.php:195
 #, php-format
 msgid "Reasoning effort \"%1$s\" is not supported by %2$s. Change it in the model settings."
 msgstr ""
@@ -2051,64 +2068,70 @@ msgstr ""
 msgid "Text generation with NVIDIA-hosted models (Kimi K3, Llama, Nemotron, Mistral, Qwen), image understanding on vision models, and image generation with FLUX models."
 msgstr ""
 
+#. translators: %d: maximum number of characters.
+#: src/Rest/RestController.php:118
+#, php-format
+msgid "The system prompt is too long. Keep it under %d characters."
+msgstr ""
+
 #. translators: %d: number of models.
-#: src/Rest/RestController.php:122
+#: src/Rest/RestController.php:164
 #, php-format
 msgid "NVIDIA listed %d models in its public catalogue."
 msgstr ""
 
-#: src/Rest/RestController.php:124
+#: src/Rest/RestController.php:166
 msgid "API endpoint reachable"
 msgstr ""
 
-#: src/Rest/RestController.php:131
+#: src/Rest/RestController.php:173
 msgid "NVIDIA accepted the API key."
 msgstr ""
 
-#: src/Rest/RestController.php:138
+#: src/Rest/RestController.php:180
 msgid "Not checked, because NVIDIA could not be reached."
 msgstr ""
 
-#: src/Rest/RestController.php:140
+#: src/Rest/RestController.php:182
 msgid "API key accepted"
 msgstr ""
 
 #. translators: %s: model name.
-#: src/Rest/RestController.php:143
+#: src/Rest/RestController.php:185
 #, php-format
 msgid "Access to %s"
 msgstr ""
 
-#: src/Rest/RestController.php:150
+#: src/Rest/RestController.php:192
 msgid "Connection works: the key is valid and the model answered."
 msgstr ""
 
-#: src/Rest/RestController.php:182
+#: src/Rest/RestController.php:224
 #: src/Support/ModelRegistry.php:425
 msgid "Unknown model."
 msgstr ""
 
-#: src/Rest/RestController.php:185
+#: src/Rest/RestController.php:227
 msgid "Image generation models use a separate NVIDIA endpoint and cannot be checked here. They are used through the WordPress AI Client."
 msgstr ""
 
-#: src/Rest/RestController.php:367
+#: src/Rest/RestController.php:409
 msgid "The first reply came back as garbled text, so the plugin threw it away and asked again."
 msgstr ""
 
-#: src/Rest/RestController.php:381
+#: src/Rest/RestController.php:423
 msgid "Missing request ID."
 msgstr ""
 
-#: src/Rest/RestController.php:392
+#: src/Rest/RestController.php:434
 msgid "Choose an enabled chat model."
 msgstr ""
 
-#: src/Rest/RestController.php:397
+#: src/Rest/RestController.php:439
 msgid "You need permission to upload files to send images."
 msgstr ""
 
-#: src/Rest/RestController.php:407
+#: src/Rest/RestController.php:449
 msgid "The system prompt is too long or contains invalid characters."
 msgstr ""
 
@@ -2164,10 +2187,6 @@ msgstr ""
 
 #: src/Seo/SeoAssistant.php:186
 msgid "Copy"
-msgstr ""
-
-#: src/Seo/SeoAssistant.php:188
-msgid "Saved"
 msgstr ""
 
 #: src/Seo/SeoAssistant.php:189

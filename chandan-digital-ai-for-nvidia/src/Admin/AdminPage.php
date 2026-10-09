@@ -435,6 +435,8 @@ final class AdminPage
     {
         return [
             'working' => __('Working…', 'chandan-digital-ai-for-nvidia'),
+            'systemSaved' => __('Saved', 'chandan-digital-ai-for-nvidia'),
+            'systemNotSaved' => __('Could not save. Try again.', 'chandan-digital-ai-for-nvidia'),
             'thinking' => __('Thinking…', 'chandan-digital-ai-for-nvidia'),
             'ok' => __('OK', 'chandan-digital-ai-for-nvidia'),
             'failed' => __('Failed', 'chandan-digital-ai-for-nvidia'),

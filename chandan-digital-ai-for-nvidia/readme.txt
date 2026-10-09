@@ -3,7 +3,7 @@ Contributors: chandandigital
 Tags: ai, nvidia, kimi, ai-provider, connector
 Requires at least: 6.9
 Tested up to: 7.1.3
-Stable tag: 1.2.1
+Stable tag: 1.2.2
 Requires PHP: 7.4
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -35,7 +35,7 @@ This is a private plugin. It is maintained by Chandan Digital (https://chandandi
 
 == Installation ==
 
-1. In WordPress, go to Plugins > Add New > Upload Plugin and upload `chandan-digital-ai-for-nvidia-v1.2.1.zip`.
+1. In WordPress, go to Plugins > Add New > Upload Plugin and upload `chandan-digital-ai-for-nvidia-v1.2.2.zip`.
 2. Activate the plugin.
 3. Open NVIDIA AI > NVIDIA API Settings, paste your API key and save. For extra security, define `CHANDAN_NVIDIA_API_KEY` in wp-config.php instead.
 4. Press "Test connection", then open the AI Models tab and press "Check access" on Kimi K3.
@@ -104,6 +104,11 @@ Every text answer can follow the Chandan Digital writing style: simple Indian En
 The style is an instruction to the model. How closely an answer follows it still depends on the model. The plugin does not check grammar, plagiarism or facts after the answer arrives, apart from the em dash check.
 
 == Changelog ==
+
+= 1.2.2 =
+
+* The AI Playground's system prompt can now be saved. Press "Save system prompt" (it is also saved when you press "Generate response"), and it is there every time you open the Playground. It is saved for each user account.
+* If you paste the Chandan Digital writing rules into the system prompt while "Use Chandan Digital writing style" is ticked, the rules are sent once, not twice.
 
 = 1.2.1 =
 

@@ -1,6 +1,6 @@
 # API Integration Report: Kimi K3 on NVIDIA
 
-**Plugin:** Chandan Digital AI for NVIDIA 1.2.1
+**Plugin:** Chandan Digital AI for NVIDIA 1.2.2
 **Model:** Moonshot AI Kimi K3, model ID `moonshotai/kimi-k3`
 **Endpoint:** `https://integrate.api.nvidia.com/v1/chat/completions` (POST, JSON, Bearer token)
 
